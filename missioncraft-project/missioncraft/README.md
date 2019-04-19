@@ -1,21 +1,34 @@
 
-## run app
-```bash
+## Run App
 
-bash:
-
-for mac/linux:
-    export FLASK_APP=missioncraft
-    export FLASK_ENV=development
-    flask init-db
-    
-    
-    flask run
-
-    visit:  
-        http://127.0.0.1:5000/auth/register
-        http://127.0.0.1:5000/auth/login
-
-    flask run
-
+For Linux and Mac:
 ```
+export FLASK_APP=missioncraft
+export FLASK_ENV=development
+flask run
+```
+For Windows cmd, use set instead of export:
+```
+set FLASK_APP=missioncraft
+set FLASK_ENV=development 
+flask run
+```
+For Windows PowerShell, use $env: instead of export:
+```
+$env:FLASK_APP = "missioncraft"
+$env:FLASK_ENV = "development"
+flask run
+```
+
+初始化数据库：
+```
+flask init-db
+```
+
+visit:  
+```
+http://127.0.0.1:5000/auth/register
+http://127.0.0.1:5000/auth/login
+```
+
+
