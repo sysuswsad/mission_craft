@@ -1,5 +1,5 @@
 
-## Run App
+## 启动服务器：
 
 For Linux and Mac:
 ```
@@ -20,12 +20,13 @@ $env:FLASK_ENV = "development"
 flask run
 ```
 
-初始化数据库：
+
+## 初始化数据库：
 ```
 flask init-db
 ```
 
-visit:  
+## 浏览器访问:  
 ```
 http://127.0.0.1:5000/auth/register
 http://127.0.0.1:5000/auth/login
