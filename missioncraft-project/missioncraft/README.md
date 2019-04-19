@@ -21,15 +21,14 @@ for mac/linux:
         http://127.0.0.1:5000/auth/login
 
     flask run
-    flaskr
 
     pip install -e .
 ```
 
 ## tree of app
 ```bash
-/home/user/Projects/flask-tutorial
-├── flaskr/
+missioncraft-project
+├── missioncraft/
 │   ├── __init__.py
 │   ├── db.py
 │   ├── schema.sql
@@ -40,19 +39,8 @@ for mac/linux:
 │   │   ├── auth/
 │   │   │   ├── login.html
 │   │   │   └── register.html
-│   │   └── blog/
-│   │       ├── create.html
-│   │       ├── index.html
-│   │       └── update.html
 │   └── static/
 │       └── style.css
-├── tests/
-│   ├── conftest.py
-│   ├── data.sql
-│   ├── test_factory.py
-│   ├── test_db.py
-│   ├── test_auth.py
-│   └── test_blog.py
 ├── venv/
 ├── setup.py
 └── MANIFEST.in
