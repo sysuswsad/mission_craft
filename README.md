@@ -2,9 +2,7 @@
 
 ------
 
-## 项目文档目录
+## 访问项目文档
 
-- [项目概况](https://sysuswsad.github.io/mission_craft/Introduction.html)
-- [项目组队与分工](https://sysuswsad.github.io/mission_craft/Team.html)
-- [市场调研](https://sysuswsad.github.io/mission_craft/Investigation.html)
+[文档](https://sysuswsad.github.io/mission_craft/)
 
