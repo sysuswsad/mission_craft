@@ -1,7 +1,5 @@
 # mission_craft
 
-------
-
 ## 项目文档目录
 
 - [About](https://sysuswsad.github.io/mission_craft/Introduction.html)(项目概况)
