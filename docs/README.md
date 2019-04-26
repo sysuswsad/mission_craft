@@ -1,23 +1,17 @@
 # mission_craft
 
-------
-
 ## 项目文档目录
 
 1. [About](https://sysuswsad.github.io/mission_craft/Introduction.html)(项目概况)
+2. [Team profile](https://sysuswsad.github.io/mission_craft/Team.html)(团队组建与分工)
+3. [Investigation](https://sysuswsad.github.io/mission_craft/Investigation.html)(项目前期调研)
 
-2. [Team profile](https://sysuswsad.github.io/mission_craft/Team.html)（团队组建与分工）
+4. [Vision](https://sysuswsad.github.io/mission_craft/Vision.html)(项目愿景)
 
-3. [Investigation](https://sysuswsad.github.io/mission_craft/Investigation.html)（项目前期调研）
-
-4. Vision（项目愿景）
-
-5. Product Backlogs（产品特性）
+5. [Product Backlog](https://sysuswsad.github.io/mission_craft/ProductBacklog.html)(产品特性库)
 
 6. Requirement specification（需求规格说明书）
-
    - 6.1 Usecase Diagram and UML Activity Diagram（用例图，业务过程/多泳道图）
-
    - 6.2 Use Cases（用例+活动图）
    - 6.3 Domian Models（领域模型）
    - 6.4 State Models（状态模型）
@@ -36,6 +30,7 @@
    - 8.2 REST API设计规范
    - 8.3 架构设计，详细设计（BCE方法）到应用程序框架映射框架映射指南
    - 8.4 部署说明
+
 9. 成品展示
    - 9.1 短视频
    - ...
