@@ -11,11 +11,11 @@
 5. [Product Backlog](https://sysuswsad.github.io/mission_craft/ProductBacklog.html)(产品特性库)
 
 6. Requirement specification（需求规格说明书）
-   - 6.1 [Usecase Diagram and UML Activity Diagram](https://github.com/sysuswsad/mission_craft/blob/master/docs/UMLActivityDiagram.html)（用例图，业务过程/多泳道图）
-   - 6.2 [Use Cases](https://github.com/sysuswsad/mission_craft/blob/master/docs/use_cases.html)（用例+活动图）
-   - 6.3 [Domian Models](https://github.com/sysuswsad/mission_craft/blob/master/docs/DomainModels.html)（领域模型）
+   - 6.1 [Usecase Diagram and UML Activity Diagram](https://github.com/sysuswsad/mission_craft/UMLActivityDiagram.html)（用例图，业务过程/多泳道图）
+   - 6.2 [Use Cases](https://github.com/sysuswsad/mission_craft/use_cases.html)（用例+活动图）
+   - 6.3 [Domian Models](https://github.com/sysuswsad/mission_craft/DomainModels.html)（领域模型）
    - 6.4 State Models（状态模型）
-   - 6.5  [System Sequence](https://sysuswsad.github.io/mission_craft/SystemSequenceDiagram.html)（功能模型）
+   - 6.5  [System Sequence](https://github.com/sysuswsad/mission_craft/SystemSequenceDiagram.html)（功能模型）
    - 6.6 Supplementary Requirements（补充需求）
 
 7. Design（设计说明书）
