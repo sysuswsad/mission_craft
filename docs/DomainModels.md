@@ -1,4 +1,4 @@
 领域模型：
 
-![imgs/DomainModels.png]()
+![https://sysuswsad.github.io/mission_craft/imgs/DomainModels.png]()
 
