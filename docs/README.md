@@ -23,7 +23,7 @@
    - 7.2 Database design（数据库设计）
    - 7.3 Interface API design（框架设计）
    - Architecture design（架构设计）
-   - Usecase design（用例设计）
+   - [Usecase design](https://sysuswsad.github.io/mission_craft/UseCaseDesign.html)（用例设计）
 
 8. 生产规范与指南
    - 8.1 代码规范
