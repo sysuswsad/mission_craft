@@ -20,7 +20,7 @@
 
 7. Design（设计说明书）
    - 7.1 UI design（界面设计）
-   - 7.2 Database design（数据库设计）
+   - 7.2 [Database design](https://sysuswsad.github.io/mission_craft/DatabaseDesign.html)（数据库设计）
    - 7.3 Interface API design（接口API设计）
    - 7.4 Architecture design（架构设计）
    - 7.5 [Usecase design](https://sysuswsad.github.io/mission_craft/UseCaseDesign.html)（用例设计）
