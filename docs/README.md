@@ -19,7 +19,7 @@
    - 6.6 Supplementary Requirements（补充需求）
 
 7. Design（设计说明书）
-   - 7.1 UI design（界面设计）
+   - 7.1 [UI design](https://sysuswsad.github.io/mission_craft/UI_design.html)（界面设计）
    - 7.2 [Database design](https://sysuswsad.github.io/mission_craft/DatabaseDesign.html)（数据库设计）
    - 7.3 Interface API design（接口API设计）
    - 7.4 Architecture design（架构设计）
