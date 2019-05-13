@@ -12,7 +12,7 @@
 
 6. Requirement specification（需求规格说明书）
    - 6.1 Usecase Diagram and UML Activity Diagram（用例图，业务过程/多泳道图）
-   - 6.2 [Use Cases](https://github.com/sysuswsad/mission_craft/blob/master/docs/use_cases.md)（用例+活动图）
+   - 6.2 [Use Cases](https://sysuswsad.github.io/mission_craft/use_cases.html)（用例+活动图）
    - 6.3 Domian Models（领域模型）
    - 6.4 State Models（状态模型）
    - 6.5 System Sequence Diagrams（功能模型）
