@@ -1,5 +1,5 @@
 {
-  "name": "vue_app",
+  "name": "mission_craft",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "element-ui": "^2.8.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6",
     "vuex": "^3.1.1"
