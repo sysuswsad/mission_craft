@@ -13,7 +13,7 @@
         </el-form-item>
         <el-form-item prop="testCode">
           <el-input v-model="info.code" placeholder="验证码" style="width: 200px"></el-input>
-          <el-button type="primary" v-on:click="getCode" id="get-code-button" :disabled="!show">
+          <el-button type="primary" v-on:click="getCode" id="get-code-button" v-bind:disabled="!show">
             <span v-show="show">获取验证码</span>
             <span v-show="!show" class="count">{{count}} s</span>
           </el-button>
