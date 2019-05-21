@@ -12,8 +12,11 @@
           <el-input v-model="info.email" placeholder="电子邮件" prefix-icon="el-icon-s-promotion"></el-input>
         </el-form-item>
         <el-form-item prop="testCode">
-          <el-input v-model="info.testCode" placeholder="验证码" style="width: 200px"></el-input>
-          <el-button type="primary" v-on:click="toRegister" id="get-code-button">获取验证码</el-button>
+          <el-input v-model="info.code" placeholder="验证码" style="width: 200px"></el-input>
+          <el-button type="primary" v-on:click="getCode" id="get-code-button" :disabled="!show">
+            <span v-show="show">获取验证码</span>
+            <span v-show="!show" class="count">{{count}} s</span>
+          </el-button>
         </el-form-item>
 
         <el-form-item prop="pass">
@@ -38,8 +41,28 @@ export default {
         studentNumber: '',
         email: '',
         password: '',
-        confirmPass: '',
-        testCode: ''
+        confirmPass: ''
+      },
+      count: '',
+      show: true,
+      timer: null,
+      code: ''
+    }
+  },
+  methods: {
+    getCode: function () {
+      if(!this.timer) {
+        this.count = 60;
+        this.show = false;
+        this.timer = setInterval(() => {
+          if(this.count > 0 && this.count <= 60) {
+            this.count--;
+          } else {
+            this.show = true;
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        }, 1000)
       }
     }
   }

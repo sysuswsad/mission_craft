@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Api from './views/Api.vue'
 import LoginPage from './views/LoginPage.vue'
-import RegisterPage from "./views/RegisterPage.vue";
+import RegisterPage from './views/RegisterPage.vue'
 
 Vue.use(Router)
 
