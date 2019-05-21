@@ -6,7 +6,9 @@
         <el-header id="top-menu">
           <TopMenu></TopMenu>
         </el-header>
-        <router-view/>
+        <el-main>
+          <router-view/>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -18,7 +20,7 @@ export default {
   components: { TopMenu },
   data () {
     return {
-      isLogin: false    // 根据登录情况判断是否展示侧栏
+      isLogin: false // 根据登录情况判断是否展示侧栏
     }
   }
 }
