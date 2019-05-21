@@ -4,10 +4,9 @@
 import Vue from 'vue'
 
 let filters = {
-
   formatTimestamp (timestamp) {
     let datetime = new Date(timestamp)
-    return datetime.toLocaleTimeString('en-US')
+    return datetime.toLocaleTimeString()
   }
 }
 

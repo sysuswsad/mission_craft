@@ -39,8 +39,8 @@ export default {
     }
   },
   methods: {
-    toRegister: function () {
-      this.$router.push({ path: '/RegisterPage' })
+    toRegister () {
+      this.$router.push({ name: 'register' })
     }
   }
 }

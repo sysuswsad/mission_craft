@@ -7,7 +7,9 @@
           <TopMenu></TopMenu>
         </el-header>
         <el-main>
-          <router-view/>
+          <transition name="fade">
+            <router-view/>
+          </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -29,5 +31,14 @@ export default {
 <style lang="scss" scoped>
   #top-menu {
     padding: 0;
+  }
+
+  .fade-enter, .fade-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .5s ease;
   }
 </style>

@@ -10,7 +10,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'LoginPage',
+      name: 'login',
       component: LoginPage
     },
     {
@@ -19,8 +19,8 @@ export default new Router({
       component: Api
     },
     {
-      path: '/RegisterPage',
-      name: 'RegisterPage',
+      path: '/register',
+      name: 'register',
       component: RegisterPage
     }
   ]
