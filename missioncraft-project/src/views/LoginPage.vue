@@ -6,14 +6,14 @@
     <div id="login-form">
       <el-form v-bind:model="info" status-icon>
         <el-form-item
-                prop="username"
-                v-bind:rules="{required: true, message: '请输入用户名或邮箱', trigger: 'blur'}"
+          prop="username"
+          v-bind:rules="{required: true, message: '请输入用户名或邮箱', trigger: 'blur'}"
         >
           <el-input v-model="info.username" label="用户名/邮箱" prefix-icon="el-icon-s-custom"></el-input>
         </el-form-item>
         <el-form-item
-                prop="password"
-                v-bind:rules="{required: true, message: '请输入密码', trigger: 'blur'}"
+          prop="password"
+          v-bind:rules="{required: true, message: '请输入密码', trigger: 'blur'}"
         >
           <el-input type="password" v-model="info.password" label="密码" autocomplete="off" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>

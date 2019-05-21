@@ -51,16 +51,16 @@ export default {
   },
   methods: {
     getCode: function () {
-      if(!this.timer) {
-        this.count = 60;
-        this.show = false;
+      if (!this.timer) {
+        this.count = 60
+        this.show = false
         this.timer = setInterval(() => {
-          if(this.count > 0 && this.count <= 60) {
-            this.count--;
+          if (this.count > 0 && this.count <= 60) {
+            this.count--
           } else {
-            this.show = true;
-            clearInterval(this.timer);
-            this.timer = null;
+            this.show = true
+            clearInterval(this.timer)
+            this.timer = null
           }
         }, 1000)
       }
