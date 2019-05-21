@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-container>
-      <el-aside width="64px" v-show="isLogin"></el-aside>
+      <el-aside width="64px" v-if="isLogin"></el-aside>
       <el-container>
         <el-header id="top-menu">
           <TopMenu></TopMenu>
@@ -27,5 +27,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  #top-menu {
+    padding: 0;
+  }
 </style>
