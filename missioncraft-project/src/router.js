@@ -19,7 +19,7 @@ export default new Router({
       component: Api
     },
     {
-      path: '/RegisterPage',
+      path: '/Register',
       name: 'RegisterPage',
       component: RegisterPage
     }
