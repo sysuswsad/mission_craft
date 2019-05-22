@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     toRegister: function () {
-      this.$router.push({ path: '/RegisterPage' })
+      this.$router.push({ path: '/Register' })
     }
   }
 }
