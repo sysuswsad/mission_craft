@@ -6,8 +6,8 @@
         <el-header id="top-menu">
           <TopMenu></TopMenu>
         </el-header>
-        <el-main>
-          <transition name="fade">
+        <el-main class="inner-container">
+          <transition name="fade" mode="out-in">
             <router-view/>
           </transition>
         </el-main>
@@ -33,12 +33,16 @@ export default {
     padding: 0;
   }
 
+  .inner-container {
+    height: calc(100vh - 60px)
+  }
+
   .fade-enter, .fade-leave-to {
     transform: translateY(-20px);
     opacity: 0;
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: all .5s ease;
+    transition: all .3s ease;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="register-container">
-    <div id="register-form">
+    <el-card class="register-card">
       <el-form v-bind:model="info" ref="info">
         <el-form-item prop="username" required>
           <el-input v-model="info.username" placeholder="昵称" prefix-icon="el-icon-user-solid"></el-input>
@@ -29,8 +29,7 @@
           <span>已有帐号？<el-button type="text" v-on:click="toLogin">登录</el-button></span>
         </div>
       </el-form>
-    </div>
-
+    </el-card>
   </div>
 </template>
 <script>
@@ -76,20 +75,20 @@ export default {
 
 <style scoped>
   #register-container {
-    width:400px;
-    height: 450px;
-    position: absolute;
-    left:0; top:0; right:0; bottom: 0;
-    margin: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 
-  #register-form {
-    width: 380px;
-    margin: 10px auto 10px auto;
+  .register-card {
+    width: 20vw;
+    margin: 10px auto;
+    padding: 15px;
   }
 
   #register-button {
-    width: 380px;
+    margin-top: 10px;
+    width: 100%;
   }
 
   #get-code-button {
