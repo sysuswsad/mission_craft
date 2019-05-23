@@ -24,7 +24,7 @@
               <el-button type="text" id="register-button" class="text-button" v-on:click="toRegister">注册</el-button>
             </el-row>
             <el-row>
-              <el-button type="primary" id="login-button">登录</el-button>
+              <el-button type="primary" id="login-button" v-on:click="toUserInfo">登录</el-button>
             </el-row>
           </div>
         </el-form>
@@ -47,6 +47,9 @@ export default {
   methods: {
     toRegister () {
       this.$router.push({ name: 'register' })
+    },
+    toUserInfo () {
+      this.$router.push({ name: 'userInfo' })
     }
   }
 }

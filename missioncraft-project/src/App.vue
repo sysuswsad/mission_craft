@@ -56,7 +56,7 @@ export default {
   }
 
   .inner-container {
-    height: calc(100vh - 60px)
+    height: calc(100vh - 60px);
   }
 
   .fade-enter, .fade-leave-to {
