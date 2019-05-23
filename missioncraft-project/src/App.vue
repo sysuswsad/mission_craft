@@ -1,13 +1,15 @@
 <template>
   <div id="app">
     <el-container>
-      <el-aside width="64px" v-show="isLogin"></el-aside>
+      <el-aside width="64px" v-if="isLogin"></el-aside>
       <el-container>
         <el-header id="top-menu">
           <TopMenu></TopMenu>
         </el-header>
-        <el-main>
-          <router-view/>
+        <el-main class="inner-container">
+          <transition name="fade" mode="out-in">
+            <router-view/>
+          </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -27,5 +29,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  #top-menu {
+    padding: 0;
+  }
 
+  .inner-container {
+    height: calc(100vh - 60px);
+  }
+
+  .fade-enter, .fade-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .3s ease;
+  }
 </style>

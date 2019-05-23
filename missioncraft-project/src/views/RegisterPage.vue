@@ -1,15 +1,15 @@
 <template>
   <div id="register-container">
-    <div id="register-form">
+    <el-card class="register-card">
       <el-form v-bind:model="info" ref="info">
         <el-form-item prop="username" required>
-          <el-input v-model="info.username" placeholder="昵称" prefix-icon="el-icon-s-custom"></el-input>
+          <el-input v-model="info.username" placeholder="昵称" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
         <el-form-item prop="studentId" required>
-          <el-input v-model="info.studentId" placeholder="学号" prefix-icon="el-icon-s-custom"></el-input>
+          <el-input v-model="info.studentId" placeholder="学号" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
         <el-form-item prop="email" required>
-          <el-input v-model="info.email" placeholder="电子邮件" prefix-icon="el-icon-s-promotion"></el-input>
+          <el-input v-model="info.email" placeholder="电子邮件" prefix-icon="el-icon-message"></el-input>
         </el-form-item>
         <el-form-item prop="testCode">
           <el-input v-model="info.code" placeholder="验证码" style="width: 200px"></el-input>
@@ -18,7 +18,6 @@
             <span v-show="!show" class="count">{{count}} s</span>
           </el-button>
         </el-form-item>
-
         <el-form-item prop="pass" required>
           <el-input type="password" v-model="info.password" placeholder="密码" autocomplete="off" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
@@ -26,9 +25,11 @@
           <el-input type="password" v-model="info.confirmPass" placeholder="确认密码" autocomplete="off" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
         <el-button type="primary" id="register-button" v-on:click="toRegister">注册</el-button>
+        <div class="login-switch-container">
+          <span>已有帐号？<el-button type="text" v-on:click="toLogin">登录</el-button></span>
+        </div>
       </el-form>
-    </div>
-
+    </el-card>
   </div>
 </template>
 <script>
@@ -50,7 +51,7 @@ export default {
     }
   },
   methods: {
-    getCode: function () {
+    getCode () {
       if (!this.timer) {
         this.count = 60
         this.show = false
@@ -64,6 +65,9 @@ export default {
           }
         }, 1000)
       }
+    },
+    toLogin () {
+      this.$router.push({ name: 'login' })
     }
   }
 }
@@ -71,24 +75,29 @@ export default {
 
 <style scoped>
   #register-container {
-    width:400px;
-    height: 450px;
-    position: absolute;
-    left:0; top:0; right:0; bottom: 0;
-    margin: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 
-  #register-form {
-    width: 380px;
-    margin: 10px auto 10px auto;
+  .register-card {
+    width: 20vw;
+    margin: 10px auto;
+    padding: 15px;
   }
 
   #register-button {
-    width: 380px;
+    margin-top: 10px;
+    width: 100%;
   }
 
   #get-code-button {
     position: absolute;
     right: 0;
+  }
+
+  .login-switch-container {
+    margin-top: 1rem;
+    text-align: center;
   }
 </style>

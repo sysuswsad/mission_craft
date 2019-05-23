@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Api from './views/Api.vue'
 import LoginPage from './views/LoginPage.vue'
 import RegisterPage from './views/RegisterPage.vue'
+import UserInfoPage from './views/UserInfoPage.vue'
 
 Vue.use(Router)
 
@@ -10,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'LoginPage',
+      name: 'login',
       component: LoginPage
     },
     {
@@ -19,9 +20,14 @@ export default new Router({
       component: Api
     },
     {
-      path: '/Register',
-      name: 'RegisterPage',
+      path: '/register',
+      name: 'register',
       component: RegisterPage
+    },
+    {
+      path: '/userInfo',
+      name: 'userInfo',
+      component: UserInfoPage
     }
   ]
 })
