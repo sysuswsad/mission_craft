@@ -2,7 +2,7 @@
   <div id="login-container">
     <el-card class="login-card">
       <template v-slot:header>
-        <h2>LOGO</h2>
+        <h1>LOGO</h1>
       </template>
       <div id="login-form">
         <el-form v-bind:model="info" status-icon>
