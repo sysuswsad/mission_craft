@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <el-menu
     id="top-nav-menu"
     mode="horizontal"
