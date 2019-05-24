@@ -2,7 +2,7 @@
   <div id="login-container">
     <el-card class="login-card">
       <template v-slot:header>
-        <h2>LOGO</h2>
+        <h1>LOGO</h1>
       </template>
       <div id="login-form">
         <el-form v-bind:model="info" status-icon>
@@ -24,7 +24,7 @@
               <el-button type="text" id="register-button" class="text-button" v-on:click="toRegister">注册</el-button>
             </el-row>
             <el-row>
-              <el-button type="primary" id="login-button">登录</el-button>
+              <el-button type="primary" id="login-button" v-on:click="toUserInfo">登录</el-button>
             </el-row>
           </div>
         </el-form>
@@ -47,6 +47,9 @@ export default {
   methods: {
     toRegister () {
       this.$router.push({ name: 'register' })
+    },
+    toUserInfo () {
+      this.$router.push({ name: 'userInfo' })
     }
   }
 }
