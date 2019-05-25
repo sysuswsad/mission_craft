@@ -39,7 +39,7 @@
           <el-menu-item index="3">
             <i class="el-icon-message-solid"></i>
             <template v-slot:title>
-              <span>我的消息</span>
+              <span v-on:click="toMessage">我的消息</span>
             </template>
           </el-menu-item>
         </el-menu>
@@ -61,6 +61,11 @@ export default {
     isCollapsed: {
       type: Boolean,
       default: true
+    }
+  },
+  methods: {
+    toMessage () {
+      this.$router.push({ name: 'message' })
     }
   }
 }
