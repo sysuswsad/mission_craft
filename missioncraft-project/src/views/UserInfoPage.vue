@@ -2,10 +2,7 @@
   <div class="user-info-container">
     <div class="head-container">
       <div class="image-name-container">
-        <el-image
-                class="head-image"
-                :src=url>
-        </el-image>
+        <img class="head-image" alt="加载失败" v-bind:src=url>
         <div class="user-name">
           Hello
         </div>
@@ -18,12 +15,16 @@
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item label="专业">
-                  <el-input v-model="privateInfo.subject"></el-input>
+                  <el-input v-model="privateInfo.subject" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px">修改</el-button>
+              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px" v-if="!canEdit" v-on:click="editButtonClick">修改</el-button>
+              <el-col>
+                <el-button type="primary" style="margin-left: 100px" v-if="canEdit" v-on:click="cancelButtonClick">取消</el-button>
+                <el-button type="primary" style="margin-left: 100px" v-if="canEdit">确认</el-button>
+              </el-col>
             </el-row>
           </el-form>
         </el-tab-pane>
@@ -57,9 +58,12 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px">确认修改</el-button>
+              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px">修改</el-button>
             </el-row>
           </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="更换头像">
+
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -71,7 +75,8 @@ export default {
   name: 'UserInfoPage',
   data () {
     return {
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+      url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
+      canEdit: false,
       privateInfo: {
         subject: ''
       },
@@ -80,6 +85,14 @@ export default {
         newPassword: '',
         confirmPassword: ''
       }
+    }
+  },
+  methods: {
+    editButtonClick () {
+      this.canEdit = !this.canEdit
+    },
+    cancelButtonClick () {
+      this.canEdit = !this.canEdit
     }
   }
 }
@@ -103,7 +116,7 @@ export default {
   .head-image {
     width: 100px;
     height: 100px;
-    margin: 10px auto;
+    border-radius: 50%;
   }
 
   .user-name {

@@ -7,7 +7,7 @@
     </el-header>
     <el-main style="padding: 0">
       <el-row class="user-info-container">
-        <div class="avatar-wrapper">
+        <div class="avatar-wrapper" v-on:click="toUserInfo">
           <img
             alt="avatar"
             src="default-avatar.png"
@@ -36,10 +36,10 @@
               <span>我的领取</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="3" v-on:click="toMessage">
             <i class="el-icon-message-solid"></i>
             <template v-slot:title>
-              <span v-on:click="toMessage">我的消息</span>
+              <span>我的消息</span>
             </template>
           </el-menu-item>
         </el-menu>
@@ -66,6 +66,9 @@ export default {
   methods: {
     toMessage () {
       this.$router.push({ name: 'message' })
+    },
+    toUserInfo () {
+      this.$router.push({ name: 'userInfo' })
     }
   }
 }
@@ -78,6 +81,7 @@ export default {
 
   .avatar-wrapper {
     margin-top: 3rem;
+    cursor: pointer;
   }
 
   .avatar-wrapper > img {
