@@ -20,7 +20,19 @@
                   v-bind:data="tableData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
                   v-bind:default-sort = "{prop: 'date', order: 'descending'}"
                   v-on:selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column type="selection" width="50"></el-table-column>
+          <el-table-column type="expand" v-on:click="markRead()">
+            <template v-slot:default="props">
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="消息日期：">
+                  <span class="expend-format">{{ props.row.date }}</span>
+                </el-form-item>
+                <el-form-item label="消息内容：">
+                  <span class="expend-format">{{ props.row.content }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
           <el-table-column prop="hasRead" label="已读" sortable width="80"></el-table-column>
           <el-table-column prop="date" label="日期" sortable width="150"></el-table-column>
           <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>
@@ -124,9 +136,7 @@ export default {
     },
     deleteRow () {
       // dialog if continue the delete operation
-      if (this.multipleSelection.length === 0) {
-        return
-      }
+
       this.dialogVisible = true
     },
     onConfirmDelete () {
@@ -168,5 +178,24 @@ export default {
 
   #pagination-container {
     float: right;
+  }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
+
+  .expend-format {
+    font-weight: bold;
   }
 </style>
