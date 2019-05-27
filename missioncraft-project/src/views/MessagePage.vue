@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
   <div>
     <el-card class="message-card">
       <template v-slot:header>
@@ -7,12 +7,13 @@
         <el-button size="mini" v-on:click="markRead()" v-bind:disabled="multipleSelection.length === 0">标为已读</el-button>
         <el-button size="mini" v-on:click="unMarkRead()" v-bind:disabled="multipleSelection.length === 0">标为未读</el-button>
         <el-button size="mini" v-on:click="cancelSelection()" v-bind:disabled="multipleSelection.length === 0">取消选择</el-button>
-        <el-pagination id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
-                       v-bind:page-sizes="[5, 10, 20, 30]"
-                       v-bind:page-size="pageSize"
-                       v-bind:total="tableData.length"
-                       v-on:current-change="handleCurrentChange"
-                       v-on:size-change="handleSizeChange">
+        <el-pagination
+          id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
+          v-bind:page-sizes="[5, 10, 20, 30]"
+          v-bind:page-size="pageSize"
+          v-bind:total="tableData.length"
+          v-on:current-change="handleCurrentChange"
+          v-on:size-change="handleSizeChange">
         </el-pagination>
       </template>
       <div id="table-container">
@@ -39,15 +40,6 @@
         </el-table>
       </div>
     </el-card>
-    <el-dialog
-        title="确认删除所选信件?"
-        :visible.sync="dialogVisible"
-        width="30%">
-      <span slot="footer" class="dialog-footer">
-        <el-button v-on:click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" v-on:click="onConfirmDelete()">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -104,7 +96,6 @@ export default {
         }
       ],
       multipleSelection: [],
-      dialogVisible: false,
       pageSize: 5,
       currentPage: 1
     }
@@ -135,9 +126,18 @@ export default {
       this.$refs.multipleTable.clearSelection()
     },
     deleteRow () {
-      // dialog if continue the delete operation
-
-      this.dialogVisible = true
+      // confirm if continue the delete operation
+      this.$confirm('确认永久删除所选消息？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.onConfirmDelete()
+        this.$message({
+          type: 'success',
+          message: '删除成功！'
+        })
+      })
     },
     onConfirmDelete () {
       // to-do: refresh data in db
@@ -146,7 +146,6 @@ export default {
         let index = this.tableData.indexOf(this.multipleSelection[i])
         this.tableData.splice(index, 1)
       }
-      this.dialogVisible = false
       console.log('delete')
     },
     cancelSelection () {

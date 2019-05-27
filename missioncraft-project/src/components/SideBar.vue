@@ -18,12 +18,15 @@
         </div>
       </el-row>
       <el-divider direction="horizontal"></el-divider>
-      <el-row>
+      <el-row style="overflow: hidden">
         <el-menu
           mode="vertical"
           class="sidebar-nav"
+          ref="sidebar"
           v-bind:collapse="isCollapsed"
-          v-bind:collapse-transition="false">
+          v-bind:collapse-transition="false"
+          v-bind:default-active="activeIdx"
+          v-on:select="checkIdx">
           <el-menu-item index="1">
             <i class="el-icon-s-order"></i>
             <template v-slot:title>
@@ -57,18 +60,31 @@
 export default {
   name: 'SideBar',
 
+  data () {
+    return {
+      activeIdx: null
+    }
+  },
+
   props: {
     isCollapsed: {
       type: Boolean,
       default: true
     }
   },
+
   methods: {
     toMessage () {
       this.$router.push({ name: 'message' })
     },
+
     toUserInfo () {
+      this.activeIdx = null
       this.$router.push({ name: 'userInfo' })
+    },
+
+    checkIdx (idx, idxPath) {
+      this.activeIdx = idx
     }
   }
 }
@@ -115,9 +131,11 @@ export default {
 
   .logout-button-wrapper {
     text-align: center;
+    overflow: hidden;
   }
 
   .logout-button {
     color: #F56C6C;
+    transition-delay: .3s;
   }
 </style>

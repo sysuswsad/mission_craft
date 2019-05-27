@@ -4,10 +4,12 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import './theme/element/index.css'
+import * as VueCookies from 'vue-cookies'
 
 import './filters'
 
 Vue.use(ElementUI)
+Vue.use(VueCookies)
 
 Vue.config.productionTip = false
 

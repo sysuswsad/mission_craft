@@ -24,7 +24,7 @@
         <el-form-item prop="confirmPass" required>
           <el-input type="password" v-model="info.confirmPass" placeholder="确认密码" autocomplete="off" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
-        <el-button type="primary" id="register-button" v-on:click="toRegister">注册</el-button>
+        <el-button type="primary" id="register-button">注册</el-button>
         <div class="login-switch-container">
           <span>已有帐号？<el-button type="text" v-on:click="toLogin">登录</el-button></span>
         </div>

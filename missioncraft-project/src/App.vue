@@ -53,6 +53,7 @@ export default {
 
   .sidebar-container {
     transition: all .3s ease;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, .12)
   }
 
   .inner-container {
