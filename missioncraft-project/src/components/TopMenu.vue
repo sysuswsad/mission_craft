@@ -28,7 +28,7 @@ export default {
   name: 'TopMenu',
   data () {
     return {
-      isLogin: false,
+      isLogin: true,
       collapseIcon: 'el-icon-s-unfold'
     }
   },

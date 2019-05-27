@@ -27,13 +27,17 @@
           <el-table-column type="selection" width="50"></el-table-column>
           <el-table-column type="expand" v-on:click="markRead">
             <template v-slot:default="props">
-              <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="消息日期：">
-                  <span class="expend-format">{{ props.row.date }}</span>
-                </el-form-item>
-                <el-form-item label="消息内容：">
-                  <span class="expend-format">{{ props.row.content }}</span>
-                </el-form-item>
+              <el-form label-position="left" inline class="table-expand">
+                <el-row>
+                  <el-form-item label="消息日期：">
+                    <span class="expend-format">{{ props.row.date }}</span>
+                  </el-form-item>
+                </el-row>
+                <el-row>
+                  <el-form-item label="消息内容：">
+                    <span class="expend-format">{{ props.row.content }}</span>
+                  </el-form-item>
+                </el-row>
               </el-form>
             </template>
           </el-table-column>
@@ -188,21 +192,6 @@ export default {
 
   #pagination-container {
     float: right;
-  }
-
-  .demo-table-expand {
-    font-size: 0;
-  }
-
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-
-  .demo-table-expand {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
   }
 
   .expend-format {
