@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="message-container">
     <el-card class="message-card">
       <template v-slot:header>
         <el-button class="el-icon-arrow-left" v-on:click="toLastPage" size="mini"></el-button>
@@ -23,7 +23,8 @@
           stripe
           v-bind:data="tableData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
           v-bind:default-sort="{prop: 'date', order: 'descending'}"
-          v-on:selection-change="handleSelectionChange">
+          v-on:selection-change="handleSelectionChange"
+          v-on:expand-change="handleExpendChange">
           <el-table-column type="selection" width="50"></el-table-column>
           <el-table-column type="expand" v-on:click="markRead">
             <template v-slot:default="props">
@@ -116,6 +117,12 @@ export default {
       this.multipleSelection = val
     },
 
+    handleExpendChange (row, expandedRows) {
+      row.hasRead = '✔'
+
+      // to-do: refresh data in db
+    },
+
     markRead () {
       // to-do: refresh data in db
 
@@ -178,6 +185,10 @@ export default {
 </script>
 
 <style scoped>
+  #message-container {
+    margin: 0 10px 0px 10px;
+  }
+
   .message-card {
     width: 100%;
   }
