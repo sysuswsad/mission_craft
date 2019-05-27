@@ -3,10 +3,10 @@
     <el-card class="message-card">
       <template v-slot:header>
         <el-button class="el-icon-arrow-left" v-on:click="toLastPage" size="mini"></el-button>
-        <el-button class="el-icon-delete-solid" type="danger" size="mini" v-on:click="deleteRow()" v-bind:disabled="multipleSelection.length === 0"></el-button>
-        <el-button size="mini" v-on:click="markRead()" v-bind:disabled="multipleSelection.length === 0">标为已读</el-button>
-        <el-button size="mini" v-on:click="unMarkRead()" v-bind:disabled="multipleSelection.length === 0">标为未读</el-button>
-        <el-button size="mini" v-on:click="cancelSelection()" v-bind:disabled="multipleSelection.length === 0">取消选择</el-button>
+        <el-button class="el-icon-delete-solid" type="danger" size="mini" v-on:click="deleteRow" v-bind:disabled="multipleSelection.length === 0"></el-button>
+        <el-button size="mini" v-on:click="markRead" v-bind:disabled="multipleSelection.length === 0">标为已读</el-button>
+        <el-button size="mini" v-on:click="unMarkRead" v-bind:disabled="multipleSelection.length === 0">标为未读</el-button>
+        <el-button size="mini" v-on:click="cancelSelection" v-bind:disabled="multipleSelection.length === 0">取消选择</el-button>
         <el-pagination
           id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
           v-bind:page-sizes="[5, 10, 20, 30]"
@@ -17,12 +17,15 @@
         </el-pagination>
       </template>
       <div id="table-container">
-        <el-table id="message-table" ref="multipleTable" stripe
-                  v-bind:data="tableData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
-                  v-bind:default-sort = "{prop: 'date', order: 'descending'}"
-                  v-on:selection-change="handleSelectionChange">
+        <el-table
+          id="message-table"
+          ref="multipleTable"
+          stripe
+          v-bind:data="tableData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
+          v-bind:default-sort="{prop: 'date', order: 'descending'}"
+          v-on:selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50"></el-table-column>
-          <el-table-column type="expand" v-on:click="markRead()">
+          <el-table-column type="expand" v-on:click="markRead">
             <template v-slot:default="props">
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="消息日期：">
@@ -104,9 +107,11 @@ export default {
     toLastPage () {
       this.$router.back()
     },
+
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
+
     markRead () {
       // to-do: refresh data in db
 
@@ -116,6 +121,7 @@ export default {
       // clear selection after operations
       this.$refs.multipleTable.clearSelection()
     },
+
     unMarkRead () {
       // to-do: refresh data in db
 
@@ -125,6 +131,7 @@ export default {
       // clear selection after operations
       this.$refs.multipleTable.clearSelection()
     },
+
     deleteRow () {
       // confirm if continue the delete operation
       this.$confirm('确认永久删除所选消息？', '提示', {
@@ -139,6 +146,7 @@ export default {
         })
       })
     },
+
     onConfirmDelete () {
       // to-do: refresh data in db
 
@@ -148,13 +156,16 @@ export default {
       }
       console.log('delete')
     },
+
     cancelSelection () {
       // clear selection after operations
       this.$refs.multipleTable.clearSelection()
     },
+
     handleCurrentChange (cPage) {
       this.currentPage = cPage
     },
+
     handleSizeChange (pSize) {
       this.pageSize = pSize
     }
