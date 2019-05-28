@@ -49,7 +49,7 @@ export default {
       this.$router.push({ name: 'register' })
     },
     toUserInfo () {
-      this.$router.push({ name: 'userInfo' })
+      this.$router.push({ name: 'questionnaire' })
     }
   }
 }

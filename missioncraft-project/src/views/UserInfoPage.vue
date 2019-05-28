@@ -63,7 +63,16 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="更换头像">
-
+          <el-upload
+                  class="avatar-uploader"
+                  :http-request="uploadImage"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -77,6 +86,7 @@ export default {
     return {
       url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
       canEdit: false,
+      imageUrl: '',
       privateInfo: {
         subject: ''
       },
@@ -93,6 +103,34 @@ export default {
     },
     cancelButtonClick () {
       this.canEdit = !this.canEdit
+    },
+    handleAvatarSuccess (res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    uploadImage (p) {
+      let param = new FormData()
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+      param.append('TOKEN', '2152162')
+      param.append('file', p.file.toString())
+      this.$axios.post('http://127.0.0.1:5000/', param, config).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
@@ -131,5 +169,31 @@ export default {
     width: 60vw;
     margin: 10px auto;
     padding: 15px;
+  }
+
+  .avatar-uploader {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+  }
+  .avatar-uploader:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
   }
 </style>
