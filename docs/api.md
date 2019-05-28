@@ -77,7 +77,7 @@ email|是|123@qq.com|用于接收验证码的邮箱|
     "data" : {
         "code" : 1234
     },
-    "message": “ok"
+    "message": "ok"
 }
 ```
 ---
@@ -103,7 +103,7 @@ code|是|1234|手机接收的验证码
 ```json
 {
     "staus" : 200,
-    "message": “ok"
+    "message": "ok"
 }
 ```
 ----
@@ -132,7 +132,7 @@ password|是|123456|登录密码
     "data" : {
         "code" : 1234
     },
-    "message": “ok"
+    "message": "ok"
 }
 ```
 ---
@@ -154,7 +154,7 @@ token|是|123|登录时获得的token
 ```json
 {
     "staus" : 200,
-    "message": “ok"
+    "message": "ok"
 }
 ```
 ---
@@ -190,7 +190,7 @@ token|是|123|登录时所获得的token
         "mission_pub_num": 10,
         "mission_fin_num": 10
     },
-    "message": “ok"
+    "message": "ok"
 }
 ```
 
@@ -221,7 +221,7 @@ wechat|否|90325|微信号
 ```json
 {
     "staus" : 200,
-    "message": “ok"
+    "message": "ok"
 }
 ```
 ---
@@ -246,7 +246,7 @@ image|是||头像
     "data" : {
         "avator" : "\..\.."
     },
-    "message": “ok"
+    "message": "ok"
 }
 ```
 ---
@@ -270,7 +270,7 @@ token|是|123|登录所返回的token
     "data" : {
         "avator" : "\..\.."
     },
-    "message": “ok"
+    "message": "ok"
 }
 ```
 
