@@ -5,6 +5,7 @@ CREATE TABLE User (
   idUser INTEGER PRIMARY KEY AUTOINCREMENT,
   username VARCHAR(45) UNIQUE NOT NULL,
   password VARCHAR(45) NOT NULL,
+  sid VARCHAR(45) UNIQUE NOT NULL,
   realname VARCHAR(45) DEFAULT '',
   id_card_num VARCHAR(45) DEFAULT '',
   type INT DEFAULT 0,
@@ -22,6 +23,7 @@ CREATE TABLE User (
   avatar BLOB NULL,
   tag VARCHAR(45) DEFAULT '',
   mission_pub_num INT DEFAULT 0,
+  mission_todo_num INT DEFAULT 0,
   mission_fin_num INT DEFAULT 0,
   balance DOUBLE DEFAULT 0.0
 );
@@ -38,6 +40,7 @@ CREATE TABLE MissionInfo (
   Bounty DOUBLE DEFAULT 1,
   max_num INT DEFAULT 1,
   rcv_num INT DEFAULT 0,
+  fin_num INT DEFAULT 0,
   state DOUBLE DEFAULT 0,
   FOREIGN KEY (publisher_id) REFERENCES User (id)
 );
