@@ -2,6 +2,7 @@
   <el-menu
     id="top-nav-menu"
     mode="horizontal"
+    v-bind:router="true"
     text-color="#fff"
     active-text-color="#cff09e"
     background-color="#2FA9F5">
@@ -14,7 +15,7 @@
         <span>帮助</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="1" class="nav-item" v-if="isLogin">
+    <el-menu-item index="1" class="nav-item" v-if="isLogin" v-bind:route="{ name: 'square' }">
       <i class="el-icon-guide"></i>
       <template v-slot:title>
         <span>广场</span>

@@ -5,6 +5,7 @@ import LoginPage from './views/LoginPage.vue'
 import RegisterPage from './views/RegisterPage.vue'
 import UserInfoPage from './views/UserInfoPage.vue'
 import MessagePage from './views/MessagePage.vue'
+import SquarePage from './views/SquarePage'
 import QuestionnairePage from './views/QuestionnairePage'
 
 Vue.use(Router)
@@ -35,6 +36,11 @@ export default new Router({
       path: '/message',
       name: 'message',
       component: MessagePage
+    },
+    {
+      path: '/square',
+      name: 'square',
+      component: SquarePage
     },
     {
       path: '/questionnaire',
