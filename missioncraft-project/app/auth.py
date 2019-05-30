@@ -20,7 +20,7 @@ bp = Blueprint('auth', __name__)
 # 下面这句@的作用就是：将url'/register'绑定到register视图函数，同时设置app.view_func['auth.register']=register
 # 也就是说url'/register'、register视图函数、endpoint'auth.register'被绑定在一起，通过任意一个可以找到其他两个
 # 通过url_for(endpoint)可以得到url'/register'，通过浏览器的url可以得到register视图函数
-@bp.route('/users/', methods=['POST'])
+@bp.route('/user/', methods=['POST'])
 def register():
     # 这里返回code 400 表示bad request，请求失败
     data = request.get_json()
@@ -55,11 +55,11 @@ def register():
     return created('Register successfully')
 
 
-@bp.route('/tokens/', methods=['POST'])
+@bp.route('/token/', methods=['POST'])
 def login():
     data = request.get_json()
     if not data:
-        return bad_request('ERROR DATA AT REGISTERING')
+        return bad_request('ERROR DATA AT LOGIN')
 
     username_or_email = data.get('username_or_email')
     password = data.get('password')
@@ -100,8 +100,95 @@ def verify_token(token):
         # token错误
         return False
     if 'idUser' in data:
+        db = get_db()
         g.user = db.execute(
             'SELECT * FROM User WHERE idUser = ?', (data['idUser'],)
         ).fetchone() 
         return True
     return False
+
+
+@bp.route('/user/', methods=['GET'])
+@auth.login_required
+def get_info():
+    return ok('Get user info successfully', g.user)
+
+
+@bp.route('/user/', methods=['PUT'])
+@auth.login_required
+def update_info():
+    data = request.get_json()
+    if not data:
+        return bad_request('ERROR DATA AT UPDATE')
+
+    username = data.get('username')
+    realname = data.get('realname', '')
+    id_card_num = data.get('id_card_num', '')
+    university = data.get('university', '')
+    school = data.get('school', '')
+    grade = data.get('grade', '')
+    gender = data.get('gender', 0)
+    phone = data.get('phone', '')
+    qq = data.get('qq', '')
+    wechat = data.get('wechat', '')
+
+    db = get_db()
+
+    if not username:
+        return bad_request('Username is required')
+    elif db.execute(
+        'SELECT idUser FROM User WHERE username = ?', (username,)
+    ).fetchone() is not None:
+        return bad_request('User {} is already registered.'.format(username))
+
+    db.execute(
+        'UPDATE User SET username = ?, realname = ?, id_card_num = ?, university = ?, school = ?, grade = ?, gender = ?, phone = ?, qq = ?, wechat = ?'
+        ' WHERE idUser = ?',
+        (username, realname, id_card_num, university, school, grade, gender, phone, qq, wechat, g.user['idUser'])
+    )
+    db.commit()
+
+    return ok('Update user info successfully')
+
+
+@bp.route('/avatar/', methods=['GET'])
+@auth.login_required
+def get_avatar():
+    db = get_db()
+    avatar = db.execute(
+        'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'],)
+    ).fetchone()
+    return ok('Get user avatar successfully', {'avatar':avatar})
+
+
+@bp.route('/avatar/', methods=['POST'])
+@auth.login_required
+def change_avatar():
+    data = request.get_json()
+    if not data:
+        return bad_request('ERROR DATA AT CHANGING AVATAR')
+
+
+@bp.route('/password/', methods=['POST'])
+@auth.login_required
+def change_password():
+    data = request.get_json()
+    if not data:
+        return bad_request('ERROR DATA AT CHANGING PASSWORD')
+
+    old_password = data.get('old_password')
+    new_password = data.get('new_password')
+    if not old_password:
+        return bad_request('Old password is required')
+    elif not new_password:
+        return bad_request('New password is required')
+
+    if not check_password_hash(g.user['password'], old_password):
+        return bad_request('Old password wrong')
+
+    db = get_db()
+    db.execute(
+        'UPDATE User SET password = ? WHERE idUser = ?', (new_password, g.user['idUser'])
+    )
+    db.commit()
+    return ok('Change password successfully')

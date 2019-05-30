@@ -12,10 +12,10 @@ CREATE TABLE User (
   -- 注意一下sql里面id都是从1开始，所以下面这个id=0是无意义的，不能用，需要赋值后使用
   -- 并且记得添加管理员表之后，需要为下面的属性标注外键
   check_man_id INT DEFAULT 0,
+  university VARCHAR(45) DEFAULT '',
   school VARCHAR(45) DEFAULT '',
-  subject VARCHAR(45) DEFAULT '',
   grade VARCHAR(45) DEFAULT '',
-  sex INT DEFAULT 0,
+  gender INT DEFAULT 0,
   email VARCHAR(45) NOT NULL,
   phone VARCHAR(45) DEFAULT '',
   qq VARCHAR(45) DEFAULT '',
