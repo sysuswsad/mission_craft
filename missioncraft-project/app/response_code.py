@@ -1,7 +1,5 @@
 from flask import jsonify
 from werkzeug.http import HTTP_STATUS_CODES
-from app.api import bp
-from app.extensions import db
 
 
 def fine_response(status_code, message=None, token=None, data=None):

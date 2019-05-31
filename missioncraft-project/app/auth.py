@@ -12,8 +12,8 @@ from .response_code import bad_request, ok, created
 from .email import send_verification_code
 from . import redis_db
 
-from flask_httpauth import HTTPBasicAuth
-auth = HTTPBasicAuth()
+from flask_httpauth import HTTPTokenAuth
+auth = HTTPTokenAuth()
 
 
 bp = Blueprint('auth', __name__)
