@@ -3,7 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from .auth import login_required
+from .auth import auth
 from .db import get_db
 
 bp = Blueprint('mission', __name__)
