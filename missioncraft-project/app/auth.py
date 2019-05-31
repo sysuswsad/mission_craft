@@ -1,8 +1,9 @@
 import functools
 import random
+import os
 
 from flask import (
-    Blueprint, g, request, session, current_app
+    Blueprint, g, request, session, current_app, send_from_directory
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
@@ -193,20 +194,44 @@ def update_info():
 
 @bp.route('/avatar/', methods=['GET'])
 @auth.login_required
-def get_avatar():
+def get_avatar_url():
     db = get_db()
     avatar = db.execute(
-        'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'],)
+        'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'])
     ).fetchone()
     return ok('Get user avatar successfully', {'avatar':avatar})
 
 
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+@bp.route('/image/<filename>')
+def get_uploaded_file(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'],
+                               filename)
+
 @bp.route('/avatar/', methods=['POST'])
 @auth.login_required
 def change_avatar():
-    data = request.get_json()
-    if not data:
-        return bad_request('ERROR DATA AT CHANGING AVATAR')
+    # 先得到文件
+    file = request.files['image']
+    if file and allowed_file(file.filename):
+        filename = file.filename
+        extention = filename.rsplit('.', 1)[1]
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], g.user['idUser'] + '.' + extention))
+        avatar = os.path.join(current_app.config['BASE_STATIC_URL'], g.user['idUser'] + '.' + extention)
+        db = get_db()
+        db.execute(
+            'UPDATE User SET avatar = ? WHERE idUser = ?', (avatar, g.user['idUser'])
+        )
+        db.commit()
+        return ok('change avatar successfully', {'avatar':avatar})
+    else:
+        return bad_request('file is supposed to be jpg or png')
 
 
 @bp.route('/password/', methods=['POST'])
