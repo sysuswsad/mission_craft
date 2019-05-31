@@ -115,7 +115,7 @@ def get_code():
     if not email:
         return bad_request('Email is required')
 
-    db.get_db()
+    db = get_db()
     if db.execute(
         'SELECT idUser FROM User WHERE email = ?', (email,)
     ).fetchone() is not None:
