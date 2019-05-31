@@ -16,6 +16,10 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('FLASK_EMAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = 'MissionCraft <{}>'.format(MAIL_USERNAME)
 
+    # 上传到的文件夹
+    UPLOAD_FOLDER = '/static'
+    BASE_STATIC_URL = 'localhost:5000/image'
+
     # 配置redis数据库
     REDIS_HOST = '127.0.0.1'
     REDIS_PORT = 6379
