@@ -1,8 +1,9 @@
 import functools
 import random
+import os
 
 from flask import (
-    Blueprint, g, request, session, current_app
+    Blueprint, g, request, session, current_app, send_from_directory
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
@@ -115,7 +116,7 @@ def get_code():
     if not email:
         return bad_request('Email is required')
 
-    db.get_db()
+    db = get_db()
     if db.execute(
         'SELECT idUser FROM User WHERE email = ?', (email,)
     ).fetchone() is not None:
@@ -193,25 +194,24 @@ def update_info():
 
 @bp.route('/avatar/', methods=['GET'])
 @auth.login_required
-def get_avatar():
+def get_avatar_url():
     db = get_db()
     avatar = db.execute(
-        'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'],)
+        'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'])
     ).fetchone()
     return ok('Get user avatar successfully', {'avatar':avatar})
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
-BASE_STATIC_URL = 'localhost:5000/image'
+
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['BASE_STATIC_URL'] = BASE_STATIC_URL
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-@app.route('/image/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
+
+@bp.route('/image/<filename>')
+def get_uploaded_file(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                filename)
 
 @bp.route('/avatar/', methods=['POST'])
@@ -222,8 +222,8 @@ def change_avatar():
     if file and allowed_file(file.filename):
         filename = file.filename
         extention = filename.rsplit('.', 1)[1]
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], g.user['idUser'] + '.' + extention))
-        avatar = os.path.join(app.config['BASE_STATIC_URL'], g.user['idUser'] + '.' + extention)
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], g.user['idUser'] + '.' + extention))
+        avatar = os.path.join(current_app.config['BASE_STATIC_URL'], g.user['idUser'] + '.' + extention)
         db = get_db()
         db.execute(
             'UPDATE User SET avatar = ? WHERE idUser = ?', (avatar, g.user['idUser'])
