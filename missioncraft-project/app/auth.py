@@ -2,13 +2,15 @@ import functools
 import random
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, g, request, session, current_app
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
 from .db import get_db
 from .response_code import bad_request, ok, created
+from .email import send_verification_code
+from . import redis_db
 
 from flask_httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
@@ -31,6 +33,8 @@ def register():
     password = data.get('password')
     email = data.get('email')
     sid = data.get('sid')
+    code = data.get('code')
+
     db = get_db()
 
     if not username:
@@ -41,10 +45,23 @@ def register():
         return bad_request('Email is required')
     elif not sid:
         return bad_request('Sid is required')
+    elif not code:
+        return bad_request('Verification code is required')
     elif db.execute(
         'SELECT idUser FROM User WHERE username = ?', (username,)
     ).fetchone() is not None:
         return bad_request('User {} is already registered.'.format(username))
+    elif db.execute(
+        'SELECT idUser FROM User WHERE email = ?', (email,)
+    ).fetchone() is not None:
+        return bad_request('Email {} is already registered.'.format(email))
+    elif db.execute(
+        'SELECT idUser FROM User WHERE sid = ?', (sid,)
+    ).fetchone() is not None:
+        return bad_request('Sid {} is already registered.'.format(sid))
+    # 检查验证码
+    elif redis_db.get('Email:'+email) != code:
+        return bad_request('Verification code is not correct')
 
     db.execute(
         'INSERT INTO User (username, password, email, sid) VALUES (?, ?, ?, ?)',
@@ -72,10 +89,11 @@ def login():
 
     user = db.execute(
         'SELECT * FROM User WHERE username = ?', (username_or_email,)
-    ).fetchone() 
-        or db.execute(
-        'SELECT * FROM User WHERE email = ?', (username_or_email,)
     ).fetchone()
+    if user is None:
+        user = db.execute(
+            'SELECT * FROM User WHERE email = ?', (username_or_email,)
+        ).fetchone()
 
     if user is None:
         return bad_request('Incorrect username or email')
@@ -85,6 +103,28 @@ def login():
     # 登录成功，服务器生成token并返回给用户端
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
     return created('Login successfully', s.dumps({'id': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8'))
+
+
+@bp.route('/code/', methods=['POST'])
+def get_code():
+    data = request.get_json()
+    if not data:
+        return bad_request('ERROR DATA AT CODE')
+
+    email = data.get('email')
+    if not email:
+        return bad_request('Email is required')
+
+    db.get_db()
+    if db.execute(
+        'SELECT idUser FROM User WHERE email = ?', (email,)
+    ).fetchone() is not None:
+        return bad_request('Email {} is already registered.'.format(email))
+
+    code = random.randint(100000, 999999)
+    redis_db.set('Email:'+emial, code)
+    send_verification_code(email, code)
+    return created('Generate and send token successfully')
 
 
 @auth.verify_token
