@@ -160,13 +160,38 @@ def get_avatar():
     ).fetchone()
     return ok('Get user avatar successfully', {'avatar':avatar})
 
+UPLOAD_FOLDER = '/path/to/the/uploads'
+BASE_STATIC_URL = 'localhost:5000/image'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['BASE_STATIC_URL'] = BASE_STATIC_URL
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/image/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 @bp.route('/avatar/', methods=['POST'])
 @auth.login_required
 def change_avatar():
-    data = request.get_json()
-    if not data:
-        return bad_request('ERROR DATA AT CHANGING AVATAR')
+    # 先得到文件
+    file = request.files['image']
+    if file and allowed_file(file.filename):
+        filename = file.filename
+        extention = filename.rsplit('.', 1)[1]
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], g.user['idUser'] + '.' + extention))
+        avatar = os.path.join(app.config['BASE_STATIC_URL'], g.user['idUser'] + '.' + extention)
+        db = get_db()
+        db.execute(
+            'UPDATE User SET avatar = ? WHERE idUser = ?', (avatar, g.user['idUser'])
+        )
+        db.commit()
+        return ok('change avatar successfully', {'avatar':avatar})
+    else:
+        return bad_request('file is supposed to be jpg or png')
 
 
 @bp.route('/password/', methods=['POST'])
