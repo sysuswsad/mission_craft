@@ -1,15 +1,15 @@
 <template>
   <div class="main-container">
     <div class="add-button-container">
-      <el-card style="align-items: center;">
-        <el-row>
-          <el-button icon="el-icon-plus" v-on:click="addQuestion(0)" style="width: 80%; margin-top: 10px;margin-left: 10%">单选题</el-button>
+      <el-card class="add-button-card">
+        <el-row type="flex" justify="center">
+          <el-button type="primary" plain icon="el-icon-plus" v-on:click="addQuestion(0)" class="add-button">单选题</el-button>
         </el-row>
-        <el-row>
-          <el-button icon="el-icon-plus" v-on:click="addQuestion(1)" style="width: 80%; margin-top: 10px;margin-left: 10%">多选题</el-button>
+        <el-row type="flex" justify="center">
+          <el-button type="primary" plain icon="el-icon-plus" v-on:click="addQuestion(1)" class="add-button">多选题</el-button>
         </el-row>
-        <el-row>
-          <el-button icon="el-icon-plus" v-on:click="addQuestion(2)" style="width: 80%; margin-top: 10px;margin-left: 10%">填空题</el-button>
+        <el-row type="flex" justify="center">
+          <el-button type="primary" plain icon="el-icon-plus" v-on:click="addQuestion(2)" class="add-button">填空题</el-button>
         </el-row>
         <el-divider></el-divider>
         <div v-if="questions[currentIndex]">
@@ -30,22 +30,22 @@
                   <el-col>
                     <el-form-item>
                       <el-input v-model="questions[currentIndex].choices[index]" style="width: 50%">{{c}}</el-input>
-                      <el-button icon="el-icon-plus" circle v-on:click="addChoice(index)"></el-button>
-                      <el-button icon="el-icon-minus" circle v-on:click="deleteChoice(index)"></el-button>
+                      <el-button type="primary" plain icon="el-icon-plus" circle v-on:click="addChoice(index)" class="add-choice"></el-button>
+                      <el-button type="primary" plain icon="el-icon-minus" circle v-on:click="deleteChoice(index)"></el-button>
                     </el-form-item>
                   </el-col>
                 </el-row>
               </el-form>
             </div>
           </div>
-          <el-row style="margin-top: 10px" v-on:click.native="moveUp">
-            <el-button>上移</el-button>
+          <el-row type="flex" justify="center" v-on:click.native="moveUp">
+            <el-button type="primary" plain class="add-button">上移</el-button>
           </el-row>
-          <el-row style="margin-top: 10px" v-on:click.native="moveDown">
-            <el-button>下移</el-button>
+          <el-row type="flex" justify="center" v-on:click.native="moveDown">
+            <el-button type="primary" plain class="add-button">下移</el-button>
           </el-row>
-          <el-row style="margin-top: 10px" v-on:click.native="deleteQuestion">
-            <el-button>删除题目</el-button>
+          <el-row type="flex" justify="center" v-on:click.native="deleteQuestion">
+            <el-button type="primary" plain class="add-button">删除题目</el-button>
           </el-row>
         </div>
       </el-card>
@@ -62,19 +62,22 @@
           </el-row>
         </el-form>
         <div>
-          <el-card v-for="(q, index) in questions" v-bind:key="index">
+          <el-card v-for="(q, index) in questions" v-bind:key="index" style="margin-top: 10px">
             <div>
-              <span>{{q.question}}</span>
+              <p>{{q.question}}</p>
               <div v-if="q.type === 2">
                 <el-input disabled></el-input>
               </div>
               <div v-else>
                 <el-radio v-for="(c, index) in q.choices" v-bind:key="index" style="margin-top: 10px">{{c}}</el-radio>
               </div>
-              <el-button v-on:click="editAble(index)" style="float: right; margin-bottom: 10px">修改</el-button>
+              <el-button type="primary" plain v-on:click="editAble(index)" icon="el-icon-edit" style="float: right; margin-bottom: 10px; margin-top: 10px">修改</el-button>
             </div>
           </el-card>
         </div>
+      </el-card>
+      <el-card>
+        <el-button>继续</el-button>
       </el-card>
     </div>
   </div>
@@ -138,7 +141,7 @@ export default {
     },
     moveDown () {
       if (this.currentIndex === this.questions.length - 1) {
-        this.showTip('已经到顶啦！')
+        this.showTip('已经到低啦！')
         return
       }
       let temp1 = this.questions[this.currentIndex + 1]
@@ -156,15 +159,30 @@ export default {
 
 <style scoped>
   .main-container {
-    transform: translate(0,0);
-    width: 100%;
+    overflow: hidden;
   }
+
   .add-button-container {
-    width: 30%;
-    position: fixed;
+    width: 20%;
   }
+
+  .add-button-container > .add-button-card {
+    align-items: center;
+    position: fixed;
+    width: inherit;
+  }
+
+  .add-button-card .add-button {
+    margin-top: 10px;
+    /*padding: 0.618rem 1rem;*/
+  }
+
   .edit-column {
     float: right;
     width: 70%;
+  }
+
+  .add-choice {
+    margin-left: 10px;
   }
 </style>
