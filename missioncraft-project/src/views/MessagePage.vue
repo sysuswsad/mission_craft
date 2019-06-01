@@ -1,8 +1,7 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div id="message-container">
     <el-card class="message-card">
       <template v-slot:header>
-        <el-button class="el-icon-arrow-left" v-on:click="toLastPage" size="mini"></el-button>
         <el-button class="el-icon-delete-solid" type="danger" size="mini" v-on:click="deleteRow" v-bind:disabled="multipleSelection.length === 0"></el-button>
         <el-button size="mini" v-on:click="markRead" v-bind:disabled="multipleSelection.length === 0">标为已读</el-button>
         <el-button size="mini" v-on:click="unMarkRead" v-bind:disabled="multipleSelection.length === 0">标为未读</el-button>
@@ -24,7 +23,10 @@
           v-bind:data="tableData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
           v-bind:default-sort="{prop: 'date', order: 'descending'}"
           v-on:selection-change="handleSelectionChange"
-          v-on:expand-change="handleExpendChange">
+          v-on:expand-change="handleExpendChange"
+          v-on:row-click="rowClick"
+          row-key="id"
+          v-bind:expand-row-keys="expandRows">
           <el-table-column type="selection" width="50"></el-table-column>
           <el-table-column type="expand" v-on:click="markRead">
             <template v-slot:default="props">
@@ -61,46 +63,55 @@ export default {
     return {
       tableData: [
         {
+          id: '1',
           hasRead: '✔',
           date: '2016-05-02',
           content: '您有新的任务。'
         },
         {
+          id: '2',
           hasRead: '',
           date: '2016-05-04',
           content: 'xxx任务发布成功。'
         },
         {
+          id: '3',
           hasRead: '✔',
           date: '2016-05-01',
           content: '你发布的xxx任务已完成，请确认。'
         },
         {
+          id: '4',
           hasRead: '',
           date: '2016-05-03',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
+          id: '5',
           hasRead: '',
           date: '2016-05-04',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
+          id: '6',
           hasRead: '',
           date: '2016-05-06',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
+          id: '7',
           hasRead: '',
           date: '2016-05-05',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
+          id: '8',
           hasRead: '',
           date: '2016-05-07',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
+          id: '9',
           hasRead: '',
           date: '2016-05-08',
           content: '您接收的xxx任务已完成，闲钱已到账。'
@@ -108,21 +119,17 @@ export default {
       ],
       multipleSelection: [],
       pageSize: 5,
-      currentPage: 1
+      currentPage: 1,
+      expandRows: []
     }
   },
   methods: {
-    toLastPage () {
-      this.$router.back()
-    },
-
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
 
     handleExpendChange (row, expandedRows) {
       row.hasRead = '✔'
-
       // to-do: refresh data in db
     },
 
@@ -187,6 +194,18 @@ export default {
     filtersHandler (value, row, column) {
       const property = column['property']
       return row[property] === value
+    },
+
+    rowClick (row) {
+      // 在<table>里，我们已经设置row的key值设置为每行数据id：row-key="id"
+      let index = this.expandRows.indexOf(row.id)
+      if (index < 0) {
+        this.expandRows.push(row.id)
+        row.hasRead = '✔'
+        // to-do: refresh data in db
+      } else {
+        this.expandRows.splice(index, 1)
+      }
     }
   }
 }
@@ -194,7 +213,7 @@ export default {
 
 <style scoped>
   #message-container {
-    margin: 0 10px 0px 10px;
+    margin: 0 10px 0 10px;
   }
 
   .message-card {
@@ -207,6 +226,7 @@ export default {
 
   #message-table {
     width: 100%;
+    cursor: pointer;
   }
 
   #pagination-container {
