@@ -4,8 +4,8 @@ from flask import current_app
 from flask_mail import Message
 
 
-def send_async(msg):
-	with current_app.app_context():
+def send_async(app, msg):
+	with app.app_context():
 		mail.send(msg)
 
 
@@ -20,6 +20,7 @@ def send_verification_code(to, code):
 		</p>
 		<p>Thank you for your support and wish you enjoying yourself</p>
 	'''.format(to, code)
-	thread = Thread(target=send_async, args=[current_app, message])
+	app = current_app._get_current_object()
+	thread = Thread(target=send_async, args=[app, message])
 	thread.start()
 	return thread

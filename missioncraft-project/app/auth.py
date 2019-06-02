@@ -1,6 +1,7 @@
 import functools
 import random
 import os
+import re
 
 from flask import (
     Blueprint, g, request, session, current_app, send_from_directory
@@ -61,7 +62,7 @@ def register():
     ).fetchone() is not None:
         return bad_request('Sid {} is already registered.'.format(sid))
     # 检查验证码
-    elif redis_db.get('Email:'+email) != code:
+    elif redis_db.get('Email:'+email).decode('utf-8') != str(code):
         return bad_request('Verification code is not correct')
 
     db.execute(
@@ -116,6 +117,10 @@ def get_code():
     if not email:
         return bad_request('Email is required')
 
+
+    if not re.match(r'^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$', email):
+        return bad_request('Email format error')
+
     db = get_db()
     if db.execute(
         'SELECT idUser FROM User WHERE email = ?', (email,)
@@ -123,7 +128,12 @@ def get_code():
         return bad_request('Email {} is already registered.'.format(email))
 
     code = random.randint(100000, 999999)
-    redis_db.set('Email:'+emial, code)
+    try:
+        redis_db.set('Email:'+email, code, 1800)    # 有效期半小时
+    except Exception as e:
+        current_app.logger.debug(e)
+        return bad_request('Redis storing error '+str(e))
+
     send_verification_code(email, code)
     return created('Generate and send token successfully')
 
