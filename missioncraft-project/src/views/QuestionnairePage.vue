@@ -12,42 +12,6 @@
           <el-button type="primary" plain icon="el-icon-plus" v-on:click="addQuestion(2)" class="add-button">填空题</el-button>
         </el-row>
         <el-divider></el-divider>
-        <div v-if="questions[currentIndex]">
-          <p style="margin-left: 10px">{{modeToStr(questions[this.currentIndex].type)}}</p>
-          <el-form label-width="50px">
-            <el-row>
-              <el-col>
-                <el-form-item label="题目">
-                  <el-input v-model="questions[currentIndex].question" type="textarea">{{questions[currentIndex].question}}</el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <div v-if="questions[currentIndex].type !== 2">
-            <div v-for="(c, index) in questions[currentIndex].choices" v-bind:key="index">
-              <el-form>
-                <el-row>
-                  <el-col>
-                    <el-form-item>
-                      <el-input v-model="questions[currentIndex].choices[index]" style="width: 50%">{{c}}</el-input>
-                      <el-button type="primary" plain icon="el-icon-plus" circle v-on:click="addChoice(index)" class="add-choice"></el-button>
-                      <el-button type="primary" plain icon="el-icon-minus" circle v-on:click="deleteChoice(index)"></el-button>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-          </div>
-          <el-row type="flex" justify="center" v-on:click.native="moveUp">
-            <el-button type="primary" plain class="add-button">上移</el-button>
-          </el-row>
-          <el-row type="flex" justify="center" v-on:click.native="moveDown">
-            <el-button type="primary" plain class="add-button">下移</el-button>
-          </el-row>
-          <el-row type="flex" justify="center" v-on:click.native="deleteQuestion">
-            <el-button type="primary" plain class="add-button">删除题目</el-button>
-          </el-row>
-        </div>
       </el-card>
     </div>
     <div class="edit-column">
@@ -62,18 +26,51 @@
           </el-row>
         </el-form>
         <div>
-          <el-card v-for="(q, index) in questions" v-bind:key="index" style="margin-top: 10px" shadow="hover">
-            <div>
-              <p>{{q.question}}</p>
-              <div v-if="q.type === 2">
-                <el-input disabled></el-input>
+          <div v-for="(q, index) in questions" v-bind:key="index" style="margin-top: 10px">
+            <el-card shadow="hover">
+              <div>
+                <p>{{q.question}}</p>
+                <div v-if="q.type === 2">
+                  <el-input disabled></el-input>
+                </div>
+                <div v-else>
+                  <el-radio v-for="(c, index) in q.choices" v-bind:key="index" style="margin-top: 10px">{{c}}</el-radio>
+                </div>
+                <el-button type="primary" plain v-on:click="editAble(index)" class="select-button" v-if="!edit[index]">修改</el-button>
+                <el-button type="primary" plain v-on:click="editAble(index)" class="select-button" v-if="edit[index]">收起</el-button>
+                <el-button type="primary" plain v-on:click="moveUp(index)" class="select-button">上移</el-button>
+                <el-button type="primary" plain v-on:click="moveDown(index)" class="select-button">下移</el-button>
+                <el-button type="primary" plain v-on:click="deleteQuestion(index)" class="select-button">删除题目</el-button>
               </div>
-              <div v-else>
-                <el-radio v-for="(c, index) in q.choices" v-bind:key="index" style="margin-top: 10px">{{c}}</el-radio>
+            </el-card>
+            <el-card v-if="edit[index]">
+              <el-form label-width="50px">
+                <el-row>
+                  <el-col>
+                    <el-form-item label="题目">
+                      <el-input v-model="questions[index].question" type="textarea">{{questions[index].question}}</el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+              <div v-if="questions[index].type !== 2">
+                <div v-for="(c, indexChoice) in questions[index].choices" v-bind:key="indexChoice">
+                  <el-form>
+                    <el-row>
+                      <el-col>
+                        <el-form-item>
+                          <el-input v-model="questions[index].choices[indexChoice]" style="width: 80%; height: 50px">{{c}}</el-input>
+                          <el-button type="primary" plain icon="el-icon-plus" circle v-on:click="addChoice(index, indexChoice)" class="add-choice"></el-button>
+                          <el-button type="primary" plain icon="el-icon-minus" circle v-on:click="deleteChoice(index, indexChoice)"></el-button>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-form>
+                </div>
+                <el-button class="confirm-button" v-on:click="hideCard(index)" type="primary">确定</el-button>
               </div>
-              <el-button type="primary" plain v-on:click="editAble(index)" icon="el-icon-edit" style="float: right; margin-bottom: 10px; margin-top: 10px">修改</el-button>
-            </div>
-          </el-card>
+            </el-card>
+          </div>
         </div>
       </el-card>
       <el-button type="info" class="show-setting" v-on:click="showSetting">问卷信息设置</el-button>
@@ -121,6 +118,7 @@ export default {
       questions: [],
       interTitle: '',
       currentIndex: -1,
+      edit: [],
       show: [],
       showMore: false,
       questionnaireSetting: {
@@ -142,6 +140,7 @@ export default {
       }
       this.questions.push(temp)
       this.show.push(false)
+      this.edit.push(false)
       // console.log(this.questions)
     },
     modeToStr (mode) {
@@ -154,44 +153,51 @@ export default {
       }
     },
     editAble (index) {
-      this.currentIndex = index
+      // this.currentIndex = index
+      let temp = this.edit[index]
+      this.edit.splice(index, 1)
+      this.edit.splice(index, 0, !temp)
+      // this.edit[index] = !this.edit[index]
     },
-    addChoice (index) {
-      this.questions[this.currentIndex].choices.splice(index + 1, 0, '选项')
+    addChoice (index, indexChoice) {
+      this.questions[index].choices.splice(indexChoice + 1, 0, '选项')
     },
-    deleteChoice (index) {
-      this.questions[this.currentIndex].choices.splice(index, 1)
+    deleteChoice (index, indexChoice) {
+      this.questions[index].choices.splice(indexChoice, 1)
     },
-    moveUp () {
-      if (this.currentIndex === 0) {
+    moveUp (index) {
+      if (index === 0) {
         this.showTip('已经到顶啦！')
         return
       }
-      let temp1 = this.questions[this.currentIndex - 1]
-      let temp2 = this.questions[this.currentIndex]
-      this.questions.splice(this.currentIndex - 1, 1, temp2)
-      this.questions.splice(this.currentIndex, 1, temp1)
-      this.currentIndex -= 1
+      let temp1 = this.questions[index - 1]
+      let temp2 = this.questions[index]
+      this.questions.splice(index - 1, 1, temp2)
+      this.questions.splice(index, 1, temp1)
     },
     showTip (str) {
       this.$message.warning(str)
     },
-    moveDown () {
-      if (this.currentIndex === this.questions.length - 1) {
+    moveDown (index) {
+      if (index === this.questions.length - 1) {
         this.showTip('已经到低啦！')
         return
       }
-      let temp1 = this.questions[this.currentIndex + 1]
-      let temp2 = this.questions[this.currentIndex]
-      this.questions.splice(this.currentIndex + 1, 1, temp2)
-      this.questions.splice(this.currentIndex, 1, temp1)
-      this.currentIndex += 1
+      let temp1 = this.questions[index + 1]
+      let temp2 = this.questions[index]
+      this.questions.splice(index + 1, 1, temp2)
+      this.questions.splice(index, 1, temp1)
     },
-    deleteQuestion () {
-      this.questions.splice(this.currentIndex, 1)
+    deleteQuestion (index) {
+      this.questions.splice(index, 1)
     },
     showSetting () {
       this.showMore = !this.showMore
+    },
+    hideCard (index) {
+      let temp = this.edit[index]
+      this.edit.splice(index, 1)
+      this.edit.splice(index, 0, !temp)
     }
   }
 }
@@ -231,6 +237,16 @@ export default {
   }
 
   .show-setting {
+    width: 100%;
+  }
+
+  .select-button {
+    float: right;
+    margin: 10px;
+  }
+
+  .confirm-button {
+    margin-bottom: 10px;
     width: 100%;
   }
 </style>
