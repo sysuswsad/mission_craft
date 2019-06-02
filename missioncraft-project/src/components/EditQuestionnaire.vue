@@ -18,7 +18,7 @@
             <el-row>
               <el-col>
                 <el-form-item label="题目">
-                  <el-input v-model="questions[currentIndex].question" type="textarea">{{questions[currentIndex].question}</el-input>
+                  <el-input v-model="questions[currentIndex].question" type="textarea">{{ questions[currentIndex].question }}</el-input>
                 </el-form-item>
               </el-col>
             </el-row>

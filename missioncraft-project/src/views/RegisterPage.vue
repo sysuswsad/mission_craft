@@ -9,7 +9,7 @@
           <el-input v-model="info.studentId" placeholder="学号" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
         <el-form-item prop="email" required>
-          <el-input v-model="info.email" placeholder="电子邮件" prefix-icon="el-icon-message"></el-input>
+          <el-input v-model="info.email" placeholder="电子邮件" prefix-icon="el-icon-message" v-on:change="handleEmailChange"></el-input>
         </el-form-item>
         <el-form-item prop="testCode">
           <el-input v-model="info.code" placeholder="验证码" style="width: 200px"></el-input>
@@ -66,8 +66,16 @@ export default {
         }, 1000)
       }
     },
+
     toLogin () {
       this.$router.push({ name: 'login' })
+    },
+
+    handleEmailChange (value) {
+      let regEmail = /^[A-Za-z]+[A-Za-z]*[1-9]*@mail2.sysu.edu.cn$/
+      if (!regEmail.test(value)) {
+        this.$message.error('请使用中山大学学生邮箱注册！')
+      }
     }
   }
 }
