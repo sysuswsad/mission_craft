@@ -15,7 +15,7 @@
       </el-card>
     </div>
     <div class="edit-column">
-      <el-card>
+      <el-card style="padding: 10px 50px">
         <el-form label-width="100px">
           <el-row>
             <el-col>

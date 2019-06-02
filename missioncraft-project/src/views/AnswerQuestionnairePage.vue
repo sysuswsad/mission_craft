@@ -1,8 +1,9 @@
 <template>
   <div class="question-container">
     <el-card class="question-card">
-      <h2>{{questionnaire.title}}</h2>
-      <el-divider></el-divider>
+      <template v-slot:header>
+        <h2>{{questionnaire.title}}</h2>
+      </template>
       <div v-for="(q, index) in questionnaire.questions" v-bind:key="index">
         <div v-if="q.type === 0">
           <h1>（单选）{{q.question}}</h1>
@@ -18,7 +19,7 @@
           <h1>（填空）{{q.question}}</h1>
           <el-input type="textarea" v-model="answer[index]"></el-input>
         </div>
-        <el-divider></el-divider>
+        <el-divider v-if="index !== questionnaire.questions.length - 1"></el-divider>
       </div>
       <el-button class="summit-button" type="primary" v-on:click="summit">提交</el-button>
     </el-card>
@@ -70,5 +71,6 @@ export default {
 
   .summit-button {
     width: 100%;
+    margin-top: 20px;
   }
 </style>
