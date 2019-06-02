@@ -7,7 +7,7 @@ import UserInfoPage from './views/UserInfoPage.vue'
 import MessagePage from './views/MessagePage.vue'
 import SquarePage from './views/SquarePage'
 import QuestionnairePage from './views/QuestionnairePage'
-import AnswerQuestionnairePage from "./views/AnswerQuestionnairePage";
+import AnswerQuestionnairePage from './views/AnswerQuestionnairePage'
 
 Vue.use(Router)
 

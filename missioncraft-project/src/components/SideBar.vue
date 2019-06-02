@@ -133,6 +133,5 @@ export default {
 
   .logout-button {
     color: #F56C6C;
-    transition-delay: .3s;
   }
 </style>
