@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
 from .db import get_db
-from .response_code import bad_request, ok, created
+from .response_code import bad_request, unauthorized, ok, created
 from .email import send_verification_code
 from . import redis_db
 
@@ -104,7 +104,7 @@ def login():
 
     # 登录成功，服务器生成token并返回给用户端
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
-    return created('Login successfully', s.dumps({'id': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8'))
+    return created('Login successfully', token=s.dumps({'idUser': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8'))
 
 
 @bp.route('/code/', methods=['POST'])
@@ -138,6 +138,11 @@ def get_code():
     return created('Generate and send token successfully')
 
 
+@auth.error_handler
+def error_handler():
+    return unauthorized('Unauthorized Access')
+
+
 @auth.verify_token
 def verify_token(token):
     g.user = None
@@ -154,7 +159,7 @@ def verify_token(token):
         db = get_db()
         g.user = db.execute(
             'SELECT * FROM User WHERE idUser = ?', (data['idUser'],)
-        ).fetchone() 
+        ).fetchone()
         return True
     return False
 
@@ -162,7 +167,14 @@ def verify_token(token):
 @bp.route('/user/', methods=['GET'])
 @auth.login_required
 def get_info():
-    return ok('Get user info successfully', g.user)
+    db = get_db()
+    user_table = db.execute('SELECT * FROM User')
+    name_list = [tuple[0] for tuple in user_table.description]
+    user = {}
+    for item in tuple(name_list):
+        user[item] = g.user[item]
+
+    return ok('Get user info successfully', data=user)
 
 
 @bp.route('/user/', methods=['PUT'])
@@ -209,7 +221,7 @@ def get_avatar_url():
     avatar = db.execute(
         'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'])
     ).fetchone()
-    return ok('Get user avatar successfully', {'avatar':avatar})
+    return ok('Get user avatar successfully', data={'avatar':avatar})
 
 
 
@@ -239,7 +251,7 @@ def change_avatar():
             'UPDATE User SET avatar = ? WHERE idUser = ?', (avatar, g.user['idUser'])
         )
         db.commit()
-        return ok('change avatar successfully', {'avatar':avatar})
+        return ok('change avatar successfully', data={'avatar':avatar})
     else:
         return bad_request('file is supposed to be jpg or png')
 
