@@ -200,7 +200,7 @@ def update_info():
     if not username:
         return bad_request('Username is required')
     elif db.execute(
-        'SELECT idUser FROM User WHERE username = ?', (username,)
+        'SELECT idUser FROM User WHERE username = ? AND username != ?', (username, g.user['username'],)
     ).fetchone() is not None:
         return bad_request('User {} is already registered.'.format(username))
 
@@ -275,7 +275,7 @@ def change_password():
 
     db = get_db()
     db.execute(
-        'UPDATE User SET password = ? WHERE idUser = ?', (new_password, g.user['idUser'])
+        'UPDATE User SET password = ? WHERE idUser = ?', (generate_password_hash(new_password), g.user['idUser'])
     )
     db.commit()
     return ok('Change password successfully')

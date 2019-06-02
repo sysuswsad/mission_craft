@@ -149,3 +149,89 @@ def test_get_info(client, app, username_or_email, password, status_code, message
         assert person is not None
         for key in person_info:
             assert person[key] == person_info[key]
+
+
+@pytest.mark.parametrize(('origin_username', 'password', 'username', 'realname', 'id_card_num', 'university', 'school', 'grade', 'gender', 'phone', 'qq', 'wechat', 'status_code', 'message'), (
+    ('test1', '123456', '', 'oooooo', '123234435', 'Sysu', '', '', '', '', '', '', 400, 'Username is required'),
+    ('test1', '123456', 'test10', 'oooooo', '123234435', 'Sysu', '', '', '', '', '', '', 400, 'User test10 is already registered.')
+))
+def test_update_info_validate_input(client, app, origin_username, password, username, realname, id_card_num, university, school, grade, gender, phone, qq, wechat, status_code, message):
+    response = client.put('/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
+        'username':username,'realname':realname,'id_card_num':id_card_num,'university':university,
+        'school':school,'grade':grade,'gender':gender,'phone':phone,'qq':qq,'wechat':wechat}))
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+
+
+@pytest.mark.parametrize(('status_code', 'message'), (
+    (401, 'Unauthorized Access'),
+))
+def test_update_info_without_login(client, app, status_code, message):
+    response = client.put('/user/', headers=get_basic_auth_headers(), data=json.dumps({}))
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+
+
+@pytest.mark.parametrize(('origin_username', 'password', 'username', 'realname', 'id_card_num', 'university', 'school', 'grade', 'gender', 'phone', 'qq', 'wechat', 'status_code', 'message'), (
+    ('test1', '123456', 'test1', 'ooooox', '1232344', 'Berkeley', '', '', '', '', '', '', 200, 'Update user info successfully'),
+    ('test1', '123456', 'test50', 'ooooos', '123234435f4365', 'Berkeley', 'software', '3', 'male', '1239087', 'dasu', 'dakl', 200, 'Update user info successfully')
+))
+def test_update_info(client, app, origin_username, password, username, realname, id_card_num, university, school, grade, gender, phone, qq, wechat, status_code, message):
+    response = client.put('/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
+        'username':username,'realname':realname,'id_card_num':id_card_num,'university':university,
+        'school':school,'grade':grade,'gender':gender,'phone':phone,'qq':qq,'wechat':wechat}))
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+    with app.app_context():
+        person = get_db().execute('SELECT * FROM User  WHERE username = ?', (username,)).fetchone()
+        assert person is not None
+        assert person['realname'] == realname
+        assert person['id_card_num'] == id_card_num
+        assert person['university'] == university
+        assert person['school'] == school
+        assert person['grade'] == grade
+        assert person['gender'] == gender
+        assert person['phone'] == phone
+        assert person['qq'] == qq
+        assert person['wechat'] == wechat
+
+
+@pytest.mark.parametrize(('username', 'password', 'old_password', 'new_password', 'status_code', 'message'), (
+    ('test1', '123456', None, None, 400, 'Old password is required'),
+    ('test1', '123456', '12345', None, 400, 'New password is required'),
+    ('test1', '123456', '12345', '12345678', 400, 'Old password wrong'),
+))
+def test_change_password_validate_input(client, app, username, password, old_password, new_password, status_code, message):
+    response = client.post('/password/', headers=get_token_auth_headers(client, app, username, password), data=json.dumps({
+        'old_password':old_password,'new_password':new_password}))
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+
+
+@pytest.mark.parametrize(('status_code', 'message'), (
+    (401, 'Unauthorized Access'),
+))
+def test_change_password_without_login(client, app, status_code, message):
+    response = client.post('/password/', headers=get_basic_auth_headers(), data=json.dumps({}))
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+
+
+@pytest.mark.parametrize(('username', 'old_password', 'new_password', 'status_code', 'message'), (
+    ('test1', '123456', '12345678', 200, 'Change password successfully'),
+))
+def test_change_password(client, app, username, old_password, new_password, status_code, message):
+    response = client.post('/password/', headers=get_token_auth_headers(client, app, username, old_password), data=json.dumps({
+        'old_password':old_password,'new_password':new_password}))
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+    with app.app_context():
+        password = get_db().execute('SELECT password FROM User  WHERE username = ?', (username,)).fetchone()
+        assert password is not None
+        assert check_password_hash(password['password'], new_password)
