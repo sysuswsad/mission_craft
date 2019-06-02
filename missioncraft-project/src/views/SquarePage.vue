@@ -1,45 +1,52 @@
 <template>
-  <vue-waterfall-easy
-    v-bind:imgs-arr="missionData"
-    v-bind:is-router-link="true"
-    v-bind:gap="30"
-    class="mission-waterfall"
-    ref="waterfall">
+    <vue-waterfall-easy
+      v-bind:imgs-arr="missionData"
+      v-bind:is-router-link="true"
+      v-bind:gap="30"
+      class="mission-waterfall"
+      ref="waterfall">
 
-    <template v-slot:waterfall-head>
-      <el-card shadow="hover" class="filter-container" v-bind:body-style="{ padding: '2rem 3.23rem' }">
-        <el-form class="mission-filter" v-model="filter">
-          <el-form-item label="任务类型" prop="type">
-            <el-checkbox-group v-model="filter.type">
-              <el-checkbox label="问卷" name="type"></el-checkbox>
-              <el-checkbox label="其他" name="type"></el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="最低报酬" prop="reward">
-            <el-input-number
-              placeholder="请输入数字"
-              v-model="filter.minReward"
-              v-bind:controls="false"
-              v-bind:min="0">
-            </el-input-number>
-          </el-form-item>
-        </el-form>
-        <el-button v-on:click="test">+</el-button>
-      </el-card>
-    </template>
+      <template v-slot:waterfall-head>
+        <el-card shadow="hover" class="filter-container" v-bind:body-style="{ padding: '1.5rem 4rem' }">
+          <el-form class="mission-filter" v-model="filter">
 
-    <template v-slot:default="descriptionProps">
-      <div class="mission-info">
-        <p>第{{ descriptionProps.index + 1 }}</p>
-        <p>{{ descriptionProps.value.href }}</p>
-      </div>
-    </template>
+            <el-form-item label="任务类型" prop="type" class="filter-item">
+              <el-checkbox-group v-model="filter.type" v-on:change="filterWithType">
+                <el-checkbox label="问卷" name="type"></el-checkbox>
+                <el-checkbox label="其他" name="type"></el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
 
-    <template v-slot:loading>
-      <div v-loading="dataLoading"></div>
-    </template>
+            <el-form-item label="最低报酬" prop="reward" class="filter-item">
+              <el-input-number
+                placeholder="请输入数字"
+                size="small"
+                v-model="filter.minReward"
+                v-bind:controls="false"
+                v-bind:min="0">
+              </el-input-number>
+              <el-button type="text" style="margin-left: 10px" v-on:click="filterWithMin">确定</el-button>
+              <el-button type="text" v-on:click="resetFilterWithMin">重置</el-button>
+            </el-form-item>
 
-  </vue-waterfall-easy>
+          </el-form>
+          <el-button v-on:click="test">+</el-button>
+        </el-card>
+      </template>
+
+      <template v-slot:default="descriptionProps">
+        <div class="mission-info">
+          <p>第{{ descriptionProps.index + 1 }}</p>
+          <p>{{ descriptionProps.value.type }}</p>
+          <p>{{ descriptionProps.value.reward }}</p>
+        </div>
+      </template>
+
+      <template v-slot:loading>
+        <div v-loading="dataLoading"></div>
+      </template>
+
+    </vue-waterfall-easy>
 </template>
 
 <script>
@@ -54,8 +61,10 @@ export default {
         type: ['问卷', '其他'],
         minReward: null
       },
+      minConfirmDisable: false,
+      allData: [],
       missionData: [
-        { href: 'login' }
+        { href: 'login', type: '问卷', reward: 0.4 }
       ],
       dataLoading: true
     }
@@ -63,12 +72,34 @@ export default {
 
   methods: {
     test () {
-      this.missionData.push({ href: 'login' })
-    }
-  },
+      let temp = Math.random() > 0.5 ? { href: 'login', type: '问卷', reward: 0.4 }
+        : { href: 'login', type: '其他', reward: 0.7 }
+      this.missionData.push(temp)
+      this.allData = this.missionData
+    },
 
-  created () {
-    this.missionData = this.missionData.concat([{ href: 'login' }, { href: 'login' }])
+    filterWithType (newVal) {
+      this.missionData =
+        this.allData.filter(mission => newVal.includes(mission.type))
+
+      if (this.filter.minReward !== 0) {
+        this.filterWithMin()
+      }
+    },
+
+    filterWithMin () {
+      if (this.filter.minReward === 0) {
+        this.resetFilterWithMin()
+      } else {
+        this.missionData =
+          this.missionData.filter(mission => mission.reward >= this.filter.minReward, this)
+      }
+    },
+
+    resetFilterWithMin () {
+      this.missionData = this.allData
+      this.filter.minReward = 0
+    }
   }
 }
 </script>
@@ -80,8 +111,12 @@ export default {
 
   .filter-container {
     margin-bottom: 2.5rem;
-    margin-left: 7rem;
-    margin-right: 7rem;
+    margin-left: 10rem;
+    margin-right: 10rem;
+  }
+
+  .filter-container .filter-item {
+    margin: 0;
   }
 </style>
 
@@ -95,10 +130,10 @@ export default {
     text-decoration: none;
     color: grey;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04) !important;
-    transition: transform .1s ease;
+    transition: transform .2s ease;
   }
 
   .mission-waterfall a:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
   }
 </style>
