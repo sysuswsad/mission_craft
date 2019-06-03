@@ -13,8 +13,8 @@ class Config(object):
     MAIL_PORT = 465
     MAIL_USE_SSL = True
     MAIL_USE_TLS = False
-    MAIL_USERNAME = os.getenv('FLASK_EMAIL')
-    MAIL_PASSWORD = os.getenv('FLASK_EMAIL_PASSWORD')
+    MAIL_USERNAME = os.getenv('FLASK_EMAIL', '1473595322@qq.com')
+    MAIL_PASSWORD = os.getenv('FLASK_EMAIL_PASSWORD', 'hzqjtpbdpdxyfejd')
     MAIL_DEFAULT_SENDER = 'MissionCraft <' + str(MAIL_USERNAME) + '>'
     # 上传到的文件夹
     UPLOAD_FOLDER = './static'

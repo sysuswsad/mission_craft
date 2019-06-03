@@ -56,7 +56,6 @@ def get_token_auth_headers(client, app, username_or_email, password):
     ('test2', '123456', '123@qq.com', '16340001', '111111', 400, 'Email 123@qq.com is already registered.'),
     ('test2', '123456', '1234@qq.com', '16340001', '111111', 400, 'Sid 16340001 is already registered.'),
     ('test2', '123456', '1234@qq.com', '16340002', '111111', 400, 'Verification code is not correct')
-
 ))
 def test_register_validate_input(client, app, username, password, email, sid, code, status_code, message):
     response = client.post('/user/', headers=get_basic_auth_headers(), data=json.dumps({
