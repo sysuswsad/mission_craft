@@ -1,6 +1,6 @@
 import os
-import redis
-redis_db = None
+# import redis
+# redis_db = None
 
 from flask import Flask
 from config import Config
@@ -38,8 +38,8 @@ def create_app(test_config=None):
     mail.init_app(app)
 
     # 使用redis数据库将验证码存储在内存
-    global redis_db
-    redis_db = redis.StrictRedis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=app.config['VERIFICATION_CODE_FILE'])
+    # global redis_db
+    # redis_db = redis.StrictRedis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=app.config['VERIFICATION_CODE_FILE'])
 
     # 添加用户蓝图
     from . import auth
