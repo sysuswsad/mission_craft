@@ -123,7 +123,7 @@ def get_code():
         return bad_request('Email {} is already registered.'.format(email))
 
     code = random.randint(100000, 999999)
-    redis_db.set('Email:'+emial, code)
+    redis_db.set('Email:'+email, code)
     send_verification_code(email, code)
     return created('Generate and send token successfully')
 
