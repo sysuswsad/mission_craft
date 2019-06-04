@@ -2,6 +2,7 @@ import functools
 import random
 import os
 import re
+import datetime
 
 from flask import (
     Blueprint, g, request, session, current_app, send_from_directory
@@ -9,16 +10,15 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
-from .db import get_db
-from .response_code import bad_request, unauthorized, ok, created
-from .email import send_verification_code
-from . import redis_db
+from app.db import get_db
+from app.response_code import bad_request, unauthorized, ok, created
+from app.email import send_verification_code
+from app.verification import  verify_istrue
+from app.api import bp
+# from app import redis_db
 
 from flask_httpauth import HTTPTokenAuth
 auth = HTTPTokenAuth()
-
-
-bp = Blueprint('auth', __name__)
 
 
 # 下面这句@的作用就是：将url'/register'绑定到register视图函数，同时设置app.view_func['auth.register']=register
@@ -61,9 +61,18 @@ def register():
         'SELECT idUser FROM User WHERE sid = ?', (sid,)
     ).fetchone() is not None:
         return bad_request('Sid {} is already registered.'.format(sid))
-    # 检查验证码
-    elif redis_db.get('Email:'+email).decode('utf-8') != str(code):
-        return bad_request('Verification code is not correct')
+    # 检查验证码，使用redis时是这样的
+    # elif redis_db.get('Email:'+email).decode('utf-8') != str(code):
+    #     return bad_request('Verification code is not correct')
+    # 检查验证码，使用sqlite数据库是这样的
+    else:
+        code_info = db.execute(
+            'SELECT code, send_time FROM Verification WHERE email = ?', (email,)
+        ).fetchone()
+        if code_info['code'] != str(code):
+            return bad_request('Verification code is not correct')
+        elif abs(code_info['send_time'] - datetime.datetime.now()).seconds > 1800:
+            return bad_request('Verification code is out of time')
 
     db.execute(
         'INSERT INTO User (username, password, email, sid) VALUES (?, ?, ?, ?)',
@@ -128,12 +137,25 @@ def get_code():
         return bad_request('Email {} is already registered.'.format(email))
 
     code = random.randint(100000, 999999)
-    try:
-        redis_db.set('Email:'+email, code, 1800)    # 有效期半小时
-    except Exception as e:
-        current_app.logger.debug(e)
-        return bad_request('Redis storing error '+str(e))
+    # 使用sqlite数据库的情况：
+    # try:
+    db.execute(
+        'REPLACE INTO Verification VALUES (?,?,?)',
+        (email, code, datetime.datetime.now())
+    )
+    # except Exception as e:
+    #     current_app.logger.debug(e)
+    #     return bad_request('Redis storing error '+str(e))
+    # 使用redis情况的代码如下：
+    # try:
+    #     redis_db.set('Email:'+email, code, 1800)    # 有效期半小时
+    # except Exception as e:
+    #     current_app.logger.debug(e)
+    #     return bad_request('Redis storing error '+str(e))
 
+    # 邮箱真实性验证，有点慢，不知道是否真的需要
+    # if not verify_istrue(email):
+    #     return bad_request('Email does not exist')
     send_verification_code(email, code)
     return created('Generate and send token successfully')
 

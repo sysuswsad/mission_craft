@@ -18,7 +18,7 @@ def get_basic_auth_headers():
 def get_token_auth_headers(client, app, username_or_email, password):
     '''创建JSON Web Token认证的headers'''
     headers = get_basic_auth_headers()
-    response = client.post('/token/', headers=headers, data=json.dumps({'username_or_email':username_or_email, 'password':password}))
+    response = client.post('/api/token/', headers=headers, data=json.dumps({'username_or_email':username_or_email, 'password':password}))
     assert response.status_code == 201
     response = json.loads(response.get_data(as_text=True))
     token = response.get('token')
@@ -36,10 +36,10 @@ def get_token_auth_headers(client, app, username_or_email, password):
 #     ('', 400, 'Email is required'),
 #     ('1473595322', 400, 'Email format error'),
 #     ('123@qq.com', 400, 'Email 123@qq.com is already registered.'),
-#     ('ousx@mail2.sysu.edu.cn', 201, 'Generate and send token successfully'),
+#     ('ou@mail2.sysu.edu.cn', 201, 'Generate and send token successfully'),
 # ))
 # def test_code(client, app, email, status_code, message):
-#     response = client.post('/code/', headers=get_basic_auth_headers(), data=json.dumps({'email':email}))
+#     response = client.post('/api/code/', headers=get_basic_auth_headers(), data=json.dumps({'email':email}))
 #     assert response.status_code == status_code
 #     response = json.loads(response.get_data(as_text=True))
 #     assert response.get('message') == message
@@ -55,10 +55,11 @@ def get_token_auth_headers(client, app, username_or_email, password):
     ('test1', '123456', '123@qq.com', '16340001', '111111', 400, 'User test1 is already registered.'),
     ('test2', '123456', '123@qq.com', '16340001', '111111', 400, 'Email 123@qq.com is already registered.'),
     ('test2', '123456', '1234@qq.com', '16340001', '111111', 400, 'Sid 16340001 is already registered.'),
-    ('test2', '123456', '1234@qq.com', '16340002', '111111', 400, 'Verification code is not correct')
+    ('test2', '123456', '1234@qq.com', '16340002', '111111', 400, 'Verification code is not correct'),
+    ('test2', '123456', '12345@qq.com', '16340002', '123456', 400, 'Verification code is out of time')
 ))
 def test_register_validate_input(client, app, username, password, email, sid, code, status_code, message):
-    response = client.post('/user/', headers=get_basic_auth_headers(), data=json.dumps({
+    response = client.post('/api/user/', headers=get_basic_auth_headers(), data=json.dumps({
         'username':username,'password':password,'email':email,'sid':sid,'code':code}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
@@ -70,7 +71,7 @@ def test_register_validate_input(client, app, username, password, email, sid, co
     ('test2', '123456', '1234@qq.com', '16340002', '123456', 201, 'Register successfully'),
 ))
 def test_register(client, app, username, password, email, sid, code, status_code, message):
-    response = client.post('/user/', headers=get_basic_auth_headers(), data=json.dumps({
+    response = client.post('/api/user/', headers=get_basic_auth_headers(), data=json.dumps({
         'username':username,'password':password,'email':email,'sid':sid,'code':code}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
@@ -93,7 +94,7 @@ def test_register(client, app, username, password, email, sid, code, status_code
     ('123@qq.com', '123', 400, 'Incorrect password'),
 ))
 def test_login_validate_input(client, app, username_or_email, password, status_code, message):
-    response = client.post('/token/', headers=get_basic_auth_headers(), data=json.dumps({
+    response = client.post('/api/token/', headers=get_basic_auth_headers(), data=json.dumps({
         'username_or_email':username_or_email,'password':password}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
@@ -106,7 +107,7 @@ def test_login_validate_input(client, app, username_or_email, password, status_c
     ('123@qq.com', '123456', 201, 'Login successfully')
 ))
 def test_login(client, app, username_or_email, password, status_code, message):
-    response = client.post('/token/', headers=get_basic_auth_headers(), data=json.dumps({
+    response = client.post('/api/token/', headers=get_basic_auth_headers(), data=json.dumps({
         'username_or_email':username_or_email,'password':password}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
@@ -127,7 +128,7 @@ def test_login(client, app, username_or_email, password, status_code, message):
     (401, 'Unauthorized Access'),
 ))
 def test_get_info_without_login(client, app, status_code, message):
-    response = client.get('/user/', headers=get_basic_auth_headers())
+    response = client.get('/api/user/', headers=get_basic_auth_headers())
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
@@ -138,7 +139,7 @@ def test_get_info_without_login(client, app, status_code, message):
     ('123@qq.com', '123456', 200, 'Get user info successfully')
 ))
 def test_get_info(client, app, username_or_email, password, status_code, message):
-    response = client.get('/user/', headers=get_token_auth_headers(client, app, username_or_email, password))
+    response = client.get('/api/user/', headers=get_token_auth_headers(client, app, username_or_email, password))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
@@ -155,7 +156,7 @@ def test_get_info(client, app, username_or_email, password, status_code, message
     ('test1', '123456', 'test10', 'oooooo', '123234435', 'Sysu', '', '', '', '', '', '', 400, 'User test10 is already registered.')
 ))
 def test_update_info_validate_input(client, app, origin_username, password, username, realname, id_card_num, university, school, grade, gender, phone, qq, wechat, status_code, message):
-    response = client.put('/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
+    response = client.put('/api/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
         'username':username,'realname':realname,'id_card_num':id_card_num,'university':university,
         'school':school,'grade':grade,'gender':gender,'phone':phone,'qq':qq,'wechat':wechat}))
     assert response.status_code == status_code
@@ -167,7 +168,7 @@ def test_update_info_validate_input(client, app, origin_username, password, user
     (401, 'Unauthorized Access'),
 ))
 def test_update_info_without_login(client, app, status_code, message):
-    response = client.put('/user/', headers=get_basic_auth_headers(), data=json.dumps({}))
+    response = client.put('/api/user/', headers=get_basic_auth_headers(), data=json.dumps({}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
@@ -178,7 +179,7 @@ def test_update_info_without_login(client, app, status_code, message):
     ('test1', '123456', 'test50', 'ooooos', '123234435f4365', 'Berkeley', 'software', '3', 'male', '1239087', 'dasu', 'dakl', 200, 'Update user info successfully')
 ))
 def test_update_info(client, app, origin_username, password, username, realname, id_card_num, university, school, grade, gender, phone, qq, wechat, status_code, message):
-    response = client.put('/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
+    response = client.put('/api/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
         'username':username,'realname':realname,'id_card_num':id_card_num,'university':university,
         'school':school,'grade':grade,'gender':gender,'phone':phone,'qq':qq,'wechat':wechat}))
     assert response.status_code == status_code
@@ -204,7 +205,7 @@ def test_update_info(client, app, origin_username, password, username, realname,
     ('test1', '123456', '12345', '12345678', 400, 'Old password wrong'),
 ))
 def test_change_password_validate_input(client, app, username, password, old_password, new_password, status_code, message):
-    response = client.post('/password/', headers=get_token_auth_headers(client, app, username, password), data=json.dumps({
+    response = client.post('/api/password/', headers=get_token_auth_headers(client, app, username, password), data=json.dumps({
         'old_password':old_password,'new_password':new_password}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
@@ -215,7 +216,7 @@ def test_change_password_validate_input(client, app, username, password, old_pas
     (401, 'Unauthorized Access'),
 ))
 def test_change_password_without_login(client, app, status_code, message):
-    response = client.post('/password/', headers=get_basic_auth_headers(), data=json.dumps({}))
+    response = client.post('/api/password/', headers=get_basic_auth_headers(), data=json.dumps({}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
@@ -225,7 +226,7 @@ def test_change_password_without_login(client, app, status_code, message):
     ('test1', '123456', '12345678', 200, 'Change password successfully'),
 ))
 def test_change_password(client, app, username, old_password, new_password, status_code, message):
-    response = client.post('/password/', headers=get_token_auth_headers(client, app, username, old_password), data=json.dumps({
+    response = client.post('/api/password/', headers=get_token_auth_headers(client, app, username, old_password), data=json.dumps({
         'old_password':old_password,'new_password':new_password}))
     assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))

@@ -21,7 +21,7 @@ class Config(object):
     BASE_STATIC_URL = 'localhost:5000/image'
 
     # 配置redis数据库
-    REDIS_HOST = '127.0.0.1'
-    REDIS_PORT = 6379
-    VERIFICATION_CODE_FILE = 0 # 这里要用0-15，不然就会报错
+    # REDIS_HOST = '127.0.0.1'
+    # REDIS_PORT = 6379
+    # VERIFICATION_CODE_FILE = 0 # 这里要用0-15，不然就会报错
     

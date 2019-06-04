@@ -1,10 +1,11 @@
 import os
 import tempfile
 import time
-import redis
+# import redis
 
 import pytest
-from app import create_app, redis_db
+from app import create_app
+# from app import redis_db
 from app.db import get_db, init_db
 
 with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
@@ -23,9 +24,9 @@ def app():
     with app.app_context():
         init_db()
         get_db().executescript(_data_sql)
-        redis_db = redis.StrictRedis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=app.config['VERIFICATION_CODE_FILE'])
-        redis_db.set('Email:123@qq.com', '111111', 1800)
-        redis_db.set('Email:1234@qq.com', '123456', 1800)
+        # redis_db = redis.StrictRedis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=app.config['VERIFICATION_CODE_FILE'])
+        # redis_db.set('Email:123@qq.com', '111111', 1800)
+        # redis_db.set('Email:1234@qq.com', '123456', 1800)
     
     yield app   
 

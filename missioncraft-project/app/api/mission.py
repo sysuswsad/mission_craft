@@ -3,13 +3,13 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from .auth import auth
-from .db import get_db
+from app.api.user import auth
+from app.db import get_db
+from app.api import bp
 
-bp = Blueprint('mission', __name__)
 
-
-@bp.route('/login')
+@bp.route('/mission/')
+@auth.login_required
 class Login():
     def get(self):
         return {'data': 'test'}
