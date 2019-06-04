@@ -40,12 +40,13 @@
               <span>我的领取</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="3" v-bind:route="{ name: 'message' }">
-            <el-badge v-bind:value="unread" v-bind:max="9" v-bind:hidden="showUnread" class="message-icon-wrapper">
+          <el-menu-item index="3" v-bind:route="{ name: 'message' }" style="overflow: hidden;">
+            <el-badge v-bind:value="unread" v-bind:max="9" v-bind:hidden="!isCollapsed || hideUnread" class="message-icon-badge">
               <i class="el-icon-message-solid"></i>
             </el-badge>
             <template v-slot:title>
               <span>我的消息</span>
+              <el-badge v-bind:value="unread" v-bind:max="9" v-bind:hidden="isCollapsed || hideUnread" class="message-badge"/>
             </template>
           </el-menu-item>
         </el-menu>
@@ -89,8 +90,8 @@ export default {
   },
 
   computed: {
-    showUnread () {
-      return this.unread === 0
+    hideUnread () {
+      return this.unread <= 0
     }
   }
 }
@@ -135,9 +136,12 @@ export default {
     width: calc(100% - 1px);
   }
 
-  .message-icon-wrapper {
+  .message-icon-badge {
     display: inline-flex;
-    width: max-content;
+  }
+
+  .message-badge {
+    float: right;
   }
 
   .logout-button-wrapper {
