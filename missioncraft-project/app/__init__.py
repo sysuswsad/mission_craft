@@ -31,7 +31,7 @@ def create_app(test_config=None):
         pass
 
     # 创建数据库
-    from . import db
+    from app import db
     db.init_app(app)
 
     # 创建并添加邮箱实例
@@ -42,11 +42,7 @@ def create_app(test_config=None):
     # redis_db = redis.StrictRedis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=app.config['VERIFICATION_CODE_FILE'])
 
     # 添加用户蓝图
-    from . import auth
-    app.register_blueprint(auth.bp)
-
-    # 添加任务蓝图
-    from . import mission
-    app.register_blueprint(mission.bp)
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp)
 
     return app

@@ -10,16 +10,15 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
-from .db import get_db
-from .response_code import bad_request, unauthorized, ok, created
-from .email import send_verification_code
-# from . import redis_db
+from app.db import get_db
+from app.response_code import bad_request, unauthorized, ok, created
+from app.email import send_verification_code
+from app.verification import  verify_istrue
+from app.api import bp
+# from app import redis_db
 
 from flask_httpauth import HTTPTokenAuth
 auth = HTTPTokenAuth()
-
-
-bp = Blueprint('auth', __name__)
 
 
 # 下面这句@的作用就是：将url'/register'绑定到register视图函数，同时设置app.view_func['auth.register']=register
@@ -154,6 +153,9 @@ def get_code():
     #     current_app.logger.debug(e)
     #     return bad_request('Redis storing error '+str(e))
 
+    # 邮箱真实性验证，有点慢，不知道是否真的需要
+    # if not verify_istrue(email):
+    #     return bad_request('Email does not exist')
     send_verification_code(email, code)
     return created('Generate and send token successfully')
 
