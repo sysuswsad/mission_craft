@@ -8,6 +8,8 @@ import MessagePage from './views/MessagePage.vue'
 import SquarePage from './views/SquarePage'
 import QuestionnairePage from './views/QuestionnairePage'
 import AnswerQuestionnairePage from './views/AnswerQuestionnairePage'
+import PublicationPage from './views/PublicationPage'
+import ReceivedPage from './views/ReceivedPage'
 
 Vue.use(Router)
 
@@ -52,6 +54,16 @@ export default new Router({
       path: '/answerQuestionnaire',
       name: 'answerQuestionnaire',
       component: AnswerQuestionnairePage
+    },
+    {
+      path: '/publication',
+      name: 'publication',
+      component: PublicationPage
+    },
+    {
+      path: '/received',
+      name: 'received',
+      component: ReceivedPage
     }
   ]
 })

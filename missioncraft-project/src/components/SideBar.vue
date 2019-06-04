@@ -28,13 +28,13 @@
           v-bind:collapse-transition="false"
           v-bind:default-active="activeIdx"
           v-on:select="checkIdx">
-          <el-menu-item index="1">
+          <el-menu-item index="1" v-bind:route="{ name: 'publication' }">
             <i class="el-icon-s-order"></i>
             <template v-slot:title>
               <span>我的发布</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="2" v-bind:route="{ name: 'received' }">
             <i class="el-icon-receiving"></i>
             <template v-slot:title>
               <span>我的领取</span>

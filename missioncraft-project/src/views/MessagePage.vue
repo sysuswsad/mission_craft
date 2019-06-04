@@ -10,7 +10,8 @@
           id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
           v-bind:page-sizes="[5, 10, 20, 30]"
           v-bind:page-size="pageSize"
-          v-bind:total="tableData.length"
+          v-bind:current-page.sync="currentPage"
+          v-bind:total="messageData.length"
           v-on:current-change="handleCurrentChange"
           v-on:size-change="handleSizeChange">
         </el-pagination>
@@ -20,7 +21,7 @@
           id="message-table"
           ref="multipleTable"
           stripe
-          v-bind:data="tableData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
+          v-bind:data="messageData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
           v-bind:default-sort="{prop: 'date', order: 'descending'}"
           v-on:selection-change="handleSelectionChange"
           v-on:expand-change="handleExpendChange"
@@ -61,7 +62,7 @@ export default {
   name: 'MessagePage',
   data () {
     return {
-      tableData: [
+      messageData: [
         {
           id: '1',
           hasRead: '✔',
@@ -172,8 +173,8 @@ export default {
       // to-do: refresh data in db
 
       for (let i = 0; i < this.multipleSelection.length; ++i) {
-        let index = this.tableData.indexOf(this.multipleSelection[i])
-        this.tableData.splice(index, 1)
+        let index = this.messageData.indexOf(this.multipleSelection[i])
+        this.messageData.splice(index, 1)
       }
       console.log('delete')
     },
