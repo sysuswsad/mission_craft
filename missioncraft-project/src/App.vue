@@ -15,6 +15,10 @@
         </el-main>
       </el-container>
     </el-container>
+    <vue-fab mainBtnColor="#2FA9F5" id="float-button" v-if="showMenu">
+      <fab-item v-on:clickItem="toMissionPublicPage(0)" v-bind:idx="0" title="发布问卷" icon="assignment" />
+      <fab-item v-on:clickItem="toMissionPublicPage(1)" v-bind:idx="1" title="发布其他" icon="directions_run" />
+    </vue-fab>
   </div>
 </template>
 
@@ -28,7 +32,8 @@ export default {
     return {
       sideWidth: '64px',
       isLogin: true, // 根据登录情况判断是否展示侧栏
-      sidebarCollapsed: true
+      sidebarCollapsed: true,
+      showMenu: true
     }
   },
 
@@ -40,6 +45,24 @@ export default {
       } else {
         this.sideWidth = '64px'
         this.sidebarCollapsed = true
+      }
+    },
+
+    toMissionPublicPage (idx) {
+      if (idx === 0) {
+        this.$router.push({ name: 'questionnaire' })
+      } else {
+        this.$router.push({ name: 'publicMission' })
+      }
+    }
+  },
+
+  watch: {
+    '$route' (to, from) {
+      if (this.$route.path === '/questionnaire' || this.$route.path === '/publicMission') {
+        this.showMenu = false
+      } else {
+        this.showMenu = true
       }
     }
   }
@@ -67,5 +90,9 @@ export default {
 
   .fade-enter-active, .fade-leave-active {
     transition: all .3s ease;
+  }
+
+  #float-button {
+    right: 10%;
   }
 </style>

@@ -6,12 +6,14 @@ import ElementUI from 'element-ui'
 import './theme/element/index.css'
 import * as VueCookies from 'vue-cookies'
 import vueWaterfallEasy from 'vue-waterfall-easy'
+import VueFab from 'vue-float-action-button'
 
 import './filters'
 
 Vue.use(ElementUI)
 Vue.use(VueCookies)
 Vue.use(vueWaterfallEasy)
+Vue.use(VueFab)
 
 Vue.config.productionTip = false
 
