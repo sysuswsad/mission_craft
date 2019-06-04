@@ -20,7 +20,7 @@
           <el-row>
             <el-col>
               <el-form-item label="问卷标题">
-                <el-input v-model="interTitle"></el-input>
+                <el-input v-model="title"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -115,11 +115,10 @@ export default {
   name: 'QuestionnairePage',
   data () {
     return {
+      title: '',
       questions: [],
-      interTitle: '',
       currentIndex: -1,
       edit: [],
-      show: [],
       showMore: false,
       questionnaireSetting: {
         recruitment: '',
@@ -139,7 +138,6 @@ export default {
         temp = { 'type': 2, 'question': '题目描述' }
       }
       this.questions.push(temp)
-      this.show.push(false)
       this.edit.push(false)
       // console.log(this.questions)
     },
