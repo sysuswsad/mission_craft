@@ -5,16 +5,18 @@
         <el-tabs v-model="activeTab" v-on:tab-click="handleClick">
           <el-tab-pane label="进行中" name="processing"></el-tab-pane>
           <el-tab-pane label="已完成" name="complete"></el-tab-pane>
+          <div>
+            <el-pagination
+                id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
+                v-bind:page-sizes="[5, 10, 20, 30]"
+                v-bind:page-size="pageSize"
+                v-bind:current-page.sync="currentPage"
+                v-bind:total="tableMission.length"
+                v-on:current-change="handleCurrentChange"
+                v-on:size-change="handleSizeChange">
+            </el-pagination>
+          </div>
         </el-tabs>
-        <el-pagination
-            id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
-            v-bind:page-sizes="[5, 10, 20, 30]"
-            v-bind:page-size="pageSize"
-            v-bind:current-page.sync="currentPage"
-            v-bind:total="tableMission.length"
-            v-on:current-change="handleCurrentChange"
-            v-on:size-change="handleSizeChange">
-        </el-pagination>
       </template>
       <el-table id="mission-table"
                 stripe
