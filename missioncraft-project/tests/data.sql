@@ -7,4 +7,8 @@ VALUES
 INSERT INTO Verification (email, code)
 VALUES 
   ('123@qq.com', '111111'),
-  ('1234@qq.com', '123456')
+  ('1234@qq.com', '123456');
+
+INSERT INTO Verification (email, code, send_time)
+VALUES 
+  ('12345@qq.com', '123456', datetime('now','+1 hours'))
