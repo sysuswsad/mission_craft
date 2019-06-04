@@ -266,8 +266,11 @@ def change_avatar():
     if file and allowed_file(file.filename):
         filename = file.filename
         extention = filename.rsplit('.', 1)[1]
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], g.user['idUser'] + '.' + extention))
-        avatar = os.path.join(current_app.config['BASE_STATIC_URL'], g.user['idUser'] + '.' + extention)
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], str(g.user['idUser']) + '.' + extention))
+        file.seek(0)
+        
+        
+        avatar = os.path.join(current_app.config['BASE_STATIC_URL'], str(g.user['idUser']) + '.' + extention)
         db = get_db()
         db.execute(
             'UPDATE User SET avatar = ? WHERE idUser = ?', (avatar, g.user['idUser'])

@@ -29,7 +29,7 @@ def get_token_auth_headers(client, app, username_or_email, password):
         'Content-Type': 'application/json'
     }
 
-
+'''
 # 有个地方非常坑，request.get_json(force=True)中force=True必须设置，否则就一直出错，建议后续写一个函数来添加header，防止出现类似错误
 # 下面这个测过了，不用测了
 # @pytest.mark.parametrize(('email', 'status_code', 'message'), (
@@ -235,3 +235,33 @@ def test_change_password(client, app, username, old_password, new_password, stat
         password = get_db().execute('SELECT password FROM User  WHERE username = ?', (username,)).fetchone()
         assert password is not None
         assert check_password_hash(password['password'], new_password)
+'''
+#from flask_uploads import TestingFileStorage
+from werkzeug.datastructures import FileStorage
+@pytest.mark.parametrize(('username', 'password', 'filename', 'status_code', 'message', 'avatar_url', 'get_url'), (
+    ('pj', '123456', 'logo.jpg', 200, 'change avatar successfully',  'localhost:5000/api/image/3.jpg', '/api/image/3.jpg'),
+   
+    
+))
+def test_upload_file(client, app, username, password, filename, status_code, message, avatar_url, get_url):
+    file_storage = FileStorage(filename=filename)
+    #file_storage = None
+    #BASE_DIR =  os.path.dirname(os.path.abspath(__file__))
+
+    #with open(os.path.join(BASE_DIR,filename), 'rb') as fp:
+    #    file_storage = FileStorage(fp)
+    data = {'image': file_storage}
+    response = client.post('api/avatar/',headers=get_token_auth_headers(client, app, username, password),data=data,content_type='multipart/form-data')
+    assert response.status_code == status_code
+    '''
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+    assert response_data.get('data').get('avatar') == avatar_url
+
+    # 访问图片路径
+    response = client.get(get_url, headers=get_token_auth_headers(client, app, username, password))
+    assert response.status_code == status_code
+'''
+
+
+
