@@ -5,7 +5,7 @@ import re
 import datetime
 
 from flask import (
-    Blueprint, g, request, session, current_app, send_from_directory
+    Blueprint, g, request, current_app, send_from_directory
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
@@ -135,6 +135,12 @@ def get_code():
         'SELECT idUser FROM User WHERE email = ?', (email,)
     ).fetchone() is not None:
         return bad_request('Email {} is already registered.'.format(email))
+    # 邮箱真实性验证，有点慢，不知道是否真的需要
+    try:
+        if not verify_istrue(email)[email]:
+            return bad_request('We can not find such email, you should change one')
+    except Exception:
+        return bad_request('We can not find such email, you should change one')
 
     code = random.randint(100000, 999999)
     # 使用sqlite数据库的情况：
@@ -143,6 +149,7 @@ def get_code():
         'REPLACE INTO Verification VALUES (?,?,?)',
         (email, code, datetime.datetime.now())
     )
+    db.commit()
     # except Exception as e:
     #     current_app.logger.debug(e)
     #     return bad_request('Redis storing error '+str(e))
@@ -153,9 +160,6 @@ def get_code():
     #     current_app.logger.debug(e)
     #     return bad_request('Redis storing error '+str(e))
 
-    # 邮箱真实性验证，有点慢，不知道是否真的需要
-    # if not verify_istrue(email):
-    #     return bad_request('Email does not exist')
     send_verification_code(email, code)
     return created('Generate and send token successfully')
 
