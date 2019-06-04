@@ -7,7 +7,7 @@
         <el-button size="mini" v-on:click="unMarkRead" v-bind:disabled="multipleSelection.length === 0">标为未读</el-button>
         <el-button size="mini" v-on:click="cancelSelection" v-bind:disabled="multipleSelection.length === 0">取消选择</el-button>
         <el-pagination
-          id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
+          id="pagination-container" layout="prev, pager, next, sizes, total, jumper"
           v-bind:page-sizes="[5, 10, 20, 30]"
           v-bind:page-size="pageSize"
           v-bind:current-page.sync="currentPage"
