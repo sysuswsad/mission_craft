@@ -1,4 +1,5 @@
 <template>
+  <div class="waterfall-container">
     <vue-waterfall-easy
       v-bind:imgs-arr="missionData"
       v-bind:is-router-link="true"
@@ -47,6 +48,7 @@
       </template>
 
     </vue-waterfall-easy>
+  </div>
 </template>
 
 <script>
@@ -105,6 +107,10 @@ export default {
 </script>
 
 <style scoped>
+  .waterfall-container {
+    height: 100%;
+  }
+
   .mission-info {
     padding: .618rem 1rem;
   }

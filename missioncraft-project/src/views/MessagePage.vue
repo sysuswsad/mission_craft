@@ -45,10 +45,11 @@
               </el-form>
             </template>
           </el-table-column>
-          <el-table-column prop="hasRead" label="已读"
-                           v-bind:filters="[{text:'未读', value: ''}, {text: '已读', value: '✔'}]"
-                           v-bind:filter-method="filtersHandler"
-                           width="80"></el-table-column>
+          <el-table-column
+            prop="hasRead" label="已读"
+            v-bind:filters="[{text:'未读', value: ''}, {text: '已读', value: '✔'}]"
+            v-bind:filter-method="filtersHandler"
+            width="80"></el-table-column>
           <el-table-column prop="date" label="日期" sortable width="150"></el-table-column>
           <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>
         </el-table>
@@ -214,7 +215,7 @@ export default {
 
 <style scoped>
   #message-container {
-    margin: 0 10px 0 10px;
+    margin: 0 2rem;
   }
 
   .message-card {

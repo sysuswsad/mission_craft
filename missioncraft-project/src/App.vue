@@ -15,9 +15,16 @@
         </el-main>
       </el-container>
     </el-container>
-    <vue-fab mainBtnColor="#2FA9F5" id="float-button" v-if="showMenu">
-      <fab-item v-on:clickItem="toMissionPublicPage(0)" v-bind:idx="0" title="发布问卷" icon="assignment" />
-      <fab-item v-on:clickItem="toMissionPublicPage(1)" v-bind:idx="1" title="发布其他" icon="directions_run" />
+    <vue-fab
+      mainBtnColor="#2FA9F5"
+      id="float-button"
+      size="big"
+      fabAnimateBezier="ease"
+      fabItemAnimate="alive"
+      v-bind:hidden="!showMenu"
+      v-bind:globalOptions="{spacing: 70, delay: 0.1}">
+      <fab-item v-on:clickItem="toMissionPublicPage(0)" v-bind:idx="0" title="发布问卷" icon="assignment"/>
+      <fab-item v-on:clickItem="toMissionPublicPage(1)" v-bind:idx="1" title="发布其他" icon="directions_run"/>
     </vue-fab>
   </div>
 </template>
@@ -32,8 +39,7 @@ export default {
     return {
       sideWidth: '64px',
       isLogin: true, // 根据登录情况判断是否展示侧栏
-      sidebarCollapsed: true,
-      showMenu: true
+      sidebarCollapsed: true
     }
   },
 
@@ -57,13 +63,9 @@ export default {
     }
   },
 
-  watch: {
-    '$route' (to, from) {
-      if (this.$route.path === '/questionnaire' || this.$route.path === '/publicMission') {
-        this.showMenu = false
-      } else {
-        this.showMenu = true
-      }
+  computed: {
+    showMenu () {
+      return !(this.$route.path === '/questionnaire' || this.$route.path === '/publicMission')
     }
   }
 }

@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <el-container direction="vertical" style="height: 100%">
     <el-header style="padding: 0">
       <el-row class="logo-wrapper">
@@ -41,7 +41,9 @@
             </template>
           </el-menu-item>
           <el-menu-item index="3" v-bind:route="{ name: 'message' }">
-            <i class="el-icon-message-solid"></i>
+            <el-badge v-bind:value="unread" v-bind:max="9" v-bind:hidden="showUnread" class="message-icon-wrapper">
+              <i class="el-icon-message-solid"></i>
+            </el-badge>
             <template v-slot:title>
               <span>我的消息</span>
             </template>
@@ -63,7 +65,8 @@ export default {
 
   data () {
     return {
-      activeIdx: null
+      activeIdx: null,
+      unread: 2
     }
   },
 
@@ -82,6 +85,12 @@ export default {
 
     checkIdx (idx, idxPath) {
       this.activeIdx = idx
+    }
+  },
+
+  computed: {
+    showUnread () {
+      return this.unread === 0
     }
   }
 }
@@ -124,6 +133,11 @@ export default {
 
   .sidebar-nav {
     width: calc(100% - 1px);
+  }
+
+  .message-icon-wrapper {
+    display: inline-flex;
+    width: max-content;
   }
 
   .logout-button-wrapper {

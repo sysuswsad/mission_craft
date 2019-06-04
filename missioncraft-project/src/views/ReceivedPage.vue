@@ -7,31 +7,36 @@
           <el-tab-pane label="已结束" name="over"></el-tab-pane>
           <div>
             <el-pagination
-                id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
-                v-bind:page-sizes="[5, 10, 20, 30]"
-                v-bind:page-size="pageSize"
-                v-bind:current-page.sync="currentPage"
-                v-bind:total="tableMission.length"
-                v-on:current-change="handleCurrentChange"
-                v-on:size-change="handleSizeChange">
+              id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
+              v-bind:page-sizes="[5, 10, 20, 30]"
+              v-bind:page-size="pageSize"
+              v-bind:current-page.sync="currentPage"
+              v-bind:total="tableMission.length"
+              v-on:current-change="handleCurrentChange"
+              v-on:size-change="handleSizeChange">
             </el-pagination>
           </div>
         </el-tabs>
       </template>
-      <el-table id="mission-table"
-                stripe
-                v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)">
-        <el-table-column label="任务类型"
-                         prop="missionType"
-                         v-bind:filters="[{text:'问卷调查', value: ''}, {text: '其他任务', value: '✔'}]"
-                         v-bind:filter-method="filtersHandler"></el-table-column>
+      <el-table
+        id="mission-table"
+        stripe
+        v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)">
+        <el-table-column
+          label="任务类型"
+          prop="missionType"
+          v-bind:filters="[{text:'问卷调查', value: ''}, {text: '其他任务', value: '✔'}]"
+          v-bind:filter-method="filtersHandler">
+        </el-table-column>
         <el-table-column prop="status" label="任务摘要"></el-table-column>
         <el-table-column align="right" v-if="activeTab === 'processing'">
           <template v-slot:default="scope">
             <el-button
-                size="mini"
-                type="danger"
-                v-on:click="handleDelete(scope.$index, scope.row)">放弃任务</el-button>
+              size="mini"
+              type="danger"
+              v-on:click="handleDelete(scope.$index, scope.row)">
+              放弃任务
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -154,7 +159,7 @@ export default {
 
 <style scoped>
   #received-container {
-    margin: 0 10px 0 10px;
+    margin: 0 2rem;
   }
 
   #pagination-container {

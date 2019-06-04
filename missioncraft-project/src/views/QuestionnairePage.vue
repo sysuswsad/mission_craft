@@ -77,27 +77,27 @@
       <el-card class="questionnaire-set-card" v-if="showMore">
         <el-form v-bind:model="questionnaireSetting" status-icon labelWidth="100px">
           <el-form-item
-                  prop="recruitment"
-                  label="招募人数"
-                  v-bind:rules="{required: true, message: '招募人数（人）', trigger: 'blur'}"
+            prop="recruitment"
+            label="招募人数"
+            v-bind:rules="{required: true, message: '招募人数（人）', trigger: 'blur'}"
           >
             <el-col :span="11">
               <el-input v-model="questionnaireSetting.money" placeholder="招募人数" prefix-icon="el-icon-s-custom"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item
-                  prop="money"
-                  label="悬赏金额"
-                  v-bind:rules="{required: true, message: '悬赏金额（元/份）', trigger: 'blur'}"
+            prop="money"
+            label="悬赏金额"
+            v-bind:rules="{required: true, message: '悬赏金额（元/份）', trigger: 'blur'}"
           >
             <el-col :span="11">
               <el-input v-model="questionnaireSetting.money" placeholder="悬赏金额（元/份）" prefix-icon="el-icon-s-custom"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item
-                  prop="endTime"
-                  label="截止时间"
-                  v-bind:rules="{required: true, message: '问卷截至时间', trigger: 'blur'}"
+            prop="endTime"
+            label="截止时间"
+            v-bind:rules="{required: true, message: '问卷截至时间', trigger: 'blur'}"
           >
             <el-col :span="11">
               <el-date-picker type="date" placeholder="问卷截至时间" v-model="questionnaireSetting.endTime" style="width: 100%;"></el-date-picker>
@@ -178,7 +178,7 @@ export default {
     },
     moveDown (index) {
       if (index === this.questions.length - 1) {
-        this.showTip('已经到低啦！')
+        this.showTip('已经到底啦！')
         return
       }
       let temp1 = this.questions[index + 1]

@@ -4,7 +4,7 @@
       <div class="image-name-container">
         <img class="head-image" alt="加载失败" v-bind:src=url>
         <div class="user-name">
-          Hello
+          Apple
         </div>
       </div>
     </div>
@@ -32,27 +32,30 @@
           <el-form v-bind:model="passwordSet" label-width="100px" status-icon>
             <el-row>
               <el-col v-bind:span="12">
-                <el-form-item label="旧密码"
-                              prop="oldPassword"
-                              v-bind:rules="{required: true, message: '请输入旧密码', trigger: 'blur'}">
+                <el-form-item
+                  label="旧密码"
+                  prop="oldPassword"
+                  v-bind:rules="{required: true, message: '请输入旧密码', trigger: 'blur'}">
                   <el-input v-model="passwordSet.oldPassword" placeholder="旧密码" type="password"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
-                <el-form-item label="新密码"
-                              prop="newPassword"
-                              v-bind:rules="{required: true, message: '请输入新密码', trigger: 'blur'}">
+                <el-form-item
+                  label="新密码"
+                  prop="newPassword"
+                  v-bind:rules="{required: true, message: '请输入新密码', trigger: 'blur'}">
                   <el-input v-model="passwordSet.newPassword" placeholder="新密码" type="password"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
-                <el-form-item label="确认密码"
-                              prop="confirmPassword"
-                              v-bind:rules="{required: true, message: '请再次确认密码', trigger: 'blur'}">
+                <el-form-item
+                  label="确认密码"
+                  prop="confirmPassword"
+                  v-bind:rules="{required: true, message: '请再次确认密码', trigger: 'blur'}">
                   <el-input v-model="passwordSet.confirmPassword" placeholder="确认密码" type="password"></el-input>
                 </el-form-item>
               </el-col>
@@ -64,13 +67,13 @@
         </el-tab-pane>
         <el-tab-pane label="更换头像">
           <el-upload
-                  class="avatar-uploader"
-                  :http-request="uploadImage"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            class="avatar-uploader"
+            :http-request="uploadImage"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-tab-pane>
