@@ -33,7 +33,7 @@ CREATE TABLE MissionInfo (
   publisher_id INTEGER NOT NULL,
   type INT DEFAULT 0,
   tag VARCHAR(45) NULL,
-  create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  create_time TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
   deadline TIMESTAMP NOT NULL,
   title VARCHAR(45) NOT NULL,
   description VARCHAR(45) NOT NULL,
@@ -45,6 +45,13 @@ CREATE TABLE MissionInfo (
   state DOUBLE DEFAULT 0,
   FOREIGN KEY (publisher_id) REFERENCES User (id)
 );
+
+-- 如果不使用redis数据库，就需要将验证码存到邮箱的这个表
+CREATE TABLE Verification (
+  email VARCHAR(45) PRIMARY KEY,
+  code VARCHAR(10) NOT NULL,
+  send_time TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
+)
 
 -- 下面这些是整个sql数据库创建，mydb指的是数据库名字，这里我们可以去掉，因为数据库名字叫mission_craft
 
