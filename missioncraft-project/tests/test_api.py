@@ -29,7 +29,7 @@ def get_token_auth_headers(client, app, username_or_email, password, content_typ
         'Content-Type': content_type
     }
 
-'''
+
 # 有个地方非常坑，request.get_json(force=True)中force=True必须设置，否则就一直出错，建议后续写一个函数来添加header，防止出现类似错误
 # 下面这个测过了，不用测了
 # @pytest.mark.parametrize(('email', 'status_code', 'message'), (
@@ -235,7 +235,7 @@ def test_change_password(client, app, username, old_password, new_password, stat
         password = get_db().execute('SELECT password FROM User  WHERE username = ?', (username,)).fetchone()
         assert password is not None
         assert check_password_hash(password['password'], new_password)
-'''
+
 
 # 测试文件放在tests文件夹里面
 @pytest.mark.parametrize(('username', 'password', 'filename', 'status_code', 'message', 'avatar_url', 'get_url'), (
@@ -256,6 +256,12 @@ def test_upload_file(client, app, username, password, filename, status_code, mes
     if (response.status_code == 200):
         #查看返回的url
         assert response_data.get('data').get('avatar') == avatar_url
+        # 是否成功插入数据库
+        with app.app_context():
+            avatar = get_db().execute('SELECT avatar FROM User  WHERE username = ?', (username,)).fetchone()
+            assert avatar is not None
+            assert avatar['avatar'] == avatar_url
+
         # 访问图片路径
         response = client.get(get_url, headers=get_token_auth_headers(client, app, username, password))
         assert response.status_code == status_code

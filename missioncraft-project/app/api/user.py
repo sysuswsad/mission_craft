@@ -243,7 +243,7 @@ def get_avatar_url():
     avatar = db.execute(
         'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'],)
     ).fetchone()
-    if avatar['avatar'] is not None:
+    if avatar['avatar']:
         return ok('Get user avatar successfully', data={'avatar':avatar['avatar']})      
     else:
         return bad_request('User avatar is not available')
