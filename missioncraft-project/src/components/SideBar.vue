@@ -10,7 +10,7 @@
         <div class="avatar-wrapper" v-on:click="toUserInfo">
           <img
             alt="avatar"
-            src="default-avatar.png"
+            v-bind:src="avatarSrc"
             v-bind:class="{ 'avatar-expand': !isCollapsed, 'avatar-collapse': isCollapsed }">
         </div>
         <div class="user-meta">
@@ -66,6 +66,7 @@ export default {
 
   data () {
     return {
+      avatarSrc: 'default-avatar.png',
       activeIdx: null,
       unread: 2
     }

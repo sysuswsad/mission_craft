@@ -4,6 +4,7 @@
       v-bind:imgs-arr="missionData"
       v-bind:is-router-link="true"
       v-bind:gap="30"
+      v-bind:img-width="320"
       class="mission-waterfall"
       ref="waterfall">
 
@@ -36,11 +37,46 @@
       </template>
 
       <template v-slot:default="descriptionProps">
-        <div class="mission-info">
-          <p>第{{ descriptionProps.index + 1 }}</p>
-          <p>{{ descriptionProps.value.type }}</p>
-          <p>{{ descriptionProps.value.reward }}</p>
-        </div>
+        <el-container>
+
+          <el-header style="border-bottom: 1px solid #dcdfe6">
+            <h4>
+              这里是标题
+            </h4>
+          </el-header>
+
+          <el-main class="mission-info-container">
+            <el-row type="inline-flex" align="center" justify="space-between">
+              <el-col v-bind:span="11" style="display: inline-flex">
+                <i v-if="descriptionProps.value.type.localeCompare('问卷') === 0" class="material-icons blue">assignment</i>
+                <i v-else class="material-icons green">directions_run</i>
+                <strong>&nbsp;{{ descriptionProps.value.type }}</strong>
+              </el-col>
+
+              <el-col v-bind:span="2">
+                <el-divider direction="vertical"></el-divider>
+              </el-col>
+
+              <el-col v-bind:span="11" style="display: inline-flex; justify-content: flex-end">
+                <i class="material-icons gold">monetization_on</i>
+                <span>&nbsp;{{ descriptionProps.value.reward }}</span>
+              </el-col>
+            </el-row>
+
+            <el-row class="mission-desc-wrapper">
+              我是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的任务描述
+            </el-row>
+          </el-main>
+
+          <el-footer class="mission-publisher-info-wrapper">
+            <div class="publisher-avatar-wrapper">
+              <el-image src="default-avatar.png" alt="avatar" fit="scale-down"></el-image>
+            </div>
+            <div class="publisher-username">这是一个比较长的用户名</div>
+            <div>发布于 2020-01-01 12:13:24</div>
+          </el-footer>
+
+        </el-container>
       </template>
 
       <template v-slot:loading>
@@ -111,10 +147,6 @@ export default {
     height: 100%;
   }
 
-  .mission-info {
-    padding: .618rem 1rem;
-  }
-
   .filter-container {
     margin-bottom: 2.5rem;
     margin-left: 10rem;
@@ -123,6 +155,33 @@ export default {
 
   .filter-container .filter-item {
     margin: 0;
+  }
+
+  .mission-info-container {
+    padding: .75rem 1.25rem;
+  }
+
+  .mission-desc-wrapper {
+    padding: 1.25rem 0;
+  }
+
+  .mission-publisher-info-wrapper {
+    padding: .75rem 1.25rem;
+    font-size: small;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .publisher-avatar-wrapper {
+    width: 12%;
+    border-radius: 50%;
+  }
+
+  .publisher-username {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 </style>
 
@@ -141,5 +200,17 @@ export default {
 
   .mission-waterfall a:hover {
     transform: translateY(-8px);
+  }
+
+  .material-icons.gold {
+    color: #FFD700;
+  }
+
+  .material-icons.blue {
+    color: #2b78fe;
+  }
+
+  .material-icons.green {
+    color: #34a853;
   }
 </style>
