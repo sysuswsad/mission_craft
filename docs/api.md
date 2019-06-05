@@ -559,11 +559,11 @@ token|是|123|登录返回的token
     "staus" : 200,
     "data" : {
         "notification" : [{
-            "not_id" : 123,
+            "n_id" : 123,
             "message": "这个message是后台生成还是怎样",
-            "mission_id": "",
+            "user_id": "",
             "time":"2019-6-1 14:40:20",
-            "if_read": 1
+            "has_read": True
         }...
         ]
     },
@@ -585,7 +585,7 @@ PUT
 参数名 | 是否必须 | 示例值 | 描述
 --|--|--|--|
 token|是|123|登录返回的token
-notification|是|[{"not_id":123,"if_read":1}]|一个
+notification|是|[{"n_id":123,"has_read":True}]|一个
 
 **返回示例**
 ```json
@@ -593,11 +593,11 @@ notification|是|[{"not_id":123,"if_read":1}]|一个
     "staus" : 200,
     "data" : {
         "notification" : [{
-            "not_id" : 123,
+            "n_id" : 123,
             "message": "这个message是后台生成",
-            "mission_id": 123456,
+            "user_id": 123456,
             "create_time":"2019-6-1 14:40:20",
-            "if_read": 1
+            "has_read": True
         }...
         ]
     },
