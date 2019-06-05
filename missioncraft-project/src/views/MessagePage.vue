@@ -131,26 +131,37 @@ export default {
     },
 
     handleExpendChange (row, expandedRows) {
-      row.hasRead = '✔'
-      // to-do: refresh data in db
+      if (row.hasRead === '') {
+        row.hasRead = '✔'
+        this.$emit('markMessage', 1)
+        // to-do: refresh data in db
+      }
     },
 
     markRead () {
       // to-do: refresh data in db
-
+      let count = 0
       for (let i = 0; i < this.multipleSelection.length; ++i) {
-        this.multipleSelection[i].hasRead = '✔'
+        if (this.multipleSelection[i].hasRead === '') {
+          this.multipleSelection[i].hasRead = '✔'
+          count += 1
+        }
       }
+      this.$emit('markMessage', count)
       // clear selection after operations
       this.$refs.multipleTable.clearSelection()
     },
 
     unMarkRead () {
       // to-do: refresh data in db
-
+      let count = 0
       for (let i = 0; i < this.multipleSelection.length; ++i) {
-        this.multipleSelection[i].hasRead = ''
+        if (this.multipleSelection[i].hasRead === '✔') {
+          this.multipleSelection[i].hasRead = ''
+          count += 1
+        }
       }
+      this.$emit('markMessage', -count)
       // clear selection after operations
       this.$refs.multipleTable.clearSelection()
     },
@@ -203,8 +214,11 @@ export default {
       let index = this.expandRows.indexOf(row.id)
       if (index < 0) {
         this.expandRows.push(row.id)
-        row.hasRead = '✔'
-        // to-do: refresh data in db
+        if (row.hasRead === '') {
+          row.hasRead = '✔'
+          this.$emit('markMessage', 1)
+          // to-do: refresh data in db
+        }
       } else {
         this.expandRows.splice(index, 1)
       }
