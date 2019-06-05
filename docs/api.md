@@ -564,7 +564,7 @@ token|是|123|登录返回的token
             "user_id": "",
             "time":"2019-6-1 14:40:20",
             "has_read": True
-        }...
+        }, ...
         ]
     },
     "message": "ok"
@@ -598,7 +598,7 @@ notification|是|[{"n_id":123,"has_read":True}]|一个
             "user_id": 123456,
             "create_time":"2019-6-1 14:40:20",
             "has_read": True
-        }...
+        }, ...
         ]
     },
     "message": "ok"
