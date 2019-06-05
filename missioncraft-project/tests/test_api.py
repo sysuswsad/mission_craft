@@ -15,7 +15,7 @@ def get_basic_auth_headers():
     }
 
 
-def get_token_auth_headers(client, app, username_or_email, password):
+def get_token_auth_headers(client, app, username_or_email, password, content_type = 'application/json'):
     '''创建JSON Web Token认证的headers'''
     headers = get_basic_auth_headers()
     response = client.post('/api/token/', headers=headers, data=json.dumps({'username_or_email':username_or_email, 'password':password}))
@@ -26,7 +26,7 @@ def get_token_auth_headers(client, app, username_or_email, password):
     return {
         'Authorization': 'Bearer ' + token,
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': content_type
     }
 
 
@@ -235,3 +235,46 @@ def test_change_password(client, app, username, old_password, new_password, stat
         password = get_db().execute('SELECT password FROM User  WHERE username = ?', (username,)).fetchone()
         assert password is not None
         assert check_password_hash(password['password'], new_password)
+
+
+# 测试文件放在tests文件夹里面
+@pytest.mark.parametrize(('username', 'password', 'filename', 'status_code', 'message', 'avatar_url', 'get_url'), (
+    ('pj', '123456', 'test_avatar.jpg', 200, 'change avatar successfully',  'localhost:5000/api/image/3.jpg', '/api/image/3.jpg'),
+    ('pj', '123456', 'test_avatar.txt', 400, 'file is supposed to be jpg or png',  '', ''),
+    
+))
+def test_upload_file(client, app, username, password, filename, status_code, message, avatar_url, get_url):
+ 
+    BASE_DIR =  os.path.dirname(os.path.abspath(__file__))
+    data = {'image': open(os.path.join(BASE_DIR,filename), 'rb')}
+    response = client.post('api/avatar/',headers=get_token_auth_headers(client, app, username, password, 'multipart/form-data'),data=data)
+    assert response.status_code == status_code
+     
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+
+    if (response.status_code == 200):
+        #查看返回的url
+        assert response_data.get('data').get('avatar') == avatar_url
+        # 是否成功插入数据库
+        with app.app_context():
+            avatar = get_db().execute('SELECT avatar FROM User  WHERE username = ?', (username,)).fetchone()
+            assert avatar is not None
+            assert avatar['avatar'] == avatar_url
+
+        # 访问图片路径
+        response = client.get(get_url, headers=get_token_auth_headers(client, app, username, password))
+        assert response.status_code == status_code
+
+@pytest.mark.parametrize(('username', 'password', 'status_code', 'message', 'avatar_url'), (
+    ('test1', '123456', 400, 'User avatar is not available',  ''),
+))
+
+def test_get_url(client, app, username, password, status_code, message, avatar_url):
+    response = client.get('api/avatar/',headers=get_token_auth_headers(client, app, username, password))
+
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+
+
