@@ -18,9 +18,10 @@ class Config(object):
     MAIL_DEFAULT_SENDER = 'MissionCraft <' + str(MAIL_USERNAME) + '>'
 
     # 上传到的文件夹
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    UPLOAD_FOLDER = os.path.join(basedir, 'app', 'static')
-    BASE_STATIC_URL = 'localhost:5000/image'
+
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app', 'static')
+    BASE_STATIC_URL = 'localhost:5000/api/image/'
 
     # 配置redis数据库
     # REDIS_HOST = '127.0.0.1'

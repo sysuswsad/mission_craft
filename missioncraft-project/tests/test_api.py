@@ -2,7 +2,8 @@ import os
 import json
 import pytest
 from werkzeug.security import check_password_hash
-from werkzeug import FileStorage
+# from werkzeug import FileStorage
+from werkzeug.datastructures import FileStorage
 
 from app.db import get_db
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
@@ -30,7 +31,7 @@ def get_token_auth_headers(client, app, username_or_email, password, ContentType
         'Content-Type': ContentType
     }
 
-
+'''
 # 有个地方非常坑，request.get_json(force=True)中force=True必须设置，否则就一直出错，建议后续写一个函数来添加header，防止出现类似错误
 # 下面这个测过了，不用测了
 @pytest.mark.parametrize(('email', 'status_code', 'message'), (
@@ -241,3 +242,32 @@ def test_change_password(client, app, username, old_password, new_password, stat
         password = get_db().execute('SELECT password FROM User  WHERE username = ?', (username,)).fetchone()
         assert password is not None
         assert check_password_hash(password['password'], new_password)
+'''
+
+
+import sys
+@pytest.mark.parametrize(('username', 'password', 'filename', 'status_code', 'message', 'avatar_url', 'get_url'), (
+    ('pj', '123456', 'logo.jpg', 200, 'change avatar successfully',  'localhost:5000/api/image/3.jpg', '/api/image/3.jpg'),
+))
+def test_upload_file(client, app, username, password, filename, status_code, message, avatar_url, get_url):
+    file = open(filename, 'rb')
+    #file_storage = None
+    #BASE_DIR =  os.path.dirname(os.path.abspath(__file__))
+
+    #with open(os.path.join(BASE_DIR,filename), 'rb') as fp:
+    #    file_storage = FileStorage(fp)
+    data = {'image': file}
+    response = client.post('api/avatar/',headers=get_token_auth_headers(client, app, username, password, 'multipart/form-data'),data=data)
+    assert response.status_code == status_code
+    '''
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+    assert response_data.get('data').get('avatar') == avatar_url
+
+    # 访问图片路径
+    response = client.get(get_url, headers=get_token_auth_headers(client, app, username, password))
+    assert response.status_code == status_code
+'''
+
+
+

@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS MissionInfo;
+DROP TABLE IF EXISTS Problem;
+DROP TABLE IF EXISTS Verification;
 
 CREATE TABLE User (
   idUser INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,12 +17,12 @@ CREATE TABLE User (
   university VARCHAR(45) DEFAULT '',
   school VARCHAR(45) DEFAULT '',
   grade VARCHAR(45) DEFAULT '',
-  gender INT DEFAULT 0,
+  gender VARCHAR(45) DEFAULT '',
   email VARCHAR(45) NOT NULL,
   phone VARCHAR(45) DEFAULT '',
   qq VARCHAR(45) DEFAULT '',
   wechat VARCHAR(45) DEFAULT '',
-  avatar BLOB NULL,
+  avatar VARCHAR(45) DEFAULT '',
   tag VARCHAR(45) DEFAULT '',
   mission_pub_num INT DEFAULT 0,
   mission_todo_num INT DEFAULT 0,
@@ -43,8 +45,30 @@ CREATE TABLE MissionInfo (
   rcv_num INT DEFAULT 0,
   fin_num INT DEFAULT 0,
   state DOUBLE DEFAULT 0,
-  FOREIGN KEY (publisher_id) REFERENCES User (id)
+  FOREIGN KEY (publisher_id) REFERENCES User (idUser)
 );
+
+CREATE TABLE Problem (
+  idProblem INTEGER PRIMARY KEY AUTOINCREMENT,
+  mission_id INTEGER NOT NULL,
+  type INT DEFAULT 0,
+  problem_stem VARCHAR(45) NOT NULL,
+  problem_detail VARCHAR(45) DEFAULT '',
+  must_be_answer INT DEFAULT 1,
+  jump_logic INT DEFAULT -1,
+  FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo)
+)
+
+CREATE TABLE IF NOT EXISTS mydb.MissionOrder (
+  idMissionOrder INTEGER PRIMARY KEY AUTOINCREMENT,
+  mission_id INTEGER NOT NULL,
+  receiver_id INTEGER NOT NULL,
+  publisher_confirm INT DEFAULT 0,
+  receiver_confirm INT DEFAULT 0,
+  order_state INT DEFAULT 0,
+  receive_time TIMESTAMP NOT NULL,
+  finish_time TIMESTAMP DEFAULT NULL
+)
 
 -- 如果不使用redis数据库，就需要将验证码存到邮箱的这个表
 CREATE TABLE Verification (

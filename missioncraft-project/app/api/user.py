@@ -111,6 +111,9 @@ def login():
     elif not check_password_hash(user['password'], password):
         return bad_request('Incorrect password')
 
+    # 新增通知功能，需要在登录时检查该用户有没有已发布的过期任务，如果有则在通知表生成新的表项
+    # 然后查通知表获取所有该用户的未读表项的数目，然后再response.body返回
+
     # 登录成功，服务器生成token并返回给用户端
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
     return created('Login successfully', token=s.dumps({'idUser': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8'))
@@ -216,7 +219,7 @@ def update_info():
     university = data.get('university', '')
     school = data.get('school', '')
     grade = data.get('grade', '')
-    gender = data.get('gender', 0)
+    gender = data.get('gender', '')
     phone = data.get('phone', '')
     qq = data.get('qq', '')
     wechat = data.get('wechat', '')
@@ -262,6 +265,7 @@ def get_uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                filename)
 
+
 @bp.route('/avatar/', methods=['POST'])
 @auth.login_required
 def change_avatar():
@@ -270,8 +274,8 @@ def change_avatar():
     if file and allowed_file(file.filename):
         filename = file.filename
         extention = filename.rsplit('.', 1)[1]
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], g.user['idUser'] + '.' + extention))
-        avatar = os.path.join(current_app.config['BASE_STATIC_URL'], g.user['idUser'] + '.' + extention)
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], str(g.user['idUser']) + '.' + extention))
+        avatar = os.path.join(current_app.config['BASE_STATIC_URL'], str(g.user['idUser']) + '.' + extention)
         db = get_db()
         db.execute(
             'UPDATE User SET avatar = ? WHERE idUser = ?', (avatar, g.user['idUser'])
