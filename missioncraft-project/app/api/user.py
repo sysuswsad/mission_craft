@@ -248,9 +248,12 @@ def update_info():
 def get_avatar_url():
     db = get_db()
     avatar = db.execute(
-        'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'])
+        'SELECT avatar FROM User WHERE idUser = ?', (g.user['idUser'],)
     ).fetchone()
-    return ok('Get user avatar successfully', data={'avatar':avatar})
+    if avatar['avatar']:
+        return ok('Get user avatar successfully', data={'avatar':avatar['avatar']})      
+    else:
+        return bad_request('User avatar is not available')
 
 
 
@@ -262,6 +265,7 @@ def allowed_file(filename):
 
 @bp.route('/image/<filename>')
 def get_uploaded_file(filename):
+
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                filename)
 
@@ -274,7 +278,9 @@ def change_avatar():
     if file and allowed_file(file.filename):
         filename = file.filename
         extention = filename.rsplit('.', 1)[1]
+
         file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], str(g.user['idUser']) + '.' + extention))
+        
         avatar = os.path.join(current_app.config['BASE_STATIC_URL'], str(g.user['idUser']) + '.' + extention)
         db = get_db()
         db.execute(
