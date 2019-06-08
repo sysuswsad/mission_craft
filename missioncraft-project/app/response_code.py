@@ -38,6 +38,9 @@ def unauthorized(message):
     '''401:未授权错误'''
     return error_response(status_code=401, message=message)
 
+
+def forbidden(message):
+    return error_response(status_code=403, message=message)
 # with app.app_context():
 #     res = jsonify(pyload)
 #     print(res.status_code)

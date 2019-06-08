@@ -7,7 +7,8 @@ import datetime
 from app.api.user import auth
 from app.db import get_db
 from app.api import bp
-from app.response_code import bad_request, unauthorized, ok, created
+from app.response_code import bad_request, unauthorized, ok, created, forbidden
+from app.statistics import statistics_ana
 
 import json
 
@@ -163,13 +164,11 @@ def get_mission():
 				problem_json['choices'] = row['problem_detail']
 				problems.append(problem_json)
 			item['problems'] = problems
-			# 如果问卷任务完成还需要返回答案统计信息
+			# 如果问卷任务还需要返回答案统计信息
 			if item['publisher_id'] != g.user['idUser']:
 				continue
-			# 答案和选项配套，有几个选项，答案数组就有几个item；对于简答题只有一个item字符串，如[[1,1,1,1],[2,2,2,2],'ok']
-			item['answers'] = []
 			for problem in problems:
-				if 
+				problem['answer'] = statistics_ana(row['type'], row['problem_detail'], row['idProblem'])
 
 	# 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
 	for item in mission_array:
@@ -209,7 +208,7 @@ def cancel_mission():
 	).fetchone()
 
 	if mission_info['publisher_id'] != g.user['idUser']:
-		return unauthorized('Not the author of mission')
+		return forbidden('Not the author of mission')
 	elif mission_info['type'] == 1 and mission_info['rcv_num'] != 0:
 		return bad_request('Should not cancel a mission already received')
 
