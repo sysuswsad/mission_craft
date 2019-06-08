@@ -78,10 +78,18 @@ CREATE TABLE Verification (
 );
 
 -- 通知表
--- CREATE TABLE Notification (
---   n_id INTEGER PRIMARY KEY AUTOINCREMENT,
-
--- )
+CREATE TABLE Notification (
+  idNotification INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  mission_id INTEGER,
+  order_id INTEGER,
+  create_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+  has_read INT DEFAULT 0,
+  notification_type INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES User (idUser),
+  FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
+  FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder)
+)
 
 
 

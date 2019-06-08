@@ -1,19 +1,42 @@
-import functools
-import random
-import os
-import re
+from flask import (
+    Blueprint, g, request
+)
+from werkzeug.exceptions import abort
 import datetime
 
-from flask import (
-    Blueprint, g, request, session, current_app, send_from_directory
-)
-from werkzeug.security import check_password_hash, generate_password_hash
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
-
+from app.api.user import auth
 from app.db import get_db
-from app.response_code import bad_request, unauthorized, ok, created
-from app.verification import verify_istrue
 from app.api import bp
+from app.response_code import bad_request, unauthorized, ok, created
 
-from flask_httpauth import HTTPTokenAuth
-auth = HTTPTokenAuth()
+import json
+
+
+@bp.route('/notification/', methods=('get','post'))
+@auth.login_required
+def index():
+	db = get_db()
+    notifications = db.execute(
+        'SELECT idNotification, mission_id, message, create_time, has_read'
+        ' FROM Notification'
+    ).fetchall()
+
+    return notifications
+
+
+def get_notification(idNotification):
+    """返回对应通知id的通知item
+    """
+    notification = get_db().execute(
+        'SELECT idNotification, mission_id, message, create_time, has_read'
+        ' FROM Notification'
+        ' WHERE idNotification = ?',
+        (idNotification,)
+    ).fetchone()
+    
+    if notification is None:
+        abort(404, "Notification id {0} doesn't exist.".format(idNotification))
+
+    return notification
+
+

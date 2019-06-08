@@ -18,6 +18,8 @@ yarn-debug.log*
 yarn-error.log*
 selenium-debug.log
 
+**/instance
+
 # Editor directories and files
 .idea
 .vscode
