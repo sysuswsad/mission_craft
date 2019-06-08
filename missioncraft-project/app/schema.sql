@@ -44,7 +44,7 @@ CREATE TABLE MissionInfo (
   max_num INT DEFAULT 1,
   rcv_num INT DEFAULT 0,
   fin_num INT DEFAULT 0,
-  state DOUBLE DEFAULT 0,
+  state INT DEFAULT 0,
   FOREIGN KEY (publisher_id) REFERENCES User (idUser)
 );
 
