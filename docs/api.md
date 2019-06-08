@@ -84,7 +84,7 @@ email|是|123@qq.com|用于接收验证码的邮箱|
 ```json
 {
     "staus" : 200,
-    "message": "ok"
+    "message": "Generate and send token successfully"
 }
 ```
 ---
@@ -112,7 +112,7 @@ code|是|1234|手机接收的验证码
 ```json
 {
     "staus" : 201,
-    "message": "ok"
+    "message": "Register successfully"
 }
 ```
 ----
@@ -146,7 +146,7 @@ password|是|123456|登录密码
     "data" : {
         "token" : 1234
     },
-    "message": "ok"
+    "message": "Login successfully"
 }
 ```
 
@@ -180,12 +180,13 @@ token|是|123|登录时所获得的token
         "school": "数据院",
         "grade": "大三",
         "gender" : 0,
-        "QQ": "90379",
+        "qq": "90379",
+        "phone": "12321",
         "wechat" : "90379",
         "mission_pub_num": 10,
         "mission_fin_num": 10
     },
-    "message": "ok"
+    "message": "Get user info successfully"
 }
 ```
 
@@ -205,12 +206,11 @@ PUT
 --|--|--|--|
 token|是|123|登录所返回的token
 username|否|pj|修改的用户名
-sid|否|16340000|修改的学号
-email|否|123@qq.com|修改的邮箱
 university|否|大山中学|修改的学校
 school|否|学院|修改的学院
 grade|否|大三|修改的年级
 gender|否|0|0为男,1为女
+phone|否|+86 136012138485|电话号码
 qq|否|90317|qq号
 wechat|否|90325|微信号
 
@@ -218,7 +218,7 @@ wechat|否|90325|微信号
 ```json
 {
     "staus" : 200,
-    "message": "ok"
+    "message": "Update user info successfully"
 }
 ```
 ---
