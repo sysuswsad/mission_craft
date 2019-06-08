@@ -2,16 +2,18 @@ import os
 import json
 import pytest
 from werkzeug.security import check_password_hash
+# from werkzeug import FileStorage
+from werkzeug.datastructures import FileStorage
 
 from app.db import get_db
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
 
-def get_basic_auth_headers():
+def get_basic_auth_headers(ContentType='application/json'):
     '''创建Basic Auth认证的headers'''
     return {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': ContentType
     }
 
 
@@ -32,17 +34,22 @@ def get_token_auth_headers(client, app, username_or_email, password, content_typ
 
 # 有个地方非常坑，request.get_json(force=True)中force=True必须设置，否则就一直出错，建议后续写一个函数来添加header，防止出现类似错误
 # 下面这个测过了，不用测了
-# @pytest.mark.parametrize(('email', 'status_code', 'message'), (
-#     ('', 400, 'Email is required'),
-#     ('1473595322', 400, 'Email format error'),
-#     ('123@qq.com', 400, 'Email 123@qq.com is already registered.'),
-#     ('ou@mail2.sysu.edu.cn', 201, 'Generate and send token successfully'),
-# ))
-# def test_code(client, app, email, status_code, message):
-#     response = client.post('/api/code/', headers=get_basic_auth_headers(), data=json.dumps({'email':email}))
-#     assert response.status_code == status_code
-#     response = json.loads(response.get_data(as_text=True))
-#     assert response.get('message') == message
+@pytest.mark.parametrize(('email', 'status_code', 'message'), (
+    ('', 400, 'Email is required'),
+    # ('1473595322', 400, 'Email format error'),
+    # ('123@qq.com', 400, 'Email 123@qq.com is already registered.'),
+    # ('ousx@ma.sy.edu.cn', 400, 'We can not find such email, you should change one'),
+    # ('o@mail2.sysu.edu.cn', 400, 'We can not find such email, you should change one'),
+    # ('ousx@mail2.sysu.edu.cn', 201, 'Generate and send token successfully'),
+))
+def test_code(client, app, email, status_code, message):
+    response = client.post('/api/code/', headers=get_basic_auth_headers(), data=json.dumps({'email':email}))
+    assert response.status_code == status_code
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+    if response.status_code == 201:
+        with app.app_context():
+            assert get_db().execute('SELECT code FROM Verification WHERE email = ?', (email,)).fetchone() is not None
 
 
 # 下面这个测过了，不用测了
@@ -244,7 +251,6 @@ def test_change_password(client, app, username, old_password, new_password, stat
     
 ))
 def test_upload_file(client, app, username, password, filename, status_code, message, avatar_url, get_url):
- 
     BASE_DIR =  os.path.dirname(os.path.abspath(__file__))
     data = {'image': open(os.path.join(BASE_DIR,filename), 'rb')}
     response = client.post('api/avatar/',headers=get_token_auth_headers(client, app, username, password, 'multipart/form-data'),data=data)

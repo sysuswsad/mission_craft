@@ -16,11 +16,12 @@ class Config(object):
     MAIL_USERNAME = os.getenv('FLASK_EMAIL', '1473595322@qq.com')
     MAIL_PASSWORD = os.getenv('FLASK_EMAIL_PASSWORD', 'hzqjtpbdpdxyfejd')
     MAIL_DEFAULT_SENDER = 'MissionCraft <' + str(MAIL_USERNAME) + '>'
+
     # 上传到的文件夹
+
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app', 'static')
     BASE_STATIC_URL = 'localhost:5000/api/image/'
-    
 
     # 配置redis数据库
     # REDIS_HOST = '127.0.0.1'
