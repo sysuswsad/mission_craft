@@ -558,7 +558,7 @@ token|是|123|登录返回的token
 {
     "staus" : 200,
     "data" : {
-        "notification" : [{
+        "notifications" : [{
             "n_id" : 123,
             "mission_id": "",
             "message": "这个message是后台生成还是怎样",
@@ -592,7 +592,7 @@ notification|是|[{"n_id":123,"has_read":True}]|一个
 {
     "staus" : 200,
     "data" : {
-        "notification" : [{
+        "notifications" : [{
             "n_id" : 123,
             "mission_id": 123456,
             "message": "这个message是后台生成",
