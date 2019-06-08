@@ -271,7 +271,6 @@ def get_uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                filename)
 
-
 @bp.route('/avatar/', methods=['POST'])
 @auth.login_required
 def change_avatar():
@@ -282,7 +281,6 @@ def change_avatar():
         extention = filename.rsplit('.', 1)[1]
 
         file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], str(g.user['idUser']) + '.' + extention))
-        
         avatar = os.path.join(current_app.config['BASE_STATIC_URL'], str(g.user['idUser']) + '.' + extention)
         db = get_db()
         db.execute(

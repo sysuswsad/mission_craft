@@ -1,6 +1,8 @@
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS MissionInfo;
 DROP TABLE IF EXISTS Problem;
+DROP TABLE IF EXISTS MissionOrder;
+DROP TABLE IF EXISTS Answer;
 DROP TABLE IF EXISTS Verification;
 
 CREATE TABLE User (
@@ -85,7 +87,7 @@ CREATE TABLE Answer (
   feedback VARCHAR(45) NULL,
   supplement_info VARCHAR(45) NULL,
   FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder),
-  FOREIGN KEY (problem_id) REFERENCES Problem (idProblem),
+  FOREIGN KEY (problem_id) REFERENCES Problem (idProblem)
 );
 
 -- 如果不使用redis数据库，就需要将验证码存到邮箱的这个表
