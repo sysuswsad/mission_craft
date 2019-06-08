@@ -1,6 +1,8 @@
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS MissionInfo;
 DROP TABLE IF EXISTS Problem;
+DROP TABLE IF EXISTS MissionOrder;
+DROP TABLE IF EXISTS Answer;
 DROP TABLE IF EXISTS Verification;
 
 CREATE TABLE User (
@@ -25,7 +27,7 @@ CREATE TABLE User (
   avatar VARCHAR(45) DEFAULT '',
   tag VARCHAR(45) DEFAULT '',
   mission_pub_num INT DEFAULT 0,
-  mission_todo_num INT DEFAULT 0,
+  -- mission_todo_num INT DEFAULT 0,
   mission_fin_num INT DEFAULT 0,
   balance DOUBLE DEFAULT 0.0
 );
@@ -33,6 +35,10 @@ CREATE TABLE User (
 CREATE TABLE MissionInfo (
   idMissionInfo INTEGER PRIMARY KEY AUTOINCREMENT,
   publisher_id INTEGER NOT NULL,
+  phone VARCHAR(45) DEFAULT '',
+  qq VARCHAR(45) DEFAULT '',
+  wechat VARCHAR(45) DEFAULT '',
+  other_way VARCHAR(45) DEFAULT '',
   type INT DEFAULT 0,
   tag VARCHAR(45) NULL,
   create_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
@@ -53,21 +59,35 @@ CREATE TABLE Problem (
   mission_id INTEGER NOT NULL,
   type INT DEFAULT 0,
   problem_stem VARCHAR(45) NOT NULL,
-  problem_detail VARCHAR(45) DEFAULT '',
+  problem_detail VARCHAR(200) DEFAULT '',
   must_be_answer INT DEFAULT 1,
   jump_logic INT DEFAULT -1,
   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo)
 );
 
-CREATE TABLE IF NOT EXISTS MissionOrder (
+CREATE TABLE MissionOrder (
   idMissionOrder INTEGER PRIMARY KEY AUTOINCREMENT,
   mission_id INTEGER NOT NULL,
   receiver_id INTEGER NOT NULL,
   publisher_confirm INT DEFAULT 0,
   receiver_confirm INT DEFAULT 0,
   order_state INT DEFAULT 0,
-  receive_time DATETIME NOT NULL,
-  finish_time DATETIME DEFAULT NULL
+  receive_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+  finish_time DATETIME DEFAULT NULL,
+  FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
+  FOREIGN KEY (receiver_id) REFERENCES User (idUser)
+);
+
+CREATE TABLE Answer (
+  idAnswer INTEGER PRIMARY KEY AUTOINCREMENT,
+  order_id INT NOT NULL,
+  problem_id INT NOT NULL,
+  result VARCHAR(45) NOT NULL,
+  answer_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+  feedback VARCHAR(45) NULL,
+  supplement_info VARCHAR(45) NULL,
+  FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder),
+  FOREIGN KEY (problem_id) REFERENCES Problem (idProblem)
 );
 
 -- 如果不使用redis数据库，就需要将验证码存到邮箱的这个表
