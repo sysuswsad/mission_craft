@@ -25,7 +25,7 @@
         <el-table-column
           label="任务类型"
           prop="missionType"
-          v-bind:filters="[{text:'问卷调查', value: ''}, {text: '其他任务', value: '✔'}]"
+          v-bind:filters="[{text:'问卷调查', value: '问卷调查'}, {text: '其他任务', value: '其他任务'}]"
           v-bind:filter-method="filtersHandler"></el-table-column>
         <el-table-column prop="status" label="任务摘要"></el-table-column>
         <el-table-column align="right" v-if="activeTab === 'processing'">
