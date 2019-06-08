@@ -561,7 +561,7 @@ token|是|123|登录返回的token
         "notification" : [{
             "n_id" : 123,
             "message": "这个message是后台生成还是怎样",
-            "user_id": "",
+            "mission_id": "",
             "time":"2019-6-1 14:40:20",
             "has_read": True
         }, ...
@@ -595,7 +595,7 @@ notification|是|[{"n_id":123,"has_read":True}]|一个
         "notification" : [{
             "n_id" : 123,
             "message": "这个message是后台生成",
-            "user_id": 123456,
+            "mission_id": 123456,
             "create_time":"2019-6-1 14:40:20",
             "has_read": True
         }, ...
