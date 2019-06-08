@@ -273,7 +273,7 @@ image|是||上传头像文件(type=file),仅允许.jpg,.jpeg,.png类型
     "data" : {
         "avator" : "\..\.."
     },
-    "message": "ok"
+    "message": "Get user avatar successfully"
 }
 ```
 ---
@@ -301,7 +301,7 @@ token|是|123|登录所返回的token
     "data" : {
         "avator" : "www.domain.com/image/.."
     },
-    "message": "ok"
+    "message": "change avatar successfully"
 }
 ```
 
