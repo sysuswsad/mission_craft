@@ -2,7 +2,11 @@ from flask import jsonify
 from werkzeug.http import HTTP_STATUS_CODES
 
 
+<<<<<<< HEAD
+def fine_response(status_code, message=None, token=None, data=None):
+=======
 def fine_response(status_code, message=None, data=None):
+>>>>>>> 61dfbb4bf5393e25ecff354c84dadeb9cdf7f4ba
     payload = {}
     if message:
         payload['message'] = message
@@ -16,8 +20,13 @@ def fine_response(status_code, message=None, data=None):
 def ok(message, data=None):
     return fine_response(status_code=200, message=message, data=data)
 
+<<<<<<< HEAD
+def created(message, token=None, data=None):
+    return fine_response(status_code=201, message=message, token=token, data=data)
+=======
 def created(message, data=None):
     return fine_response(status_code=201, message=message, data=data)
+>>>>>>> 61dfbb4bf5393e25ecff354c84dadeb9cdf7f4ba
 
 
 def error_response(status_code, message=None):

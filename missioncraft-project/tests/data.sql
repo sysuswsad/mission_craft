@@ -3,7 +3,9 @@ INSERT INTO User (username, password, sid, email)
 VALUES
   ('test1', 'pbkdf2:sha256:50000$26WYbCSt$9014a8d3969053fd0b55af5dea48e2b509d0e0586b6d30bae3dde9c8cd86df90', '16340001', '123@qq.com'),
   ('test10', 'pbkdf2:sha256:50000$26WYbCSt$9014a8d3969053fd0b55af5dea48e2b509d0e0586b6d30bae3dde9c8cd86df90', '16340010', '456@qq.com'),
-  ('pj', 'pbkdf2:sha256:50000$26WYbCSt$9014a8d3969053fd0b55af5dea48e2b509d0e0586b6d30bae3dde9c8cd86df90','16340176','666@qq.com');
+  ('pj', 'pbkdf2:sha256:50000$26WYbCSt$9014a8d3969053fd0b55af5dea48e2b509d0e0586b6d30bae3dde9c8cd86df90','16340176','666@qq.com'),
+  ('pj2', 'pbkdf2:sha256:50000$26WYbCSt$9014a8d3969053fd0b55af5dea48e2b509d0e0586b6d30bae3dde9c8cd86df90','16340171','666@qq.com');
+
 
 INSERT INTO Verification (email, code)
 VALUES 
@@ -12,4 +14,24 @@ VALUES
 
 INSERT INTO Verification (email, code, send_time)
 VALUES 
-  ('12345@qq.com', '123456', datetime('now','+1 hours'))
+  ('12345@qq.com', '123456', datetime('now','+1 hours'));
+
+INSERT INTO MissionInfo (publisher_id, title, description, deadline,type,max_num,rcv_num,fin_num, state)
+VALUES 
+  (1, '问卷1', '未到最大数,开放', datetime('2029-06-08 11:20:12'),0,100,1,1,0),
+  (1, '问卷2', '最大数-1, 开放', datetime('2029-06-08 11:20:12'),0,100,99,99,0),
+  (1, '问卷3', '达最大数', datetime('2029-06-08 11:20:12'),0,100,100,100,1),
+  (1, '问卷4', '未达最大,但已取消', datetime('2029-06-08 11:20:12'),0,100,50,50,1),
+  (1, '问卷5', '未达最大，已过期', datetime('2019-06-08 11:20:12'), 0,100,50,0,0),
+  (1, '快递6', '开放且尚未接的任务', datetime('2029-06-08 11:20:12'),1,1,0,0,0),
+  (1, '快递7', '已经接了的任务', datetime('2029-06-08 11:20:12'),1,1,1,0,1),
+  (1, '快递8', '已经取消了的任务', datetime('2029-06-08 11:20:12'),1,0,0,0,1),
+  (1, '快递9', '已过期的任务', datetime('2019-06-08 11:20:12'),1,1,0,0,0);
+ 
+  
+
+INSERT INTO MissionOrder (mission_id, receiver_id, publisher_confirm, receiver_confirm, receive_time, finish_time)
+VALUES 
+  (1, 3, 1, 1, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (2, 3, 1, 1, datetime('2019-06-08 12:12:12'), Null)
+  ;
