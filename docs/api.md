@@ -12,6 +12,7 @@
     - [退出登录](#退出登录)        
     - [得到个人信息](#得到个人信息)        
     - [修改个人信息](#修改个人信息)        
+    - [修改密码](#修改个人信息)  
     - [上传头像](#上传头像)       
     - [得到头像](#得到头像)   
 - [任务接口](#任务接口)
@@ -219,6 +220,32 @@ wechat|否|90325|微信号
 {
     "staus" : 200,
     "message": "Update user info successfully"
+}
+```
+---
+### 修改密码
+**请求地址**
+```
+/password/
+```
+
+**HTTP方法**
+POST
+
+**请求参数**
+
+参数名 | 是否必须 | 示例值 | 描述
+--|--|--|--|
+token|是|123|登录所返回的token
+username|是|pj|用户名
+old_password|是|Pj123456|原密码
+new_password|是|PJ123|新密码
+
+**返回示例**
+```json
+{
+    "staus" : 200,
+    "message": "Change password successfully"
 }
 ```
 ---
