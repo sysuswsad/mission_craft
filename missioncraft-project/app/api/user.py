@@ -71,7 +71,7 @@ def register():
         ).fetchone()
         if code_info['code'] != str(code):
             return bad_request('Verification code is not correct')
-        elif abs(code_info['send_time'] - datetime.datetime.now()).seconds > 1800:
+        elif abs(datetime.datetime.strptime(code_info['send_time'], '%Y-%m-%d %H:%M:%S') - datetime.datetime.now()).seconds > 1800:
             return bad_request('Verification code is out of time')
 
     db.execute(
@@ -81,6 +81,11 @@ def register():
     db.commit()
 
     return created('Register successfully')
+
+
+# ??????????根据用户id返回该用户信息的api
+# @bp.route('/token/', methods=['POST'])
+# def
 
 
 @bp.route('/token/', methods=['POST'])
@@ -111,12 +116,14 @@ def login():
     elif not check_password_hash(user['password'], password):
         return bad_request('Incorrect password')
 
-    # 新增通知功能，需要在登录时检查该用户有没有已发布的过期任务，如果有则在通知表生成新的表项
+    # 新增通知功能，需要在登录时检查该用户有没有已发布的过期任务，如果有则在通知表生成新的表项????????????????待完成
     # 然后查通知表获取所有该用户的未读表项的数目，然后再response.body返回
 
     # 登录成功，服务器生成token并返回给用户端
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
-    return created('Login successfully', token=s.dumps({'idUser': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8'))
+    return created('Login successfully', data={
+            'token':s.dumps({'idUser': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8')
+        })
 
 
 @bp.route('/code/', methods=['POST'])
@@ -142,29 +149,25 @@ def get_code():
     try:
         if not verify_istrue(email)[email]:
             return bad_request('We can not find such email, you should change one')
+        else:
+            code = random.randint(100000, 999999)
+            # 使用sqlite数据库的情况：
+            db.execute(
+                'REPLACE INTO Verification VALUES (?,?,?)',
+                (email, code, datetime.datetime.now())
+            )
+            db.commit()
+            # 使用redis情况的代码如下：
+            # try:
+            #     redis_db.set('Email:'+email, code, 1800)    # 有效期半小时
+            # except Exception as e:
+            #     current_app.logger.debug(e)
+            #     return bad_request('Redis storing error '+str(e))
+
+            send_verification_code(email, code)
+            return created('Generate and send token successfully')
     except Exception:
         return bad_request('We can not find such email, you should change one')
-
-    code = random.randint(100000, 999999)
-    # 使用sqlite数据库的情况：
-    # try:
-    db.execute(
-        'REPLACE INTO Verification VALUES (?,?,?)',
-        (email, code, datetime.datetime.now())
-    )
-    db.commit()
-    # except Exception as e:
-    #     current_app.logger.debug(e)
-    #     return bad_request('Redis storing error '+str(e))
-    # 使用redis情况的代码如下：
-    # try:
-    #     redis_db.set('Email:'+email, code, 1800)    # 有效期半小时
-    # except Exception as e:
-    #     current_app.logger.debug(e)
-    #     return bad_request('Redis storing error '+str(e))
-
-    send_verification_code(email, code)
-    return created('Generate and send token successfully')
 
 
 @auth.error_handler
@@ -197,11 +200,10 @@ def verify_token(token):
 @auth.login_required
 def get_info():
     db = get_db()
-    user_table = db.execute('SELECT * FROM User')
-    name_list = [tuple[0] for tuple in user_table.description]
     user = {}
-    for item in tuple(name_list):
-        user[item] = g.user[item]
+    for item in [name_list[1] for name_list in db.execute('PRAGMA table_info(User)').fetchall()]:
+        if item != 'password':
+            user[item] = g.user[item]
 
     return ok('Get user info successfully', data=user)
 
