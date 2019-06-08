@@ -1,0 +1,9 @@
+Werkzeug==0.15.2
+redis==3.2.1
+itsdangerous==1.1.0
+Flask_HTTPAuth==3.3.0
+Flask_Mail==0.9.1
+Click==7.0
+Flask==1.0.2
+config==0.4.2
+dnspython==1.16.0

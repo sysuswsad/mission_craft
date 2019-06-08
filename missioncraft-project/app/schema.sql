@@ -53,6 +53,14 @@ CREATE TABLE Verification (
   send_time TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
 )
 
+-- 通知表
+-- CREATE TABLE Notification (
+--   n_id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+-- )
+
+
+
 -- 下面这些是整个sql数据库创建，mydb指的是数据库名字，这里我们可以去掉，因为数据库名字叫mission_craft
 
 -- -----------------------------------------------------
