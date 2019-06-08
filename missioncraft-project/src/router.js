@@ -10,6 +10,7 @@ import QuestionnairePage from './views/QuestionnairePage'
 import AnswerQuestionnairePage from './views/AnswerQuestionnairePage'
 import PublicationPage from './views/PublicationPage'
 import ReceivedPage from './views/ReceivedPage'
+import PublishMissionPage from './views/PublishMissionPage'
 
 Vue.use(Router)
 
@@ -64,6 +65,11 @@ export default new Router({
       path: '/received',
       name: 'received',
       component: ReceivedPage
+    },
+    {
+      path: '/publishMission',
+      name: 'publishMission',
+      component: PublishMissionPage
     }
   ]
 })

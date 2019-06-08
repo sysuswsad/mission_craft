@@ -14,8 +14,22 @@
           <el-form label-width="100px">
             <el-row>
               <el-col v-bind:span="12">
-                <el-form-item label="专业">
-                  <el-input v-model="privateInfo.subject" v-bind:disabled="!canEdit"></el-input>
+                <el-form-item label="用户名">
+                  <el-input v-model="privateInfo.username" v-bind:disabled="!canEdit"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col v-bind:span="12">
+                <el-form-item label="年级">
+                  <el-input v-model="privateInfo.grade" v-bind:disabled="!canEdit"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col v-bind:span="12">
+                <el-form-item label="学院">
+                  <el-input v-model="privateInfo.school" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -91,7 +105,9 @@ export default {
       canEdit: false,
       imageUrl: '',
       privateInfo: {
-        subject: ''
+        username: '',
+        school: '',
+        grade: ''
       },
       passwordSet: {
         oldPassword: '',

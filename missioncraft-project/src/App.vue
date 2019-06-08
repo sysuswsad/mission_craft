@@ -58,14 +58,14 @@ export default {
       if (idx === 0) {
         this.$router.push({ name: 'questionnaire' })
       } else {
-        this.$router.push({ name: 'publicMission' })
+        this.$router.push({ name: 'publishMission' })
       }
     }
   },
 
   computed: {
     showMenu () {
-      return !(this.$route.path === '/questionnaire' || this.$route.path === '/publicMission')
+      return !(this.$route.path === '/questionnaire' || this.$route.path === '/publishMission')
     }
   }
 }
