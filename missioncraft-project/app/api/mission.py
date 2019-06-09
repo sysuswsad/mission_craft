@@ -31,8 +31,9 @@ def create_mission():
     other_way = data.get('other_way')
     bounty = data.get('bounty')
     max_num = data.get('max_num', 1)
-    problems = data.get('questions')
+    problems = data.get('problems')
 
+    # bounty等于0也会报错Missing some necessary parameter
     if (not mission_type and mission_type != 0) or (not deadline) or (not title) or (not description) or (not bounty):
         return bad_request('Missing some necessary parameter')
     elif (not qq) and (not wechat) and (not phone) and (not other_way):
@@ -52,8 +53,8 @@ def create_mission():
 
     db = get_db()
     db.execute(
-        'INSERT INTO MissionInfo (publisher_id, type, deadline, title, description, bounty, max_num) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        (g.user['idUser'], mission_type, deadline, title, description, bounty, max_num)
+        'INSERT INTO MissionInfo (publisher_id, type, deadline, title, description, qq, wechat, phone, other_way, bounty, max_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (g.user['idUser'], mission_type, deadline, title, description, qq, wechat, phone, other_way, bounty, max_num)
     )
     db.commit()
     # 这里可以通过type(fetchone())来查看列值；通过fetchone().keys()查看列名
@@ -90,11 +91,16 @@ def get_mission():
         return bad_request('ERROR DATA AT GET MISSION')
 
     limit = data.get('limit')
-
     mission_type = data.get('type')
+    return_problems = data.get('return_problems')
+    return_statistics = data.get('return_statistics')
 
-    bounty = data.get('bounty', 0)
-    create_time = data.get('create_time', '2000-01-01 01:01:01')
+    bounty = data.get('bounty')
+    create_time = data.get('create_time')
+    if not bounty:
+        bounty = 0.0
+    if not create_time:
+        create_time = '2000-01-01 00:00:00'
 
     personal = data.get('personal')
     mission_id = data.get('mission_id')
@@ -104,7 +110,7 @@ def get_mission():
     col_name = [name_list[1] for name_list in db.execute('PRAGMA table_info(MissionInfo)').fetchall()]
     col_name.remove('phone');col_name.remove('qq');col_name.remove('wechat');col_name.remove('other_way')
     # 若missionid不为空，说明是通过missionid查询特定订单信息，不需要提供任何其他信息
-    if mission_id:
+    if mission_id or mission_id == 0:
         try:
             mission_id = int(mission_id)
         except Exception:
@@ -118,10 +124,10 @@ def get_mission():
         for item in col_name:
             mission_json[item] = mission_info[item]
         mission_array.append(mission_json)
-    else:
+    elif personal or personal == 0:
         try:
             create_time = datetime.datetime.strptime(create_time, '%Y-%m-%d %H:%M:%S')
-            bounty = int(bounty)
+            bounty = float(bounty)
             personal = int(personal)
         except Exception:
             return bad_request('Parse create_time, bounty or personal error')
@@ -141,8 +147,10 @@ def get_mission():
             for item in col_name:
                 mission_json[item] = row[item]
             mission_array.append(mission_json)
+    else:
+        return bad_request('Personal or mission_id are required')
     # 根据mission_type筛选
-    if mission_type:
+    if mission_type or mission_type == 0:
         try:
             mission_type = int(mission_type)
         except Exception:
@@ -159,7 +167,7 @@ def get_mission():
     # 使用问题表完善missioninfo信息
     for item in mission_array:
         item['problems'] = ''
-        if item['type'] == 0:
+        if item['type'] == 0 and return_problems:
             problem_info = db.execute(
                 'SELECT * FROM Problem WHERE mission_id = ?', (item['idMissionInfo'],)
             ).fetchall()
@@ -168,34 +176,35 @@ def get_mission():
                 problem_json = {}
                 problem_json['type'] = row['type']
                 problem_json['question'] = row['problem_stem']
-                problem_json['choices'] = row['problem_detail']
+                problem_json['choices'] = json.loads(row['problem_detail'])
                 problems.append(problem_json)
             item['problems'] = problems
             # 如果问卷任务还需要返回答案统计信息
-            if item['publisher_id'] != g.user['idUser']:
+            if item['publisher_id'] != g.user['idUser'] or (not return_statistics):
                 continue
-            for problem in problems:
-                problem['answer'] = statistics_ana(row['type'], row['problem_detail'], row['idProblem'])
+            for num in range(0, len(problems)):
+                item['problems'][num]['answer'] = statistics_ana(problem_info[num]['type'], problem_info[num]['problem_detail'], problem_info[num]['idProblem'])
 
-    # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
-    for item in mission_array:
-        item['receiver_id'] = ''
-        item['receiver_time'] = ''
-        item['avatar'] = db.execute(
-            'SELECT avatar FROM User WHERE idUser = ?', (item['publisher_id'],)
-        ).fetchone()['avatar']
-        # 暂时只考虑快递任务，如果有人接单且查询人是发布者，返回接单人信息
-        if item['type'] == 1 and item['rcv_num'] == 1 and item['publisher_id'] == g.user['idUser']:
-            mission_order = db.execute(
-                'SELECT receiver_id, receiver_time FROM MissionOrder WHERE mission_id = ?', (item['idMissionInfo'],)
-            ).fetchone()
-            item['receiver_id'] = mission_order['receiver_id']
-            item['receiver_time'] = mission_order['receiver_time']
+    # # 讨论过后发现不需要接单人信息
+    # # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
+    # for item in mission_array:
+    #     item['receiver_id'] = ''
+    #     item['receiver_time'] = ''
+    #     item['avatar'] = db.execute(
+    #         'SELECT avatar FROM User WHERE idUser = ?', (item['publisher_id'],)
+    #     ).fetchone()['avatar']
+    #     # 暂时只考虑快递任务，如果有人接单且查询人是发布者，返回接单人信息
+    #     if item['type'] == 1 and item['rcv_num'] == 1 and item['publisher_id'] == g.user['idUser']:
+    #         mission_order = db.execute(
+    #             'SELECT receiver_id, receiver_time FROM MissionOrder WHERE mission_id = ?', (item['idMissionInfo'],)
+    #         ).fetchone()
+    #         item['receiver_id'] = mission_order['receiver_id']
+    #         item['receiver_time'] = mission_order['receiver_time']
 
     # 选出后limit个
     if limit and int(limit) < len(mission_array):
         limit = int(limit)
-        mission_array = mission_array[limit:len(mission_array)]
+        mission_array = mission_array[len(mission_array)-limit:len(mission_array)]
 
     return ok('Get missions successfully', data={'missions':mission_array})
 
@@ -208,7 +217,7 @@ def cancel_mission():
         return bad_request('ERROR DATA AT CANCEL MISSION')
 
     mission_id = data.get('mission_id')
-    if not mission_id:
+    if (not mission_id and mission_id != 0):
         return bad_request('Mission_id is required')
     mission_info = db.execute('SELECT publisher_id, type, rcv_num FROM MissionInfo WHERE idMissionInfo = ?',
         (mission_id,) 
