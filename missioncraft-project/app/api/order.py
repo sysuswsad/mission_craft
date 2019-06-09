@@ -7,7 +7,7 @@ import datetime
 from app.api.user import auth
 from app.db import get_db
 from app.api import bp
-from app.response_code import bad_request, unauthorized, ok, created
+from app.response_code import bad_request, unauthorized, ok, created, forbidden
 
 import json
 
@@ -146,7 +146,7 @@ def confirm_order():
 	# 分成两类，问卷由接收人确认即可，其他任务由发布人确认
 	if mission_info['type'] == 0:
 		if order_info['receiver_id'] != g.user['idUser']:
-			return unauthorized('You can not submit for other receivers')
+			return forbidden('You can not submit for other receivers')
 		answers = json.loads(data.get('answers'))
 		problem_ids = db.execute(
 			'SELECT idProblem FROM Problem WHERE mission_id = ?', (order_info['mission_id'])
@@ -161,9 +161,9 @@ def confirm_order():
 			return bad_request('Parse answers error')
 	elif mission_info['type'] == 1:
 		if mission_info['publisher_id'] != g.user['idUser']:
-			return unauthorized('You can not submit for other publishers')
-		# 注意进行修改通知表？？？？？？？？？？后续完成
-	# 为接单人发钱
+			return forbidden('You can not submit for other publishers')
+		# 注意进行修改通知表??????后续完成
+	# 为接单人发钱??????后续完成
 
 	# 更新其它表
 	db.execute(

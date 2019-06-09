@@ -19,7 +19,7 @@ CREATE TABLE User (
   university VARCHAR(45) DEFAULT '',
   school VARCHAR(45) DEFAULT '',
   grade VARCHAR(45) DEFAULT '',
-  gender VARCHAR(45) DEFAULT '',
+  gender INT DEFAULT -1,
   email VARCHAR(45) NOT NULL,
   phone VARCHAR(45) DEFAULT '',
   qq VARCHAR(45) DEFAULT '',

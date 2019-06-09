@@ -23,8 +23,7 @@ def get_token_auth_headers(client, app, username_or_email, password, content_typ
     response = client.post('/api/token/', headers=headers, data=json.dumps({'username_or_email':username_or_email, 'password':password}))
     assert response.status_code == 201
     response = json.loads(response.get_data(as_text=True))
-    assert response.get('message') == ' '
-    token = response.get('token')
+    token = response.get('data')['token']
     assert token is not None
     return {
         'Authorization': 'Bearer ' + token,
@@ -126,7 +125,7 @@ def test_login(client, app, username_or_email, password, status_code, message):
             person = get_db().execute('SELECT * FROM User  WHERE email = ?', (username_or_email,)).fetchone()
         assert person is not None
         s = Serializer(app.config['SECRET_KEY'])
-        token = s.loads(response_data.get('token'))
+        token = s.loads(response_data.get('data')['token'])
         assert token is not None
         assert token['idUser'] == person['idUser']
         assert token['email'] == person['email']
@@ -184,7 +183,7 @@ def test_update_info_without_login(client, app, status_code, message):
 
 @pytest.mark.parametrize(('origin_username', 'password', 'username', 'realname', 'id_card_num', 'university', 'school', 'grade', 'gender', 'phone', 'qq', 'wechat', 'status_code', 'message'), (
     ('test1', '123456', 'test1', 'ooooox', '1232344', 'Berkeley', '', '', '', '', '', '', 200, 'Update user info successfully'),
-    ('test1', '123456', 'test50', 'ooooos', '123234435f4365', 'Berkeley', 'software', '3', 'male', '1239087', 'dasu', 'dakl', 200, 'Update user info successfully')
+    ('test1', '123456', 'test50', 'ooooos', '123234435f4365', 'Berkeley', 'software', '3', 0, '1239087', 'dasu', 'dakl', 200, 'Update user info successfully')
 ))
 def test_update_info(client, app, origin_username, password, username, realname, id_card_num, university, school, grade, gender, phone, qq, wechat, status_code, message):
     response = client.put('/api/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
@@ -256,7 +255,7 @@ def test_upload_file(client, app, username, password, filename, status_code, mes
     data = {'image': open(os.path.join(BASE_DIR,filename), 'rb')}
     response = client.post('api/avatar/',headers=get_token_auth_headers(client, app, username, password, 'multipart/form-data'),data=data)
     assert response.status_code == status_code
-     
+
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
 
