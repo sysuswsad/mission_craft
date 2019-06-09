@@ -90,6 +90,7 @@
             <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+          <el-button type="primary" style="margin-top: 10px">确认修改</el-button>
         </el-tab-pane>
       </el-tabs>
     </el-card>

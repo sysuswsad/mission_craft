@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-card>
-      <div style="float: left; width: 50%">
+    <el-card style="position: relative">
+      <div style="width: 50%">
         <template>
           <el-select v-model="missionType" placeholder="请选择任务类型">
             <el-option
@@ -79,10 +79,12 @@
           </el-row>
         </el-form>
       </div>
-      <div class="block" style="float: right; width: 45%; margin-right: 5px">
+      <div style="width:45%;height:100%;position:absolute;right:0;bottom:0">
         <el-image
                 :src="url"
-                fit="contain"></el-image>
+                fit="cover"
+                style="position: absolute;bottom: 0"
+        ></el-image>
       </div>
     </el-card>
     <el-card class="pay-card">

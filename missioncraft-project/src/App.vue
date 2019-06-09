@@ -70,7 +70,8 @@ export default {
 
   computed: {
     showMenu () {
-      return !(this.$route.path === '/questionnaire' || this.$route.path === '/publishMission')
+      return !(this.$route.path === '/questionnaire' || this.$route.path === '/publishMission' ||
+          this.$route.path === '/login' || this.$route.path === '/register' || this.$route.path === '/answerQuestionnaire')
     }
   }
 }
