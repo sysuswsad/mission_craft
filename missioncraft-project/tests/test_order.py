@@ -52,8 +52,3 @@ def test_create_order(client, app, username, password, status_code, message, ord
         assert mission
         assert mission['state'] == state
         assert mission['rcv_num'] == rcv_num
-        
-     
-    
-    
-

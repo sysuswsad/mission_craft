@@ -221,7 +221,7 @@ def update_info():
     university = data.get('university', '')
     school = data.get('school', '')
     grade = data.get('grade', '')
-    gender = data.get('gender', '')
+    gender = data.get('gender', -1)
     phone = data.get('phone', '')
     qq = data.get('qq', '')
     wechat = data.get('wechat', '')
