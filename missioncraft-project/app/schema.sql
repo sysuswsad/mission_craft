@@ -19,7 +19,7 @@ CREATE TABLE User (
   university VARCHAR(45) DEFAULT '',
   school VARCHAR(45) DEFAULT '',
   grade VARCHAR(45) DEFAULT '',
-  gender VARCHAR(45) DEFAULT '',
+  gender INT DEFAULT -1,
   email VARCHAR(45) NOT NULL,
   phone VARCHAR(45) DEFAULT '',
   qq VARCHAR(45) DEFAULT '',
@@ -50,7 +50,7 @@ CREATE TABLE MissionInfo (
   max_num INT DEFAULT 1,
   rcv_num INT DEFAULT 0,
   fin_num INT DEFAULT 0,
-  state DOUBLE DEFAULT 0,
+  state INT DEFAULT 0,
   FOREIGN KEY (publisher_id) REFERENCES User (idUser)
 );
 

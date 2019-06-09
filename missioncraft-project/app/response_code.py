@@ -16,6 +16,7 @@ def fine_response(status_code, message=None, data=None):
 def ok(message, data=None):
     return fine_response(status_code=200, message=message, data=data)
 
+
 def created(message, data=None):
     return fine_response(status_code=201, message=message, data=data)
 
@@ -38,6 +39,9 @@ def unauthorized(message):
     '''401:未授权错误'''
     return error_response(status_code=401, message=message)
 
+
+def forbidden(message):
+    return error_response(status_code=403, message=message)
 # with app.app_context():
 #     res = jsonify(pyload)
 #     print(res.status_code)

@@ -11,7 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
 from app.db import get_db
-from app.response_code import bad_request, unauthorized, ok, created
+from app.response_code import bad_request, unauthorized, ok, created, forbidden
 from app.email import send_verification_code
 from app.verification import  verify_istrue
 from app.api import bp
@@ -221,7 +221,7 @@ def update_info():
     university = data.get('university', '')
     school = data.get('school', '')
     grade = data.get('grade', '')
-    gender = data.get('gender', '')
+    gender = data.get('gender', -1)
     phone = data.get('phone', '')
     qq = data.get('qq', '')
     wechat = data.get('wechat', '')
