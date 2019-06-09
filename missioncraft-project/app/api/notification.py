@@ -12,25 +12,25 @@ from app.response_code import bad_request, unauthorized, ok, created
 import json
 
 
-
-@bp.route('/notification/', methods=('get'))
+# @bp.route('/notification/', methods=('get'))
+@bp.route('/notification', methods=('get'))
 @auth.login_required
 def get_notification():
     """返回对应通知id的通知item
     """
-    # data = request.get_json()
-	# if not data:
-	# 	return bad_request('ERROR DATA AT GET NOTIFICATION')
-    notifications = get_db().execute(
+    db = get_db()
+    notifications = db.execute(
         'SELECT n_id, mission_id, message, create_time, has_read'
         ' FROM Notification n'
-        ' WHERE n.n_id = ?',
+        ' WHERE n.user_id = ?'
+        ' ORDER BY create_time DESC',
         (g.user['idUser'],)
-    ).fetchone()
+    ).fetchall()
 
     return ok('Get notifications successfully', data={'notifications': notifications})
 
 
+###########################################################
 def get_unread_num(user_id):
     """获取未读通知读数量
     """
@@ -40,22 +40,24 @@ def get_unread_num(user_id):
         ' FROM Notification'
         ' WHERE user_id = ? AND has_read = 1',
         (user_id, )
-    ).fetchone()
+    ).fetchall()
     return len(notifications)
 
+
 def has_created(n_type, user_id, mission_id):
-    """判定该通知是否已创建过，若是，则返回True，否则范围False
+    """判定通知是否已创建过，若是，则返回True，否则范围False
     """
     db = get_db()
     notification = db.execute(
         'SELECT *'
         ' FROM Notification'
-        ' WHERE user_id = ? AND mission_id = ? AND type = ?',
+        ' WHERE user_id = ? AND mission_id = ? AND notification_type = ?',
         (user_id, mission_id, n_type,)
-    ).fetchone()
-    # None 表示还没创建过，非None表示已经创建过了
-    has_created = False if notification is None else True
+    ).fetchall()
+    # 0 表示还没创建过，非None表示已经创建过了
+    has_created = False if len(notification) == 0 else True
     return has_created
+
 
 def create_notification_type_1(user_id, mission_id, time):
     """
@@ -74,14 +76,14 @@ def create_notification_type_1(user_id, mission_id, time):
         ' FROM User u JOIN MissionInfo m ON u.idUser = m.publisher_id'
         ' WHERE m.idMissionInfo = ? AND m.fin_num = m.max_num',
         (mission_id,)
-    ).fetchone()
+    ).fetchall()
     if info is None:  # 不是最后一人填完问卷，不生成通知
         return
 
     # 生成新通知
     now_time = datetime.datetime.now()
-    massage = "{}：您于 {} 发布的问卷 {} 已于 {} 全部填写完成。".format(
-        info[0][0], info[0][1], info[0][2], time
+    massage = "您于 {} 发布的问卷 {} 已于 {} 全部填写完成。".format(
+        info[0][1], info[0][2], time
     )
 
     # 插入数据库
@@ -105,10 +107,18 @@ def create_notification_type_2(user_id):
 
     info = db.execute(
         'SELECT m.idMissionInfo, u.username, m.create_time, m.deadline, m.title, m.fin_num'
-        ' FROM User u JOIN MissionInfo m ON u.idUser = m.publisher_id'
-        ' WHERE u.idUser = ? AND m.deadline  > ? AND m.type = 0 AND m.fin_num < m.max_num',
-        (user_id, now_time,)
-    ).fetchone()
+        ' FROM User u, MissionInfo m'
+        ' WHERE u.idUser = m.publisher_id'
+        ' AND u.idUser = ? AND m.deadline < ? AND m.type = 0 AND m.fin_num < m.max_num',
+        (user_id, now_time)
+    ).fetchall()
+
+    if len(info) == 0:
+        print("没有第2类通知")
+        return
+    else:
+        print("生成第2类通知")
+
     for i in range(len(info)):
         # 若这条通知已经创建过，则声明无需创建声明
         mission_id = info[i][0]
@@ -116,9 +126,10 @@ def create_notification_type_2(user_id):
             continue
 
         # 生成通知
-        message = "{}：您于 {} 发布的问卷 {} 已于 {} 过期，已有{}人填写了您的问卷。".format(
-            info[i][1], info[i][2], info[i][4], info[i][3], info[i][5]
+        message = "您于 {} 发布的问卷 {} 已于 {} 过期，已有{}人填写了您的问卷。".format(
+            info[i][2], info[i][4], info[i][3], info[i][5]
         )
+        print(message)
         # 插入数据库
         db.execute(
             'INSERT INTO Notification (user_id, mission_id, message, create_time, notification_type)'
@@ -137,24 +148,24 @@ def create_notification_type_3(mission_id):
     n_type = 3
     now_time = datetime.datetime.now()
     db = get_db()
-    
+
     info = db.execute(
         'SELECT u.username, m.create_time, m.title, tu.username, o.receive_time, m.publisher_id'
         ' FROM (SELECT * FROM User) AS tu, User u, MissionInfo m, MissionOrder o'
         ' WHERE u.idUser = m.publisher_id AND tu.idUser = o.receiver_id AND m.idMissionInfo = o.mission_id'
         ' AND m.idMissionInfo = ?',
         (mission_id,)
-    ).fetchone()
+    ).fetchall()
 
     # 生成通知
-    message = "{发布人}：您于 {时间} 发布的任务 {任务号} 已被 {接收人} 于 {时间} 确认接收。".format(
-        info[0][0], info[0][1], info[0][2], info[0][3], info[0][4]
+    message = "您于 {} 发布的任务 {} 已被 {} 于 {} 确认接收。".format(
+        info[0][1], info[0][2], info[0][3], info[0][4]
     )
     # 插入数据库
     db.execute(
         'INSERT INTO Notification (user_id, mission_id, message, create_time, notification_type)'
         ' VALUES (?, ?, ?, ?, ?)',
-        (info[0][6], mission_id, message, now_time, n_type,)
+        (info[0][5], mission_id, message, now_time, n_type,)
     )
     db.commit()
 
@@ -176,11 +187,11 @@ def create_notification_type_4(mission_id):
         ' WHERE u.idUser = m.publisher_id AND tu.idUser = o.receiver_id AND m.idMissionInfo = o.mission_id'
         ' AND m.idMissionInfo = ?',
         (mission_id,)
-    ).fetchone()
+    ).fetchall()
 
     # 生成通知
-    message = "{接收人}：您接收的任务 {任务号} 以被 {发布人} 于 {时间} 确认完成。".format(
-        info[0][2], info[0][1], info[0][0], info[0][3]
+    message = "您接收的任务 {} 以被 {} 于 {} 确认完成。".format(
+        info[0][1], info[0][0], info[0][3]
     )
     # 插入数据库
     db.execute(
@@ -204,17 +215,19 @@ def create_notification_type_5(user_id):
     info = db.execute(
         'SELECT m.idMissionInfo, u.username, m.create_time, m.deadline, m.title'
         ' FROM User u JOIN MissionInfo m ON u.idUser = m.publisher_id'
-        ' WHERE u.idUser = ? AND m.deadline  > ? AND m.type = 1 AND m.rcv_num = 0',
+        ' WHERE u.idUser = ? AND m.deadline  < ? AND m.type = 1 AND m.rcv_num = 0',
         (user_id, now_time,)
-    ).fetchone()
+    ).fetchall()
+    if info is None:
+        return
     for i in range(len(info)):
         # 若这条通知已经创建过，则声明无需创建声明
         mission_id = info[i][0]
         if has_created(n_type, user_id, mission_id):
             continue
         # 生成通知
-        message = "{}：您于 {} 发布的任务 {} 于 {} 过期，无人接收该任务，请重新发布任务。".format(
-            info[i][1], info[i][2], info[i][4], info[i][3], 
+        message = "您于 {} 发布的任务 {} 于 {} 过期，无人接收该任务，请重新发布任务。".format(
+            info[i][2], info[i][4], info[i][3],
         )
         # 插入数据库
         db.execute(
@@ -239,17 +252,19 @@ def create_notification_type_6(user_id):
         'SELECT m.idMissionInfo, u.username, m.create_time, m.deadline, m.title'
         ' FROM User u, MissionInfo m, MissionOrder o'
         ' WHERE u.idUser = m.publisher_id AND m.idMissionInfo = o.mission_id'
-        ' AND u.idUser = ? AND m.deadline  > ? AND m.type = 1 AND o.publisher_confirm = 0',
+        ' AND u.idUser = ? AND m.deadline  < ? AND m.type = 1 AND o.publisher_confirm = 0',
         (user_id, now_time,)
-    ).fetchone()
+    ).fetchall()
+    if info is None:
+        return
     for i in range(len(info)):
         # 若这条通知已经创建过，则声明无需创建声明
         mission_id = info[i][0]
         if has_created(n_type, user_id, mission_id):
             continue
         # 生成通知
-        message = "{发布人}：您于 {时间} 发布的任务 {任务号} 于 {时间} 过期，请按时确认完成任务。".format(
-            info[i][1], info[i][2], info[i][4], info[i][3],
+        message = "您于 {} 发布的任务 {} 于 {} 过期，请按时确认完成任务。".format(
+            info[i][2], info[i][4], info[i][3],
         )
         # 插入数据库
         db.execute(
@@ -271,20 +286,22 @@ def create_notification_type_7(user_id):
     db = get_db()
 
     info = db.execute(
-        'SELECT m.idMissionInfo, u.username, m.create_time, m.deadline, m.title'
+        'SELECT m.idMissionInfo, u.username, m.create_time, m.deadline, m.title, tu.username, o.receive_time'
         ' FROM (SELECT * FROM User) AS tu, User u, MissionInfo m, MissionOrder o'
         ' WHERE u.idUser = m.publisher_id AND tu.idUser = o.receiver_id AND m.idMissionInfo = o.mission_id'
-        ' AND o.receiver_id = ? AND m.deadline  > ? AND m.type = 1 AND o.publisher_confirm = 0',
+        ' AND o.receiver_id = ? AND m.deadline  < ? AND m.type = 1 AND o.publisher_confirm = 0',
         (user_id, now_time,)
-    ).fetchone()
+    ).fetchall()
+    if info is None:
+        return
     for i in range(len(info)):
         # 若这条通知已经创建过，则声明无需创建声明
         mission_id = info[i][0]
         if has_created(n_type, user_id, mission_id):
             continue
         # 生成通知
-        message = "{接收人}：您接收的任务 {任务号} 于{时间} 过期，发布人 {发布人} 未确认任务完成，您将无法获得对应奖励，请提醒发布人按时确认完成任务。如需投诉，请联系客服。".format(
-            info[i][1], info[i][2], info[i][4], info[i][3],
+        message = "您于 {} 接收的任务 {} 于 {} 过期，发布人 {} 未确认任务完成，您将无法获得对应奖励，请提醒发布人按时确认完成任务。如需投诉，请联系客服。".format(
+            info[i][6], info[i][4], info[i][3], info[i][5],
         )
         # 插入数据库
         db.execute(
@@ -293,6 +310,7 @@ def create_notification_type_7(user_id):
             (user_id, mission_id, message, now_time, n_type,)
         )
         db.commit()
+
 
 def create_notification_type_8(mission_id, receiver_id, cancel_time):
     """若接受人放弃任务，立即对发布人生成通知！（通知8）
@@ -311,11 +329,11 @@ def create_notification_type_8(mission_id, receiver_id, cancel_time):
         ' WHERE u.idUser = m.publisher_id'
         ' AND m.idMissionInfo = ?',
         (mission_id,)
-    ).fetchone()
+    ).fetchall()
 
     # 生成通知
-    message = "{发布人}：您于 {时间} 发布的任务 {任务号} 于 {时间} 被接收人 {接收人} 取消接收任务。 ".format(
-        info[0][0], info[0][1], info[0][2], cancel_time, receiver_id
+    message = "您于 {} 发布的任务 {} 于 {} 被接收人 {} 取消接收任务。 ".format(
+        info[0][1], info[0][2], cancel_time, receiver_id
     )
     # 插入数据库
     db.execute(
@@ -325,19 +343,12 @@ def create_notification_type_8(mission_id, receiver_id, cancel_time):
     )
     db.commit()
 
-# def get_a_notification(idNotification):
-#     """返回对应通知id的通知item
-#     """
-#     notification = get_db().execute(
-#         'SELECT idNotification, mission_id, message, create_time, has_read'
-#         ' FROM Notification'
-#         ' WHERE idNotification = ?',
-#         (idNotification,)
-#     ).fetchone()
-    
-#     if notification is None:
-#         abort(404, "Notification id {0} doesn't exist.".format(idNotification))
 
-#     return notification
-
-
+def update_notification_login(user_id):
+    """登陆后调用该函数，自动检查是否有需要更新的通知
+    """
+    create_notification_type_2(user_id)
+    create_notification_type_5(user_id)
+    create_notification_type_6(user_id)
+    create_notification_type_7(user_id)
+    return
