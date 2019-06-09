@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-aside v-bind:width="sideWidth" v-if="isLogin" class="sidebar-container">
-        <side-bar v-bind:is-collapsed="sidebarCollapsed"></side-bar>
+        <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="unreadMsgNum"></side-bar>
       </el-aside>
       <el-container>
         <el-header id="top-menu">
@@ -10,7 +10,7 @@
         </el-header>
         <el-main class="inner-container">
           <transition name="fade" mode="out-in">
-            <router-view/>
+            <router-view v-on:markMessage="markMessage"/>
           </transition>
         </el-main>
       </el-container>
@@ -39,7 +39,8 @@ export default {
     return {
       sideWidth: '64px',
       isLogin: true, // 根据登录情况判断是否展示侧栏
-      sidebarCollapsed: true
+      sidebarCollapsed: true,
+      unreadMsgNum: 7 // temp
     }
   },
 
@@ -60,6 +61,10 @@ export default {
       } else {
         this.$router.push({ name: 'publishMission' })
       }
+    },
+
+    markMessage (count) {
+      this.unreadMsgNum -= count
     }
   },
 
