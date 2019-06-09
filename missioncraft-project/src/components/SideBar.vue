@@ -67,8 +67,7 @@ export default {
   data () {
     return {
       avatarSrc: 'default-avatar.png',
-      activeIdx: null,
-      unread: 2
+      activeIdx: null
     }
   },
 
@@ -76,6 +75,11 @@ export default {
     isCollapsed: {
       type: Boolean,
       default: true
+    },
+
+    unread: {
+      type: Number,
+      default: 0
     }
   },
 

@@ -1,4 +1,6 @@
 import axios from 'axios'
+import Vue from 'vue'
+import { Message } from 'element-ui'
 
 let $axios = axios.create({
   baseURL: '/api/',
@@ -7,29 +9,52 @@ let $axios = axios.create({
 })
 
 // Request Interceptor
-$axios.interceptors.request.use(function (config) {
-  config.headers['Authorization'] = 'Fake Token'
+$axios.interceptors.request.use( config => {
+  if (Vue.$cookies.isKey('u-token')) {
+    config.headers.Authorization = `Bearer ${Vue.$cookies.get('u-token')}`
+  }
   return config
+}, error => {
+  Message.error({'message': '请求超时，请稍后重试'})
+  return Promise.reject(error)
 })
 
 // Response Interceptor to handle and log errors
-$axios.interceptors.response.use(function (response) {
+$axios.interceptors.response.use(response => {
   return response
-}, function (error) {
-  // Handle Error
-  console.log(error)
+}, error => {
+  switch (error.response.status) {
+    case 401:
+      Message.warning({message: '认证失效，请先登录'})
+      Vue.$router.replace({name: 'login'})
+      break
+
+    case 403:
+      Message.error({message: '权限不足'})
+      break
+
+    case 404:
+      Message.error({message: '资源错误'})
+      break
+
+    default:
+      Message.error({message: '未知错误'})
+      break
+  }
+
   return Promise.reject(error)
 })
 
 export default {
-
-  fetchResource () {
-    return $axios.get(`resource/xxx`)
-      .then(response => response.data)
+  postRequest (url, params, config={}) {
+    return $axios.post(url, params, config)
   },
 
-  fetchSecureResource () {
-    return $axios.get(`secure-resource/zzz`)
-      .then(response => response.data)
+  getRequest (url) {
+    return $axios.get(url)
+  },
+
+  putRequest (url, params, config={}) {
+    return $axios.put(url, params, config)
   }
 }
