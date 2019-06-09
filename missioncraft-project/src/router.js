@@ -11,6 +11,7 @@ import AnswerQuestionnairePage from './views/AnswerQuestionnairePage'
 import PublicationPage from './views/PublicationPage'
 import ReceivedPage from './views/ReceivedPage'
 import PublishMissionPage from './views/PublishMissionPage'
+import OtherMissionsDetailPage from './views/OtherMissionsDetailPage'
 
 Vue.use(Router)
 
@@ -70,6 +71,11 @@ export default new Router({
       path: '/publishMission',
       name: 'publishMission',
       component: PublishMissionPage
+    },
+    {
+      path: '/otherMissionsDetail',
+      name: 'otherMissionsDetail',
+      component: OtherMissionsDetailPage
     }
   ]
 })

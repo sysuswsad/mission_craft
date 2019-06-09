@@ -21,7 +21,8 @@
       <el-table
         id="mission-table"
         stripe
-        v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)">
+        v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)"
+        v-on:row-click="rowClick">
         <el-table-column
           label="任务类型"
           prop="missionType"
@@ -152,6 +153,17 @@ export default {
       let index = this.allMission.indexOf(this.tableMission[i])
       this.allMission.splice(index, 1)
       this.tableMission.splice(i, 1)
+    },
+
+    rowClick (row) {
+      // judge and jump to the detail page
+      if (row.missionType === '问卷调查') {
+
+      } else {
+        // to-do: route to detail page and pass some parameters to sign if the mission is over or
+        // if the mission is published by the one clicking the row
+        this.$router.push({ name: 'otherMissionsDetail' })
+      }
     }
   }
 }
