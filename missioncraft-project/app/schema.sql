@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS Problem;
 DROP TABLE IF EXISTS MissionOrder;
 DROP TABLE IF EXISTS Answer;
 DROP TABLE IF EXISTS Verification;
+DROP TABLE IF EXISTS Notification;
 
 CREATE TABLE User (
   idUser INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -96,6 +97,20 @@ CREATE TABLE Verification (
   code VARCHAR(10) NOT NULL,
   send_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
 );
+
+CREATE TABLE Notification (
+  n_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  mission_id INTEGER,
+  order_id INTEGER,
+  message VARCHAR(200) NOT NULL,
+  create_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+  has_read INT DEFAULT 0,
+  notification_type INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES User (idUser),
+  FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
+  FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder)
+)
 
 -- 下面这些是整个sql数据库创建，mydb指的是数据库名字，这里我们可以去掉，因为数据库名字叫mission_craft
 

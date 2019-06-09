@@ -4,11 +4,13 @@ from flask import (
 from werkzeug.exceptions import abort
 import datetime
 
-from app.api.user import auth
+from app.auth import auth
 from app.db import get_db
 from app.api import bp
 from app.response_code import bad_request, unauthorized, ok, created, forbidden, error_response
 from app.statistics import statistics_ana
+
+from app.api.notification import create_notification_type_8, get_unread_num
 
 import json
 import re
@@ -206,7 +208,9 @@ def get_mission():
         limit = int(limit)
         mission_array = mission_array[len(mission_array)-limit:len(mission_array)]
 
-    return ok('Get missions successfully', data={'missions':mission_array})
+    # notification
+    # return ok('Get missions successfully', data={'missions':mission_array})
+    return ok('Get missions successfully', data={'missions': mission_array, 'notification_num': get_unread_num(g.user['idUser'])})
 
 
 @bp.route('/mission/', methods=['put'])
@@ -267,6 +271,13 @@ def cancel_mission():
                 # 订单取消
                 db.execute('UPDATE MissionOrder SET order_state = ? WHERE mission_id = ?', (2, mission_id))
                 db.commit()
+
+                # notification
+                create_notification_type_8(
+                    mission_id=mission_info['idMissionInfo'], 
+                    receiver_id=order_info['receiver_id'], 
+                    cancel_time=datetime.datetime.now())
+                
                 return ok('cancel successfully')
             else:
                 return error_response(403, 'The operation is forbidden')
