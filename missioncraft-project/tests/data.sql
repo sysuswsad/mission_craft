@@ -40,6 +40,15 @@ VALUES
     5, 10, 2, 1, 0.1)
 ;
 
+INSERT INTO MissionInfo (publisher_id, title, description, deadline,type,max_num,rcv_num,fin_num, state)
+VALUES 
+  (1, '问卷14', '问卷发布者取消任务', datetime('2029-06-08 11:20:12'),0,100,1,1,0),
+  (1, '问卷15', '问卷填写者取消任务', datetime('2029-06-08 11:20:12'),0,100,50,49,0),
+  (1, '问卷16', '问卷填写者取消任务,重新开放', datetime('2029-06-08 11:20:12'),0,100,100,99,1),
+  (1, '快递17', '发布者取消未接任务', datetime('2029-06-08 11:20:12'),1,0,0,0,0),
+  (1, '快递18', '发布者取消已接任务', datetime('2029-06-08 11:20:12'),1,1,1,0,1),
+  (1, '快递19', '领取者放弃任务', datetime('2029-06-08 11:20:12'),1,1,1,0,1);
+
 INSERT INTO MissionOrder (mission_id, receiver_id, publisher_confirm, receiver_confirm, receive_time, finish_time)
 VALUES 
   (1, 3, 1, 1, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
@@ -52,7 +61,14 @@ VALUES
   (11, 3, 1, 1, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
   (11, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
   (11, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
-  (6, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12'))
+  (6, 2, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (15, 3, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (16, 3, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (16, 3, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (18, 3, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (19, 3, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12'))
+
+
 ;
 
 INSERT INTO Problem (mission_id, type, problem_stem, problem_detail)

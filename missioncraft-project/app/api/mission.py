@@ -7,7 +7,7 @@ import datetime
 from app.api.user import auth
 from app.db import get_db
 from app.api import bp
-from app.response_code import bad_request, unauthorized, ok, created, forbidden
+from app.response_code import bad_request, unauthorized, ok, created, forbidden, error_response
 from app.statistics import statistics_ana
 
 import json
@@ -218,17 +218,60 @@ def cancel_mission():
 
     db = get_db()
     mission_id = data.get('mission_id')
-    if (not mission_id and mission_id != 0):
+    if (mission_id is None):
         return bad_request('Mission_id is required')
-    mission_info = db.execute('SELECT publisher_id, type, rcv_num FROM MissionInfo WHERE idMissionInfo = ?',
+    mission_info = db.execute('SELECT * FROM MissionInfo WHERE idMissionInfo = ?',
         (mission_id,) 
     ).fetchone()
+    if(mission_info is None):
+        return bad_request('Mission_id is invalid')
+    
+    rcv_num = mission_info['rcv_num']
+    max_num = mission_info['max_num']
+    # 问卷
+    # 发布者可以取消
+    if(mission_info['type'] == 0):
+        if(mission_info['publisher_id'] == g.user['idUser']):
+            db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
+            db.commit()
+            return ok('cancel successfully')
+        else:
+            order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()
+            if order_info['receiver_id'] == g.user['idUser']:
+                # 如果问卷原本是满人了,就重新开放
+                if rcv_num == max_num:
+                    db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (0, mission_id))         
+                # 修改接单人数
+                db.execute('UPDATE MissionInfo SET rcv_num = ? WHERE idMissionInfo = ?', (rcv_num - 1, mission_id))
+                # 订单取消
+                db.execute('UPDATE MissionOrder SET order_state = ? WHERE mission_id = ?', (2, mission_id))
+                db.commit()
+                return ok('cancel successfully')
+            else:
+                return error_response(403, 'The operation is forbidden')
+    # 取快递
+    # 没人接，发布者可以取消
+    # 领取者主动放弃
+    elif(mission_info['type'] == 1):
+        if(mission_info['publisher_id'] == g.user['idUser']):
+            if rcv_num != 0:
+                return error_response(400, 'Should not cancel a mission already received')
+            else:
+                db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
+                db.commit()
+                return ok('cancel successfully')        
+        else:
+            order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()
+            if order_info['receiver_id'] == g.user['idUser']:
+                db.execute('UPDATE MissionInfo SET rcv_num = ?, state = ? WHERE idMissionInfo = ?', (rcv_num - 1, 0, mission_id))
+                # 订单取消
+                db.execute('UPDATE MissionOrder SET order_state = ? WHERE mission_id = ?', (2, mission_id))
+                db.commit()
+                return ok('cancel successfully')
+            else:
+                return error_response(403, 'The operation is forbidden')
+            
+    else:
+        return error_response(500, 'Server Internal error')
 
-    if mission_info['publisher_id'] != g.user['idUser']:
-        return forbidden('Not the author of mission')
-    elif mission_info['type'] == 1 and mission_info['rcv_num'] != 0:
-        return bad_request('Should not cancel a mission already received')
-
-    db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
-    db.commit()
     # 取消任务之后返回部分或全部金额，????????????待完成

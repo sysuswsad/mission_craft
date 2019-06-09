@@ -141,7 +141,7 @@ def confirm_order():
 
 	# 确认过的订单不能再确认，防止再次生成答案表
 	if order_info['order_state'] == 1:
-		return bad_request('The order has been confirmed')
+	    return bad_request('The order has been confirmed')
 
 	# 分成两类，问卷由接收人确认即可，其他任务由发布人确认
 	if mission_info['type'] == 0:

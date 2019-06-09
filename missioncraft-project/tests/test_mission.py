@@ -132,3 +132,35 @@ def test_get_mission_with_problems(client, app, personal, mission_id, return_pro
             assert problems[0]['answer'] == [1, 1, 1]
             assert problems[1]['answer'] == [2, 1, 3]
             assert problems[2]['answer'] == ['ousuixin', 'pj', 'pjh']
+
+
+@pytest.mark.parametrize(('username', 'password','mission_id', 'rcv_num','mission_state', 'order_state', 'response_code', 'message'), (
+    ('test1', '123456', 14, 1, 1, 2, 200, 'cancel successfully'),
+    ('pj', '123456', 15, 49, 0, 2, 200, 'cancel successfully'),
+    ('pj', '123456', 16, 99, 0, 2, 200, 'cancel successfully'),
+    ('test1', '123456', 17, 0, 1, 0, 200, 'cancel successfully'),
+    ('test1', '123456', 18, 1, 1, 0, 400, 'Should not cancel a mission already received'),
+    ('pj', '123456', 19, 0, 0, 2, 200, 'cancel successfully'),
+    ('pj2', '123456', 16, 100, 1, 0, 403, 'The operation is forbidden'),
+    ('pj2', '123456', 19, 1, 1, 0, 403, 'The operation is forbidden'),
+
+))
+def test_cancel_mission(client, app, username, password, mission_id, rcv_num, mission_state, order_state, response_code, message):
+    response = client.put('api/mission/',headers=get_token_auth_headers(client, app, username, password),data=json.dumps({'mission_id':mission_id}))
+    assert response
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('message') == message
+
+    with app.app_context():
+        db = get_db()
+        mission_info = db.execute(
+            'SELECT * FROM MissionInfo WHERE idMissionInfo = ?', (mission_id,)
+        ).fetchone()
+        assert mission_info['state'] == mission_state
+        assert mission_info['rcv_num'] == rcv_num
+        # 领取者额外查看
+        if username == 'pj':
+            order_info = db.execute(
+                'SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)
+            ).fetchone()
+            assert order_info['order_state'] == order_state
