@@ -42,6 +42,10 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <el-dialog title="hhh"
+               width="70%">
+
+    </el-dialog>
   </div>
 </template>
 
@@ -90,7 +94,8 @@ export default {
       ],
       pageSize: 5,
       currentPage: 1,
-      tableMission: []
+      tableMission: [],
+      dialogVisible: false
     }
   },
 
@@ -160,7 +165,7 @@ export default {
       if (row.missionType === '问卷调查') {
 
       } else {
-        // to-do: route to detail page and pass some parameters to sign if the mission is over or
+        // to-do: route to detail page and pass some parameters to sign if the mission is over/finished or
         // if the mission is published by the one clicking the row
         this.$router.push({ name: 'otherMissionsDetail' })
       }
