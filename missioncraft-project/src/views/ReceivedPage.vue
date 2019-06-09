@@ -42,10 +42,6 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-dialog title="hhh"
-               width="70%">
-
-    </el-dialog>
   </div>
 </template>
 
@@ -94,8 +90,7 @@ export default {
       ],
       pageSize: 5,
       currentPage: 1,
-      tableMission: [],
-      dialogVisible: false
+      tableMission: []
     }
   },
 
