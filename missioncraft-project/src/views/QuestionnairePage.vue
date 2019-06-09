@@ -3,13 +3,13 @@
     <div class="add-button-container">
       <el-card class="add-button-card">
         <el-row type="flex" justify="center">
-          <el-button type="primary" plain icon="el-icon-plus" v-on:click="addQuestion(0)" class="add-button">单选题</el-button>
+          <el-button type="primary" plain icon="el-icon-circle-check" v-on:click="addQuestion(0)" class="add-button">单选题</el-button>
         </el-row>
         <el-row type="flex" justify="center">
-          <el-button type="primary" plain icon="el-icon-plus" v-on:click="addQuestion(1)" class="add-button">多选题</el-button>
+          <el-button type="primary" plain icon="el-icon-check" v-on:click="addQuestion(1)" class="add-button">多选题</el-button>
         </el-row>
         <el-row type="flex" justify="center">
-          <el-button type="primary" plain icon="el-icon-plus" v-on:click="addQuestion(2)" class="add-button">填空题</el-button>
+          <el-button type="primary" plain icon="el-icon-edit" v-on:click="addQuestion(2)" class="add-button">填空题</el-button>
         </el-row>
         <el-divider></el-divider>
       </el-card>

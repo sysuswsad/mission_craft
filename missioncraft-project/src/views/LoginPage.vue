@@ -5,17 +5,11 @@
         <h1>LOGO</h1>
       </template>
       <div id="login-form">
-        <el-form v-bind:model="info" status-icon>
-          <el-form-item
-            prop="username"
-            v-bind:rules="{required: true, message: '请输入用户名或邮箱', trigger: 'blur'}"
-          >
+        <el-form v-bind:model="info" v-bind:rules="rules" status-icon>
+          <el-form-item prop="username">
             <el-input v-model="info.username" placeholder="用户名/邮箱" prefix-icon="el-icon-s-custom"></el-input>
           </el-form-item>
-          <el-form-item
-            prop="password"
-            v-bind:rules="{required: true, message: '请输入密码', trigger: 'blur'}"
-          >
+          <el-form-item prop="password">
             <el-input type="password" v-model="info.password" placeholder="密码" autocomplete="off" prefix-icon="el-icon-lock"></el-input>
           </el-form-item>
           <div id="func-container">
@@ -41,6 +35,30 @@ export default {
       info: {
         username: '',
         password: ''
+      },
+      rules: {
+        username: [
+          {
+            required: true,
+            message: '请输入用户名或邮箱',
+            trigger: 'blur'
+          },
+          {
+            pattern: /^[A-Za-z]+[A-Za-z0-9]{5,20}|^[A-Za-z]+[A-Za-z]*[1-9]*@mail2.sysu.edu.cn$/,
+            message: '用户名非法'
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+          },
+          {
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\s\S]{8,16}$/,
+            message: '至少8位且包含大写字母，小写字母和数字各一个'
+          }
+        ]
       }
     }
   },
@@ -63,7 +81,7 @@ export default {
   }
 
   .login-card {
-    width: 20vw;
+    width: 25vw;
     margin: 10px auto;
     padding: 15px;
   }
