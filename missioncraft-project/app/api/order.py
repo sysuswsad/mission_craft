@@ -149,12 +149,12 @@ def confirm_order():
 			return forbidden('You can not submit for other receivers')
 		answers = json.loads(data.get('answers'))
 		problem_ids = db.execute(
-			'SELECT idProblem FROM Problem WHERE mission_id = ?', (order_info['mission_id'])
+			'SELECT idProblem FROM Problem WHERE mission_id = ?', (order_info['mission_id'],)
 		).fetchall()
 		try:
 			for i in range(0, len(answers)):
-				db.execute('INSERT INTO ANSWER (order_id, problem_id, result)', 
-					(order_id, problem_ids[i]['idProblem'], answers[i])
+				db.execute('INSERT INTO Answer (order_id, problem_id, result) VALUES (?, ?, ?)', 
+					(order_id, problem_ids[i]['idProblem'], json.dumps(answers[i]))
 				)
 			db.commit()
 		except Exception:
@@ -172,16 +172,16 @@ def confirm_order():
 	)
 	db.execute(
 		'UPDATE User SET mission_fin_num = mission_fin_num + 1 WHERE idUser = ?', 
-		(order_info['receiver_id'])
+		(order_info['receiver_id'],)
 	)
 	db.execute(
 		'UPDATE MissionInfo SET fin_num = fin_num + 1 WHERE idMissionInfo = ?', 
-		(order_id['mission_id'],)
+		(order_info['mission_id'],)
 	)
 	db.commit()
 	db.execute(
-		'UPDATE MissionInfo SET state = fin_num/max_num WHERE idMissionInfo = ? and state < 1', 
-		(order_id['mission_id'],)
+		'UPDATE MissionInfo SET state = 1.0*fin_num/max_num WHERE idMissionInfo = ? and state < 1', 
+		(order_info['mission_id'],)
 	)
 	db.commit()
 	

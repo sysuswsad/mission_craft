@@ -46,11 +46,11 @@ CREATE TABLE MissionInfo (
   title VARCHAR(45) NOT NULL,
   description VARCHAR(45) NOT NULL,
   detail VARCHAR(45) DEFAULT '',
-  bounty DOUBLE DEFAULT 1,
+  bounty DOUBLE DEFAULT 0,
   max_num INT DEFAULT 1,
   rcv_num INT DEFAULT 0,
   fin_num INT DEFAULT 0,
-  state INT DEFAULT 0,
+  state DOUBLE DEFAULT 0,
   FOREIGN KEY (publisher_id) REFERENCES User (idUser)
 );
 

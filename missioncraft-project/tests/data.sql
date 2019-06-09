@@ -27,11 +27,50 @@ VALUES
   (1, '快递7', '已经接了的任务', datetime('2029-06-08 11:20:12'),1,1,1,0,1),
   (1, '快递8', '已经取消了的任务', datetime('2029-06-08 11:20:12'),1,0,0,0,1),
   (1, '快递9', '已过期的任务', datetime('2019-06-08 11:20:12'),1,1,0,0,0);
- 
-  
+
+INSERT INTO MissionInfo (publisher_id, phone, qq, wechat, other_way, type, create_time, deadline, title, description, bounty, max_num, rcv_num, fin_num, state)
+VALUES
+  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
+    10, 10, 2, 1, 0.1),
+  (2, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
+    20, 10, 2, 1, 0.1),
+  (2, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
+    15, 10, 2, 1, 0.1),
+  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-06 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
+    5, 10, 2, 1, 0.1)
+;
 
 INSERT INTO MissionOrder (mission_id, receiver_id, publisher_confirm, receiver_confirm, receive_time, finish_time)
 VALUES 
   (1, 3, 1, 1, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
   (2, 3, 1, 1, datetime('2019-06-08 12:12:12'), Null)
-  ;
+;
+
+INSERT INTO MissionOrder (mission_id, receiver_id, publisher_confirm, receiver_confirm, order_state, receive_time, finish_time)
+VALUES 
+  (11, 3, 1, 1, 1, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (11, 3, 1, 1, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (11, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (11, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
+  (6, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12'))
+;
+
+INSERT INTO Problem (mission_id, type, problem_stem, problem_detail)
+VALUES 
+  (11, 0, 'are you pj', '["yes", "no", "pardon"]'),
+  (11, 1, 'what do you like', '["apple", "banana", "watermelon"]'),
+  (11, 2, 'what is your name', '""')
+;
+
+INSERT INTO Answer (order_id, problem_id, result)
+VALUES 
+  (3, 1, '0'),
+  (3, 2, '[1,2]'),
+  (3, 3, '"ousuixin"'),
+  (4, 1, '1'),
+  (4, 2, '[0,2]'),
+  (4, 3, '"pj"'),
+  (5, 1, '2'),
+  (5, 2, '[0,2]'),
+  (5, 3, '"pjh"')
+;
