@@ -23,6 +23,7 @@ def get_token_auth_headers(client, app, username_or_email, password, content_typ
     response = client.post('/api/token/', headers=headers, data=json.dumps({'username_or_email':username_or_email, 'password':password}))
     assert response.status_code == 201
     response = json.loads(response.get_data(as_text=True))
+    assert response.get('message') == ' '
     token = response.get('token')
     assert token is not None
     return {
