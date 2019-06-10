@@ -43,27 +43,30 @@
     </el-card>
     <el-dialog width="70%"
                center
-               v-bind:visible.sync="dialogVisible"
-               v-bind:before-close="handleClose">
+               v-bind:visible.sync="dialogVisible">
       <template v-slot:title>
         <h2>{{ missionTitle }}</h2>
       </template>
       <el-divider></el-divider>
       <div id="detail-container">
-        <el-row>
+        <el-row type="flex">
           <el-col v-bind:span="8">
-            <h1>发布者</h1>
-            <el-col v-bind:span="8" v-bind:offset="1">
-              <div id="img-wrapper">
-                <img id="img-container" v-bind:src=url alt="加载失败"/>
-              </div>
-            </el-col>
-            <el-col id="username-container" v-bind:span="8">
-              <span>caixukun</span>
-              <div style="margin-top: 10px">
-                <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
-              </div>
-            </el-col>
+            <el-row>
+              <h1>发布者</h1>
+            </el-row>
+            <el-row>
+              <el-col v-bind:span="8" v-bind:offset="1" id="img-wrapper">
+                <div>
+                  <img id="img-container" v-bind:src=url alt="加载失败"/>
+                </div>
+              </el-col>
+              <el-col id="username-container" v-bind:span="8">
+                <span>caixukun</span>
+                <div style="margin-top: 10px">
+                  <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
+                </div>
+              </el-col>
+            </el-row>
             <div v-for="(index, value) in contactWay" v-bind:key="value">
               <el-row v-if="contactWay[value] !== emptyStr" id="contact-row-wrapper">
                 <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'phone'">
@@ -80,6 +83,9 @@
                 </el-col>
               </el-row>
             </div>
+          </el-col>
+          <el-col v-bind:span="2" style="display: flex; justify-content: center">
+            <div class="vertical-divider"></div>
           </el-col>
           <el-col v-bind:span="14">
             <h1>任务详情</h1>
@@ -293,14 +299,6 @@ export default {
         passHour = Math.ceil(msDiff / (1000 * 3600))
       }
       return passHour * Math.floor(100 / this.$options.methods.timeDiff(startTime, this.endTime))
-    },
-
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
     }
   }
 }
@@ -320,7 +318,13 @@ export default {
   }
 
   #detail-container {
-    margin: 0 0 0 0;
+    display: block;
+  }
+
+  .vertical-divider {
+    width: 1px;
+    display: inline-block;
+    background-color: #DCDFE6;
   }
 
   #img-wrapper {
