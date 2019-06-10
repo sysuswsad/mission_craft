@@ -50,32 +50,43 @@
       </template>
       <el-divider></el-divider>
       <div id="detail-container">
-        <h1>发布者</h1>
-        <el-col v-bind:span="8" v-bind:offset="10">
-          <img id="img-container" v-bind:src=url alt="加载失败" v-on:click="showInfo"/>
-          <div id="username-container">caixukun</div>
-        </el-col>
-        <div v-for="(index, value) in contactWay" v-bind:key="value">
-          <el-row v-if="contactWay[value] !== emptyStr" id="contact-container">
-            <el-col v-bind:span="8" v-bind:offset="9" v-if="value === 'phone'">
-              <span>{{ '手机号码：' + contactWay[value] }}</span>
-            </el-col>
-            <el-col v-bind:span="8" v-bind:offset="9" v-if="value === 'weChat'">
-              <span>{{ '微信：' + contactWay[value] }}</span>
-            </el-col>
-            <el-col v-bind:span="8" v-bind:offset="9" v-if="value === 'qq'">
-              <span>{{ 'qq：' + contactWay[value] }}</span>
-            </el-col>
-            <el-col v-bind:span="8" v-bind:offset="9" v-if="value === 'other'">
-              <span>{{ '其他联系方式：' + contactWay[value] }}</span>
-            </el-col>
-          </el-row>
-        </div>
-        <el-divider></el-divider>
-        <h1>任务详情</h1>
         <el-row>
-          <el-col v-bind:span="20" v-bind:offset="2" style="background-color: #2a98dd">caixukun...</el-col>
+          <el-col v-bind:span="8">
+            <h1>发布者</h1>
+            <el-col v-bind:span="8" v-bind:offset="1">
+              <div>
+                <img id="img-container" v-bind:src=url alt="加载失败"/>
+              </div>
+            </el-col>
+            <el-col id="username-container" v-bind:span="8">
+              <span>caixukun</span>
+              <div style="margin-top: 10px">
+                <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
+              </div>
+            </el-col>
+            <div v-for="(index, value) in contactWay" v-bind:key="value">
+              <el-row v-if="contactWay[value] !== emptyStr" id="contact-row-wrapper">
+                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'phone'">
+                  <span>{{ '手机号码：' + contactWay[value] }}</span>
+                </el-col>
+                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'weChat'">
+                  <span>{{ '微信：' + contactWay[value] }}</span>
+                </el-col>
+                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'qq'">
+                  <span>{{ 'qq：' + contactWay[value] }}</span>
+                </el-col>
+                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'other'">
+                  <span>{{ '其他联系方式：' + contactWay[value] }}</span>
+                </el-col>
+              </el-row>
+            </div>
+          </el-col>
+          <el-col v-bind:span="14">
+            <h1>任务详情</h1>
+            <el-col v-bind:span="20" v-bind:offset="2">caixukunhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...</el-col>
+          </el-col>
         </el-row>
+        <el-divider></el-divider>
         <el-row v-bind:gutter="15" style="margin-top: 30px">
           <el-col v-bind:span="5" style="padding: 8px 0 0 40px">{{ startTime }}</el-col>
           <el-col v-bind:span="14">
@@ -150,6 +161,7 @@ export default {
       dialogVisible: false,
       missionTitle: '',
       url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
+      integral: 8,
       contactWay: {
         phone: '17878787878',
         weChat: 'we-chat',
@@ -308,22 +320,22 @@ export default {
   }
 
   #detail-container {
-    margin: 0 0px 0 0px;
+    margin: 0 0 0 0;
   }
 
   #img-container {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     cursor: pointer;
   }
 
   #username-container {
-    margin: 0 0 10px 15px;
+    margin: 20px 0 0 10px;
     font-weight: bold;
   }
 
-  #contact-container {
+  #contact-row-wrapper {
     margin-bottom: 10px;
   }
 </style>
