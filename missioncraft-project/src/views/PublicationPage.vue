@@ -54,7 +54,7 @@
           <el-col v-bind:span="8">
             <h1>发布者</h1>
             <el-col v-bind:span="8" v-bind:offset="1">
-              <div>
+              <div id="img-wrapper">
                 <img id="img-container" v-bind:src=url alt="加载失败"/>
               </div>
             </el-col>
@@ -323,15 +323,18 @@ export default {
     margin: 0 0 0 0;
   }
 
+  #img-wrapper {
+    cursor: pointer;
+  }
+
   #img-container {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    cursor: pointer;
   }
 
   #username-container {
-    margin: 20px 0 0 10px;
+    margin: 20px 0 0 0;
     font-weight: bold;
   }
 
