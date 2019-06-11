@@ -48,7 +48,7 @@
               <el-input type="text" v-model="info.other" placeholder="其他联系方式" auto-complete="off" prefix-icon="el-icon-s-home"></el-input>
             </el-form-item>
             <el-button type="primary" id="last-page-button" v-on:click="changeState">上一页</el-button>
-            <el-button type="primary" id="register-button">注册</el-button>
+            <el-button type="primary" id="register-button" v-on:click="register">注册</el-button>
           </div>
         </transition>
       </el-form>
@@ -72,6 +72,7 @@ export default {
         username: '',
         studentId: '',
         email: '',
+        code: '',
         password: '',
         confirmPass: '',
         phone: '',
@@ -82,7 +83,6 @@ export default {
       count: '',
       show: true,
       timer: null,
-      code: '',
       state: true,
       rules: {
         username: [
@@ -121,7 +121,7 @@ export default {
             message: '验证码不能为空'
           },
           {
-            pattern: /^[0-9]{4}$/,
+            pattern: /^[0-9]{6}$/,
             message: '验证码必须是4个数字组成的串'
           }
         ],
@@ -171,11 +171,12 @@ export default {
   },
   methods: {
     getCode () {
-      backend.postRequest('code/', { email: 'penglsh6@mail2.sysu.edu.cn' }).then(function (response) {
-        console.log(response)
-      }).catch(function (error) {
-        console.log(error)
-      })
+      backend.postRequest('code/', { email: this.info.email })
+        .then(function (response) {
+          console.log(response)
+        }).catch(function (error) {
+          console.log(error)
+        })
       if (!this.timer) {
         this.count = 60
         this.show = false
@@ -197,6 +198,26 @@ export default {
 
     changeState () {
       this.state = !this.state
+    },
+
+    register () {
+      if (this.info.password !== this.info.confirmPass) {
+        this.$message.error('两次输入的密码不对应!')
+        return
+      }
+      backend.postRequest('user/',
+        { username: this.info.username,
+          sid: this.info.studentId,
+          email: this.info.email,
+          password: this.info.password,
+          code: this.info.code
+        })
+        .then(function (response) {
+          this.$router.push({ name: 'login' })
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }

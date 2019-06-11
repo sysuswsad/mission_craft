@@ -5,12 +5,12 @@
         <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="unreadMsgNum"></side-bar>
       </el-aside>
       <el-container>
-        <el-header id="top-menu">
+        <el-header id="top-menu" v-show="isLogin">
           <top-menu v-on:barCollapse="changeBarWidth"></top-menu>
         </el-header>
         <el-main class="inner-container">
           <transition name="fade" mode="out-in">
-            <router-view v-on:markMessage="markMessage"/>
+            <router-view v-on:markMessage="markMessage" v-on:login="login"/>
           </transition>
         </el-main>
       </el-container>
@@ -65,6 +65,11 @@ export default {
 
     markMessage (count) {
       this.unreadMsgNum -= count
+    },
+
+    login () {
+      this.isLogin = true
+      this.$router.push({ name: 'square' })
     }
   },
 

@@ -14,8 +14,10 @@ export default new Vuex.Store({
       school: '',
       grade: -1,    // 0: male, 1: female
       gender: '',
+      phone: '',
+      weChat: '',
       qq: '',
-      wechat: '',
+      other: '',
       mission_pub_num: -1,
       mission_fin_num: -1
     },
@@ -43,6 +45,24 @@ export default new Vuex.Store({
       state.userInfo.wechat = ''
       state.userInfo.mission_pub_num = -1
       state.userInfo.mission_fin_num = -1
+    },
+
+    setInRegister (state, username, studentId, email, phone, weChat, qq, other) {
+      state.userInfo.username = username
+      state.userInfo.sid = studentId
+      state.userInfo.email = email
+      state.userInfo.phone = phone
+      state.userInfo.weChat = weChat
+      state.userInfo.qq = qq
+      state.userInfo.other = other
+    },
+
+    setUsername (state, username) {
+      state.userInfo.username = username
+    },
+
+    setEmail (state, email) {
+      state.userInfo.email = email
     }
   },
 
