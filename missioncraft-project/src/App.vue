@@ -5,7 +5,7 @@
         <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="unreadMsgNum"></side-bar>
       </el-aside>
       <el-container>
-        <el-header id="top-menu" v-show="isLogin">
+        <el-header id="top-menu">
           <top-menu v-on:barCollapse="changeBarWidth"></top-menu>
         </el-header>
         <el-main class="inner-container">
@@ -46,21 +46,19 @@ export default {
   },
 
   created: function () {
-    if (this.$cookies.isKey('u-token')) {
-      let token = this.$cookies.get('u-token')
-      console.log(token)
-      backend.getRequest('user/',
-        {
-          token: token
-        })
-        .then((response) => {
-          this.isLogin = true
-          this.$store.commit('setAll', response.data.data)
-          console.log(response.data.data)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+    if (this.$route.path !== '/login') {
+      if (this.$cookies.isKey('u-token')) {
+        let token = this.$cookies.get('u-token')
+        this.$store.commit('setToken', token)
+        backend.getRequest('user/')
+          .then((response) => {
+            this.isLogin = true
+            this.$store.commit('setAll', response.data.data)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     }
   },
 

@@ -212,7 +212,7 @@ export default {
           password: this.info.password,
           code: this.info.code
         })
-        .then(function (response) {
+        .then((response) => {
           this.$router.push({ name: 'login' })
         })
         .catch(function (error) {

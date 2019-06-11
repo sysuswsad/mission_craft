@@ -2,6 +2,7 @@ import axios from 'axios'
 import Vue from 'vue'
 import { Message } from 'element-ui'
 import router from './router'
+import store from './store'
 
 let $axios = axios.create({
   baseURL: 'http://127.0.0.1:5000/api/',
@@ -16,11 +17,11 @@ let $axios = axios.create({
 
 // Request Interceptor
 $axios.interceptors.request.use( config => {
-  /*
-  if (Vue.$cookies.isKey('u-token')) {
-    config.headers.Authorization = `Bearer ${Vue.$cookies.get('u-token')}`
+  let token = store.state.token
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
   }
-  */
+
   return config
 }, error => {
   Message.error({'message': '请求超时，请稍后重试'})
