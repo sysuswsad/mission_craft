@@ -5,12 +5,12 @@
         <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="unreadMsgNum"></side-bar>
       </el-aside>
       <el-container>
-        <el-header id="top-menu">
+        <el-header id="top-menu" v-show="isLogin">
           <top-menu v-on:barCollapse="changeBarWidth"></top-menu>
         </el-header>
         <el-main class="inner-container">
           <transition name="fade" mode="out-in">
-            <router-view v-on:markMessage="markMessage"/>
+            <router-view v-on:markMessage="markMessage" v-on:login="login"/>
           </transition>
         </el-main>
       </el-container>
@@ -38,7 +38,7 @@ export default {
   data () {
     return {
       sideWidth: '64px',
-      isLogin: true, // 根据登录情况判断是否展示侧栏
+      isLogin: false, // 根据登录情况判断是否展示侧栏
       sidebarCollapsed: true,
       unreadMsgNum: 7 // temp
     }
@@ -65,13 +65,18 @@ export default {
 
     markMessage (count) {
       this.unreadMsgNum -= count
+    },
+
+    login () {
+      this.isLogin = true
+      this.$router.push({ name: 'square' })
     }
   },
 
   computed: {
     showMenu () {
       return !(this.$route.path === '/questionnaire' || this.$route.path === '/publishMission' ||
-          this.$route.path === '/login' || this.$route.path === '/register' || this.$route.path === '/answerQuestionnaire')
+          this.$route.path === '/login' || this.$route.path === '/register' || this.$route.path === '/answerQuestionnaire' || this.$route.path === '/')
     }
   }
 }

@@ -18,7 +18,7 @@
               <el-button type="text" id="register-button" class="text-button" v-on:click="toRegister">注册</el-button>
             </el-row>
             <el-row>
-              <el-button type="primary" id="login-button" v-on:click="toUserInfo">登录</el-button>
+              <el-button type="primary" id="login-button" v-on:click="login">登录</el-button>
             </el-row>
           </div>
         </el-form>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import backend from '../backend'
 export default {
   name: 'LoginPage',
   data () {
@@ -66,8 +67,28 @@ export default {
     toRegister () {
       this.$router.push({ name: 'register' })
     },
-    toUserInfo () {
-      this.$router.push({ name: 'questionnaire' })
+
+    login () {
+      backend.postRequest('token/',
+        {
+          username_or_email: this.info.username,
+          password: this.info.password
+        })
+        .then((response) => {
+          this.$emit('login')
+          let pattern = /^[A-Za-z]+[A-Za-z0-9]{5,20}|^[A-Za-z]+[A-Za-z]*[1-9]*@mail2.sysu.edu.cn$/
+          if (pattern.test(this.info.username)) {
+            this.$store.commit('setEmail', this.info.username)
+          } else {
+            this.$store.commit('setUsername', this.info.username)
+          }
+          console.log(response.data.data.token)
+          this.$cookies.set('u-token', response.data.data.token)
+          alert(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }

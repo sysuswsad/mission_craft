@@ -3,16 +3,23 @@ import Vue from 'vue'
 import { Message } from 'element-ui'
 
 let $axios = axios.create({
-  baseURL: '/api/',
+  baseURL: 'http://127.0.0.1:5000/api/',
   timeout: 5000,
-  headers: { 'Content-Type': 'application/json' }
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Authorization,Origin, X-Requested-With, Content-Type, Accept',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT'
+  }
 })
 
 // Request Interceptor
 $axios.interceptors.request.use( config => {
+  /*
   if (Vue.$cookies.isKey('u-token')) {
     config.headers.Authorization = `Bearer ${Vue.$cookies.get('u-token')}`
   }
+  */
   return config
 }, error => {
   Message.error({'message': '请求超时，请稍后重试'})
