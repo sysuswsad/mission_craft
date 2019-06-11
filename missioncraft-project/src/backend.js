@@ -22,7 +22,7 @@ $axios.interceptors.request.use( config => {
   */
   return config
 }, error => {
-  Message.error({'message': '请求超时，请稍后重试'})
+  Message.error({ 'message': '请求超时，请稍后重试' })
   return Promise.reject(error)
 })
 
@@ -32,20 +32,20 @@ $axios.interceptors.response.use(response => {
 }, error => {
   switch (error.response.status) {
     case 401:
-      Message.warning({message: '认证失效，请先登录'})
-      Vue.$router.replace({name: 'login'})
+      Message.warning({ message: '认证失效，请先登录' })
+      Vue.$router.replace({ name: 'login' })
       break
 
     case 403:
-      Message.error({message: '权限不足'})
+      Message.error({ message: '权限不足' })
       break
 
     case 404:
-      Message.error({message: '资源错误'})
+      Message.error({ message: '资源错误' })
       break
 
     default:
-      Message.error({message: '未知错误'})
+      Message.error({ message: '未知错误' })
       break
   }
 
@@ -53,7 +53,7 @@ $axios.interceptors.response.use(response => {
 })
 
 export default {
-  postRequest (url, params, config={}) {
+  postRequest (url, params, config = {}) {
     return $axios.post(url, params, config)
   },
 
@@ -61,7 +61,7 @@ export default {
     return $axios.get(url)
   },
 
-  putRequest (url, params, config={}) {
+  putRequest (url, params, config = {}) {
     return $axios.put(url, params, config)
   }
 }

@@ -1,6 +1,7 @@
 <template>
   <div class="waterfall-container">
     <vue-waterfall-easy
+      v-on:click="checkProfile"
       v-bind:imgs-arr="missionData"
       v-bind:is-router-link="true"
       v-bind:gap="30"
@@ -84,6 +85,85 @@
       </template>
 
     </vue-waterfall-easy>
+
+    <el-dialog
+      v-bind:visible.sync="profileVisible"
+      v-bind:show-close="false"
+      width="50%">
+
+      <template v-slot:title>
+        <el-row>
+          <h3>任务详情</h3>
+        </el-row>
+        <el-divider></el-divider>
+      </template>
+
+      <template v-slot:footer>
+        <el-button v-on:click="profileVisible = false">再看看</el-button>
+        <el-button type="primary" v-on:click="acceptMission">接 受</el-button>
+      </template>
+
+      <template v-slot:default>
+        <el-row type="flex" justify="center">
+
+          <el-col v-bind:span="8">
+
+            <el-row>
+              <h4><i class="el-icon-user-solid"></i>&nbsp;发布者</h4>
+            </el-row>
+
+            <el-row v-bind:gutter="20" type="flex" justify="center">
+              <el-col v-bind:span="7" style="display: flex; align-items: center">
+                <el-image src="default-avatar.png" fit="contain" alt="avatar"></el-image>
+              </el-col>
+              <el-col v-bind:span="16">
+                <el-row style="margin: 1rem 0">
+                  <span>nickname</span>
+                </el-row>
+                <el-row style="margin: 1rem 0">
+                  <strong>信誉积分？：213</strong>
+                </el-row>
+              </el-col>
+            </el-row>
+
+          </el-col>
+
+          <el-col v-bind:span="2" style="display: flex; justify-content: center">
+            <div class="vertical-divider"></div>
+          </el-col>
+
+          <el-col v-bind:span="15">
+            <el-row>
+              <h4><i class="el-icon-document"></i>&nbsp;任务描述</h4>
+            </el-row>
+            <el-row>
+              <p>我是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的任务描述</p>
+            </el-row>
+            <el-row>
+              <p><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ missionProfile.reward }}</p>
+            </el-row>
+          </el-col>
+
+        </el-row>
+
+        <el-divider></el-divider>
+
+        <el-row type="flex" justify="center">
+          <el-col v-bind:span="4">{{ missionProfile.createTime }}</el-col>
+          <el-col v-bind:span="16">
+            <el-slider
+              v-bind:step="Math.floor(100 / timeDiff(missionProfile.createTime, missionProfile.deadline))"
+              v-bind:value="passTime(missionProfile.createTime)"
+              v-bind:format-tooltip="formatTooltip"
+              disabled>
+            </el-slider>
+          </el-col>
+          <el-col v-bind:span="4">{{ missionProfile.deadline }}</el-col>
+        </el-row>
+
+      </template>
+
+    </el-dialog>
   </div>
 </template>
 
@@ -102,16 +182,27 @@ export default {
       minConfirmDisable: false,
       allData: [],
       missionData: [
-        { href: 'login', type: '问卷', reward: 0.4 }
+        { href: '#', type: '问卷', reward: 0.4 }
       ],
-      dataLoading: true
+      dataLoading: true,
+      profileVisible: false,
+      missionProfile: {
+        username: '',
+        type: 0,
+        avatar: '',
+        title: '',
+        createTime: '',
+        deadline: '',
+        description: '',
+        reward: -1
+      }
     }
   },
 
   methods: {
     test () {
-      let temp = Math.random() > 0.5 ? { href: 'login', type: '问卷', reward: 0.4 }
-        : { href: 'login', type: '其他', reward: 0.7 }
+      let temp = Math.random() > 0.5 ? { href: '#', type: '问卷', reward: 0.4 }
+        : { href: '#', type: '其他', reward: 0.7 }
       this.missionData.push(temp)
       this.allData = this.missionData
     },
@@ -137,7 +228,61 @@ export default {
     resetFilterWithMin () {
       this.missionData = this.allData
       this.filter.minReward = 0
+    },
+
+    checkProfile (event, { index, value }) {
+      event.preventDefault()
+      this.profileVisible = true
+    },
+
+    acceptMission () {
+
+    },
+
+    // --- same to ReceivedPage ---
+    formatTooltip () {
+      let startTime = Date.now()
+      let endTime = new Date(this.endTime)
+      let left = '剩余0天0时0分0秒'
+      if (endTime.getTime() > startTime) {
+        let msDiff = endTime.getTime() - startTime
+        // compute day left
+        let leftDay = Math.floor(msDiff / (1000 * 24 * 60 * 60))
+        // hours left after computing day left
+        let leaveForHour = msDiff % (1000 * 24 * 60 * 60)
+        // compute hour left
+        let leftHour = Math.floor(leaveForHour / (1000 * 60 * 60))
+        let leaveForMinute = leaveForHour % (1000 * 3600)
+        let leftMinute = Math.floor(leaveForMinute / (1000 * 60))
+        let leaveForSecond = leaveForMinute % (1000 * 60)
+        let leftSecond = Math.round(leaveForSecond / 1000)
+        left = '剩余' + leftDay + '天' + leftHour + '时' + leftMinute + '分' + leftSecond + '秒'
+      }
+      return left
+    },
+
+    timeDiff (sTime, eTime) {
+      let startTime = new Date(sTime)
+      let endTime = new Date(eTime)
+      let leftHour = 0
+      if (endTime.getTime() > startTime.getTime()) {
+        let msDiff = endTime.getTime() - startTime.getTime()
+        leftHour = Math.floor(msDiff / (1000 * 3600))
+      }
+      return leftHour
+    },
+
+    passTime (startTime) {
+      let nowTime = Date.now()
+      let sTime = new Date(startTime)
+      let passHour = 0
+      if (nowTime > sTime.getTime()) {
+        let msDiff = nowTime - sTime.getTime()
+        passHour = Math.ceil(msDiff / (1000 * 3600))
+      }
+      return passHour * Math.floor(100 / this.$options.methods.timeDiff(startTime, this.endTime))
     }
+    // --- ---
   }
 }
 </script>
@@ -182,6 +327,12 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+
+  .vertical-divider {
+    width: 1px;
+    display: inline-block;
+    background-color: #DCDFE6;
   }
 </style>
 
