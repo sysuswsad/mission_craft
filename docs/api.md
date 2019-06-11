@@ -59,7 +59,6 @@
 }
 ```
 
-
 ---
 ---
 ## 用户接口
@@ -311,12 +310,12 @@ token|是|123|登录所返回的token
 ## 任务接口
 ### 得到任务信息
 根据传递的参数获得所需的功能
-- 任务广场所使用的API，返回待领取的任务。使用游标分页设计，返回特定时间后的任务清单
-- 返回个人发布的任务，如果是问卷类型，则接收者为空(问卷为匿名)
-- 返回某个任务的具体信息，需要提供mission id
-
+- 任务广场所使用的API，返回待领取的任务。使用游标分页设计，返回特定条件下的任务清单
+- 返回个人发布的任务，如果是问卷类型，则接收者为空(问卷为匿名)，否则带上接收者id和接收时间
+- 返回某个任务的具体信息，通过mission id查找
 
 **请求地址**
+
 ```
 /mission/
 ```
@@ -327,14 +326,16 @@ GET
 **请求参数**
 
 参数名 | 是否必须 | 示例值 | 描述
---|--|--|--|
+--|--|--|--
 token|是|123|登录返回的token
 create_time|否|2019-5-1 14:40:20|返回该时间前的任务
-limit|否|10|返回的最大条数
-type|否|0或1或2|分别代表问卷、取快递和全部
-bounty|否|10|最低报酬
-personal|否|1|是否返回个人发布的任务（对应第2个功能）
-mission_id|否|123|返回某个的任务
+limit|否|10|最多返回条数
+type|否|0或1|筛选返回类型，0-问卷、1-取快递、None全部
+return_problems|否|0或1|1表示查询结果中需要返回问题信息
+return_statistics|否|0或1|1表示查询结果中需要返回答案统计信息
+bounty|否|10|筛选最低报酬
+personal|否|0或1|0对应第一个功能，1对应第2个功能
+mission_id|否|123|返回特定id对应的任务
 
 
 **返回示例**
@@ -357,16 +358,21 @@ mission_id|否|123|返回某个的任务
             "finish_time":"2019-5-10 14:40:20",
             "type":0, 
             "publisher_id":10, 
+            "username":"pj",
             "avatar":"www.domain.com/imgage/..",
-            "problems":[],
+            "receiver_id":"ousx",
+            "receiver_time":"2010-10-10 11:11:11",
+            "problems":[
+                { 'type': 0, 'question': '单选问题', 'choices': ['选项1', '选项2'], 'answer': [10,20]},
+                { 'type': 1, 'question': '多选问题', 'choices': ['选项1', '选项2'], 'answer': [20,30] },
+                { 'type': 2, 'question': '填空问题' , 'answer': ['answer1', 'answer2']}]
             },
             ...
 
         ],
-        "unread_notification_num": 10,
-        "bottom": true,   
+        "unread_notification_num": 10 
     },   
-    "message": "ok"
+    "message": "Get missions successfully"
 }
 ```
 ---
@@ -383,22 +389,27 @@ POST
 **请求参数**
 
 参数名 | 是否必须 | 示例值 | 描述
---|--|--|--|
-token|是|123|登录返回的token|
+--|--|--|--
+token|是|123|登录返回的token
 type|是|类型|0表示问卷，1表示其他
-deadline|否|2019-5-1 14:40:20|结束时间,如果是取快递，就不需要(默认为3天)|
+deadline|否|2019-5-1 14:40:20|结束时间,如果是取快递，就不需要(默认为3天)
 title|是|"标题1"|标题
-descrption|是|"描述"|任务描述|
+descrption|是|"描述"|任务描述
+qq|否|123|联系信息四个必有其一
+phone|否|183|
+wechat|否|ousx|
+other_way|否|其它|
 bounty|是|100|赏金
 max_num|否|10|最大接收人,默认为1
-problems|否||以数组形式上传
+problems|否|"problems":[<br/>                { 'type': 0, 'question': '单选问题', 'choices': ['选项1', '选项2'], 'answer': [10,20]},<br/>                { 'type': 1, 'question': '多选问题', 'choices': ['选项1', '选项2'], 'answer': [20,30] },<br/>                { 'type': 2, 'question': '填空问题' , 'answer': ['answer1', 'answer2']}]<br/>|以数组形式上传
 
 **返回示例**
+
 ```json
 {
     "staus" : 200,
     "mission_id": 123,
-    "message": "ok"
+    "message": "Create mission successfully"
 }
 ```
 ---
@@ -432,7 +443,6 @@ mission_id|是|123456|id
     "message": "ok"
 }
 ```
-
 
 ---
 ---
@@ -521,16 +531,16 @@ PUT
 **请求参数**
 
 参数名 | 是否必须 | 示例值 | 描述
---|--|--|--|
+--|--|--|--
 token|是|123|登录时所用的token
 order_id|是|123|订单id
-problem|否||问卷问题答案
+answers|否|[<br/>        0,(单选选第一个)<br/>        [0,1],（多选选第一和第二个）<br/>        '填空题答案'（填空题答案）<br/>    ]|问卷类型提交必须有
 
 **返回示例**
 ```json
 {
     "staus" : 200,
-    "message": "ok"
+    "message": "Confirm order successfully"
 }
 ```
 
@@ -575,7 +585,7 @@ token|是|123|登录返回的token
     "message": "ok"
 }
 ```
---- 
+---
 ### 修改通知已读情况 
 **请求地址**
 ```
