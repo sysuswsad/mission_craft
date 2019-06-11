@@ -5,12 +5,15 @@ import os
 from flask import Flask
 from config import Config
 from flask_mail import Mail
+from flask_cors import *
 mail = Mail()
 
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app, supports_credentials=True)
+
     # 设置数据库
     app.config.from_mapping(
         DATABASE = os.path.join(app.instance_path, 'mission_craft.sqlite')
