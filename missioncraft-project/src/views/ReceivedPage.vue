@@ -1,5 +1,5 @@
 <template>
-  <div id="received-container">
+  <div class="received-container">
     <el-card>
       <template v-slot:header>
         <el-tabs v-model="activeTab" v-on:tab-click="handleClick">
@@ -7,7 +7,7 @@
           <el-tab-pane label="已结束" name="over"></el-tab-pane>
           <div>
             <el-pagination
-              id="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
+              class="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
               v-bind:page-sizes="[5, 10, 20, 30]"
               v-bind:page-size="pageSize"
               v-bind:current-page.sync="currentPage"
@@ -19,7 +19,7 @@
         </el-tabs>
       </template>
       <el-table
-        id="mission-table"
+        class="mission-table"
         stripe
         v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)"
         v-on:row-click="rowClick">
@@ -49,19 +49,19 @@
         <h2>{{ missionTitle }}</h2>
       </template>
       <el-divider></el-divider>
-      <div id="detail-container">
+      <div class="detail-container">
         <el-row type="flex">
           <el-col v-bind:span="8">
             <el-row>
               <h1>发布者</h1>
             </el-row>
             <el-row>
-              <el-col v-bind:span="8" v-bind:offset="1" id="img-wrapper">
+              <el-col v-bind:span="8" v-bind:offset="1" class="img-wrapper">
                 <div>
-                  <img id="img-container" v-bind:src=url alt="加载失败"/>
+                  <img class="img-container" v-bind:src=url alt="加载失败"/>
                 </div>
               </el-col>
-              <el-col id="username-container" v-bind:span="8">
+              <el-col class="username-container" v-bind:span="8">
                 <span>caixukun</span>
                 <div style="margin-top: 10px">
                   <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
@@ -69,7 +69,7 @@
               </el-col>
             </el-row>
             <div v-for="(index, value) in contactWay" v-bind:key="value">
-              <el-row v-if="contactWay[value] !== emptyStr" id="contact-row-wrapper">
+              <el-row v-if="contactWay[value] !== emptyStr" class="contact-row-wrapper">
                 <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'phone'">
                   <span>{{ '手机号码：' + contactWay[value] }}</span>
                 </el-col>
@@ -306,19 +306,19 @@ export default {
 </script>
 
 <style scoped>
-  #received-container {
+  .received-container {
     margin: 0 2rem;
   }
 
-  #pagination-container {
+  .pagination-container {
     float: right;
   }
 
-  #mission-table {
+  .mission-table {
     cursor: pointer;
   }
 
-  #detail-container {
+  .detail-container {
     display: block;
   }
 
@@ -328,22 +328,22 @@ export default {
     background-color: #DCDFE6;
   }
 
-  #img-wrapper {
+  .img-wrapper {
     cursor: pointer;
   }
 
-  #img-container {
+  .img-container {
     width: 80px;
     height: 80px;
     border-radius: 50%;
   }
 
-  #username-container {
+  .username-container {
     margin: 20px 0 0 0;
     font-weight: bold;
   }
 
-  #contact-row-wrapper {
+  .contact-row-wrapper {
     margin-bottom: 10px;
   }
 </style>

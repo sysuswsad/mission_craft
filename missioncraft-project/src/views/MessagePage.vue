@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <div id="message-container">
+  <div class="message-container">
     <el-card class="message-card">
       <template v-slot:header>
         <el-button class="el-icon-delete-solid" type="danger" size="mini" v-on:click="deleteRow" v-bind:disabled="multipleSelection.length === 0"></el-button>
@@ -7,7 +7,7 @@
         <el-button size="mini" v-on:click="unMarkRead" v-bind:disabled="multipleSelection.length === 0">标为未读</el-button>
         <el-button size="mini" v-on:click="cancelSelection" v-bind:disabled="multipleSelection.length === 0">取消选择</el-button>
         <el-pagination
-          id="pagination-container" layout="prev, pager, next, sizes, total, jumper"
+          class="pagination-container" layout="prev, pager, next, sizes, total, jumper"
           v-bind:page-sizes="[5, 10, 20, 30]"
           v-bind:page-size="pageSize"
           v-bind:current-page.sync="currentPage"
@@ -16,9 +16,9 @@
           v-on:size-change="handleSizeChange">
         </el-pagination>
       </template>
-      <div id="table-container">
+      <div class="table-container">
         <el-table
-          id="message-table"
+          class="message-table"
           ref="multipleTable"
           stripe
           v-bind:data="messageData.slice((currentPage-1) * pageSize, currentPage * pageSize)"
@@ -228,7 +228,7 @@ export default {
 </script>
 
 <style scoped>
-  #message-container {
+  .message-container {
     margin: 0 2rem;
   }
 
@@ -236,16 +236,16 @@ export default {
     width: 100%;
   }
 
-  #table-container {
+  .table-container {
     width: 100%;
   }
 
-  #message-table {
+  .message-table {
     width: 100%;
     cursor: pointer;
   }
 
-  #pagination-container {
+  .pagination-container {
     float: right;
   }
 
