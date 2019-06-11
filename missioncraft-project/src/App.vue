@@ -32,6 +32,7 @@
 <script>
 import TopMenu from './components/TopMenu'
 import SideBar from './components/SideBar'
+import backend from './backend'
 
 export default {
   components: { SideBar, TopMenu },
@@ -41,6 +42,25 @@ export default {
       isLogin: false, // 根据登录情况判断是否展示侧栏
       sidebarCollapsed: true,
       unreadMsgNum: 7 // temp
+    }
+  },
+
+  created: function () {
+    if (this.$cookies.isKey('u-token')) {
+      let token = this.$cookies.get('u-token')
+      console.log(token)
+      backend.getRequest('user/',
+        {
+          token: token
+        })
+        .then((response) => {
+          this.isLogin = true
+          this.$store.commit('setAll', response.data.data)
+          console.log(response.data.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
 

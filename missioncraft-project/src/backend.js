@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 import { Message } from 'element-ui'
+import router from './router'
 
 let $axios = axios.create({
   baseURL: 'http://127.0.0.1:5000/api/',
@@ -33,7 +34,7 @@ $axios.interceptors.response.use(response => {
   switch (error.response.status) {
     case 401:
       Message.warning({message: '认证失效，请先登录'})
-      Vue.$router.replace({name: 'login'})
+      router.replace({name: 'login'})
       break
 
     case 403:
@@ -57,8 +58,8 @@ export default {
     return $axios.post(url, params, config)
   },
 
-  getRequest (url) {
-    return $axios.get(url)
+  getRequest (url, params) {
+    return $axios.get(url, params)
   },
 
   putRequest (url, params, config={}) {

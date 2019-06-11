@@ -63,6 +63,10 @@ export default new Vuex.Store({
 
     setEmail (state, email) {
       state.userInfo.email = email
+    },
+
+    setAll (state, info) {
+      state.userInfo = info
     }
   },
 
