@@ -154,7 +154,7 @@ def get_code():
             # 使用sqlite数据库的情况：
             db.execute(
                 'REPLACE INTO Verification VALUES (?,?,?)',
-                (email, code, datetime.datetime.now())
+                (email, code, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             )
             db.commit()
             # 使用redis情况的代码如下：

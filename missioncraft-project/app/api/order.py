@@ -42,7 +42,6 @@ def get_rcv_order():
     return ok('return successfully', data=data)
 
 
-
 # 创建个人订单
 @bp.route('/order/', methods=['POST'])
 @auth.login_required
@@ -99,7 +98,7 @@ def create_order():
     # 添加订单
     db.execute(
       'INSERT INTO MissionOrder (mission_id, receiver_id, receive_time) VALUES (?, ?, ?)',
-        (mission_id, g.user['idUser'], datetime.datetime.now())
+        (mission_id, g.user['idUser'], datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     )
  
     # 得到订单id
@@ -168,7 +167,7 @@ def confirm_order():
 	# 更新其它表
 	db.execute(
 		'UPDATE MissionOrder SET publisher_confirm = ?, receiver_confirm = ?, order_state = ?, finish_time = ? WHERE idMissionOrder = ?', 
-		(1, 1, 1, datetime.datetime.now(), order_id,)
+		(1, 1, 1, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), order_id,)
 	)
 	db.execute(
 		'UPDATE User SET mission_fin_num = mission_fin_num + 1 WHERE idUser = ?', 

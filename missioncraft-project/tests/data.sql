@@ -52,7 +52,7 @@ VALUES
   (11, 3, 1, 1, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
   (11, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
   (11, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12')),
-  (6, 1, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12'))
+  (6, 2, 0, 0, 0, datetime('2019-06-08 12:12:12'), datetime('2019-06-08 12:12:12'))
 ;
 
 INSERT INTO Problem (mission_id, type, problem_stem, problem_detail)
