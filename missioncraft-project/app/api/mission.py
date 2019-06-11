@@ -4,11 +4,13 @@ from flask import (
 from werkzeug.exceptions import abort
 import datetime
 
-from app.api.user import auth
+from app.auth import auth
 from app.db import get_db
 from app.api import bp
-from app.response_code import bad_request, unauthorized, ok, created, forbidden
+from app.response_code import bad_request, unauthorized, ok, created, forbidden, error_response
 from app.statistics import statistics_ana
+
+from app.api.notification import create_notification_type_8, get_unread_num
 
 import json
 import re
@@ -185,28 +187,32 @@ def get_mission():
             for num in range(0, len(problems)):
                 item['problems'][num]['answer'] = statistics_ana(problem_info[num]['type'], problem_info[num]['problem_detail'], problem_info[num]['idProblem'])
 
-    # # 讨论过后发现不需要接单人信息
-    # # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
-    # for item in mission_array:
-    #     item['receiver_id'] = ''
-    #     item['receiver_time'] = ''
-    #     item['avatar'] = db.execute(
-    #         'SELECT avatar FROM User WHERE idUser = ?', (item['publisher_id'],)
-    #     ).fetchone()['avatar']
-    #     # 暂时只考虑快递任务，如果有人接单且查询人是发布者，返回接单人信息
-    #     if item['type'] == 1 and item['rcv_num'] == 1 and item['publisher_id'] == g.user['idUser']:
-    #         mission_order = db.execute(
-    #             'SELECT receiver_id, receiver_time FROM MissionOrder WHERE mission_id = ?', (item['idMissionInfo'],)
-    #         ).fetchone()
-    #         item['receiver_id'] = mission_order['receiver_id']
-    #         item['receiver_time'] = mission_order['receiver_time']
+    # 讨论过后发现不需要接单人信息
+    # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
+    for item in mission_array:
+        item['receiver_id'] = ''
+        item['receiver_time'] = ''
+        user_info = db.execute(
+            'SELECT username, avatar FROM User WHERE idUser = ?', (item['publisher_id'],)
+        ).fetchone()
+        item['avatar'] = user_info['avatar']
+        item['username'] = user_info['username']
+        # 暂时只考虑快递任务，如果有人接单且查询人是发布者，返回接单人信息
+        if item['type'] == 1 and item['rcv_num'] == 1 and item['publisher_id'] == g.user['idUser']:
+            mission_order = db.execute(
+                'SELECT receiver_id, receive_time FROM MissionOrder WHERE mission_id = ?', (item['idMissionInfo'],)
+            ).fetchone()
+            item['receiver_id'] = mission_order['receiver_id']
+            item['receiver_time'] = mission_order['receive_time']
 
     # 选出后limit个
     if limit and int(limit) < len(mission_array):
         limit = int(limit)
         mission_array = mission_array[len(mission_array)-limit:len(mission_array)]
 
-    return ok('Get missions successfully', data={'missions':mission_array})
+    # notification
+    # return ok('Get missions successfully', data={'missions':mission_array})
+    return ok('Get missions successfully', data={'missions': mission_array, 'notification_num': get_unread_num(g.user['idUser'])})
 
 
 @bp.route('/mission/', methods=['put'])
@@ -216,18 +222,69 @@ def cancel_mission():
     if not data:
         return bad_request('ERROR DATA AT CANCEL MISSION')
 
+    db = get_db()
     mission_id = data.get('mission_id')
-    if (not mission_id and mission_id != 0):
+    if (mission_id is None):
         return bad_request('Mission_id is required')
-    mission_info = db.execute('SELECT publisher_id, type, rcv_num FROM MissionInfo WHERE idMissionInfo = ?',
+    mission_info = db.execute('SELECT * FROM MissionInfo WHERE idMissionInfo = ?',
         (mission_id,) 
     ).fetchone()
+    if(mission_info is None):
+        return bad_request('Mission_id is invalid')
+    
+    rcv_num = mission_info['rcv_num']
+    max_num = mission_info['max_num']
+    # 问卷
+    # 发布者可以取消
+    if(mission_info['type'] == 0):
+        if(mission_info['publisher_id'] == g.user['idUser']):
+            db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
+            db.commit()
+            return ok('cancel successfully')
+        else:
+            order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()
+            if order_info['receiver_id'] == g.user['idUser']:
+                # 如果问卷原本是满人了,就重新开放
+                if rcv_num == max_num:
+                    db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (0, mission_id))         
+                # 修改接单人数
+                db.execute('UPDATE MissionInfo SET rcv_num = ? WHERE idMissionInfo = ?', (rcv_num - 1, mission_id))
+                # 订单取消
+                db.execute('UPDATE MissionOrder SET order_state = ? WHERE mission_id = ?', (2, mission_id))
+                db.commit()
+                return ok('cancel successfully')
+            else:
+                return error_response(403, 'The operation is forbidden')
+    # 取快递
+    # 没人接，发布者可以取消
+    # 领取者主动放弃
+    elif(mission_info['type'] == 1):
+        if(mission_info['publisher_id'] == g.user['idUser']):
+            if rcv_num != 0:
+                return error_response(400, 'Should not cancel a mission already received')
+            else:
+                db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
+                db.commit()
+                return ok('cancel successfully')        
+        else:
+            order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()
+            if order_info['receiver_id'] == g.user['idUser']:
+                db.execute('UPDATE MissionInfo SET rcv_num = ?, state = ? WHERE idMissionInfo = ?', (rcv_num - 1, 0, mission_id))
+                # 订单取消
+                db.execute('UPDATE MissionOrder SET order_state = ? WHERE mission_id = ?', (2, mission_id))
+                db.commit()
 
-    if mission_info['publisher_id'] != g.user['idUser']:
-        return forbidden('Not the author of mission')
-    elif mission_info['type'] == 1 and mission_info['rcv_num'] != 0:
-        return bad_request('Should not cancel a mission already received')
+                # notification
+                create_notification_type_8(
+                    mission_id=mission_info['idMissionInfo'], 
+                    receiver_id=order_info['receiver_id'], 
+                    cancel_time=datetime.datetime.now())
+                
+                return ok('cancel successfully')
+            else:
+                return error_response(403, 'The operation is forbidden')
+            
+    else:
+        return error_response(500, 'Server Internal error')
 
-    db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
-    db.commit()
     # 取消任务之后返回部分或全部金额，????????????待完成

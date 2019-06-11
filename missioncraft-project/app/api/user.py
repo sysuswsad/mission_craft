@@ -15,10 +15,11 @@ from app.response_code import bad_request, unauthorized, ok, created, forbidden
 from app.email import send_verification_code
 from app.verification import  verify_istrue
 from app.api import bp
+from app.auth import auth
 # from app import redis_db
 
-from flask_httpauth import HTTPTokenAuth
-auth = HTTPTokenAuth()
+# from flask_httpauth import HTTPTokenAuth
+# auth = HTTPTokenAuth()
 
 
 # 下面这句@的作用就是：将url'/register'绑定到register视图函数，同时设置app.view_func['auth.register']=register
@@ -170,30 +171,30 @@ def get_code():
         return bad_request('We can not find such email, you should change one')
 
 
-@auth.error_handler
-def error_handler():
-    return unauthorized('Unauthorized Access')
+# @auth.error_handler
+# def error_handler():
+#     return unauthorized('Unauthorized Access')
 
 
-@auth.verify_token
-def verify_token(token):
-    g.user = None
-    s = Serializer(current_app.config['SECRET_KEY'])
-    try:
-        data = s.loads(token)
-    except SignatureExpired:
-        # token正确但是过期了
-        return False
-    except BadSignature:
-        # token错误
-        return False
-    if 'idUser' in data:
-        db = get_db()
-        g.user = db.execute(
-            'SELECT * FROM User WHERE idUser = ?', (data['idUser'],)
-        ).fetchone()
-        return True
-    return False
+# @auth.verify_token
+# def verify_token(token):
+#     g.user = None
+#     s = Serializer(current_app.config['SECRET_KEY'])
+#     try:
+#         data = s.loads(token)
+#     except SignatureExpired:
+#         # token正确但是过期了
+#         return False
+#     except BadSignature:
+#         # token错误
+#         return False
+#     if 'idUser' in data:
+#         db = get_db()
+#         g.user = db.execute(
+#             'SELECT * FROM User WHERE idUser = ?', (data['idUser'],)
+#         ).fetchone()
+#         return True
+#     return False
 
 
 @bp.route('/user/', methods=['GET'])

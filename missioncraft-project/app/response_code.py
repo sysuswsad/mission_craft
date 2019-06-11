@@ -1,7 +1,6 @@
 from flask import jsonify
 from werkzeug.http import HTTP_STATUS_CODES
 
-
 def fine_response(status_code, message=None, data=None):
     payload = {}
     if message:
@@ -15,7 +14,6 @@ def fine_response(status_code, message=None, data=None):
 
 def ok(message, data=None):
     return fine_response(status_code=200, message=message, data=data)
-
 
 def created(message, data=None):
     return fine_response(status_code=201, message=message, data=data)
