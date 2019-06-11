@@ -38,7 +38,7 @@ export default {
   data () {
     return {
       sideWidth: '64px',
-      isLogin: true, // 根据登录情况判断是否展示侧栏
+      isLogin: false, // 根据登录情况判断是否展示侧栏
       sidebarCollapsed: true,
       unreadMsgNum: 7 // temp
     }
@@ -71,7 +71,7 @@ export default {
   computed: {
     showMenu () {
       return !(this.$route.path === '/questionnaire' || this.$route.path === '/publishMission' ||
-          this.$route.path === '/login' || this.$route.path === '/register' || this.$route.path === '/answerQuestionnaire')
+          this.$route.path === '/login' || this.$route.path === '/register' || this.$route.path === '/answerQuestionnaire' || this.$route.path === '/')
     }
   }
 }

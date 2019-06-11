@@ -3,16 +3,18 @@ import Vue from 'vue'
 import { Message } from 'element-ui'
 
 let $axios = axios.create({
-  baseURL: '/api/',
+  baseURL: 'http://qcloud.captainp.cn/api/',
   timeout: 5000,
-  headers: { 'Content-Type': 'application/json' }
+  headers: { 'Content-Type': 'application/json'}
 })
 
 // Request Interceptor
 $axios.interceptors.request.use( config => {
+  /*
   if (Vue.$cookies.isKey('u-token')) {
     config.headers.Authorization = `Bearer ${Vue.$cookies.get('u-token')}`
   }
+  */
   return config
 }, error => {
   Message.error({'message': '请求超时，请稍后重试'})

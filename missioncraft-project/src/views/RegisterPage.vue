@@ -56,6 +56,7 @@
   </div>
 </template>
 <script>
+import backend from '../backend'
 export default {
   name: 'RegisterPage',
   data () {
@@ -170,6 +171,11 @@ export default {
   },
   methods: {
     getCode () {
+      backend.postRequest('code/', { email: 'penglsh6@mail2.sysu.edu.cn' }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
       if (!this.timer) {
         this.count = 60
         this.show = false
