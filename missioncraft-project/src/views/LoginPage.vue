@@ -83,7 +83,6 @@ export default {
             this.$store.commit('setUsername', this.info.username)
           }
           this.$cookies.set('u-token', response.data.data.token)
-          this.$store.commit('setToken', response.data.data.token)
         })
         .catch(function (error) {
           console.log(error)
