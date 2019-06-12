@@ -5,7 +5,7 @@
         <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="unreadMsgNum"></side-bar>
       </el-aside>
       <el-container>
-        <el-header id="top-menu" v-show="isLogin">
+        <el-header id="top-menu">
           <top-menu v-on:barCollapse="changeBarWidth"></top-menu>
         </el-header>
         <el-main class="inner-container">
@@ -32,6 +32,7 @@
 <script>
 import TopMenu from './components/TopMenu'
 import SideBar from './components/SideBar'
+import backend from './backend'
 
 export default {
   components: { SideBar, TopMenu },
@@ -41,6 +42,23 @@ export default {
       isLogin: false, // 根据登录情况判断是否展示侧栏
       sidebarCollapsed: true,
       unreadMsgNum: 7 // temp
+    }
+  },
+
+  created: function () {
+    if (this.$route.path !== '/login') {
+      if (this.$cookies.isKey('u-token')) {
+        let token = this.$cookies.get('u-token')
+        this.$store.commit('setToken', token)
+        backend.getRequest('user/')
+          .then((response) => {
+            this.isLogin = true
+            this.$store.commit('setAll', response.data.data)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     }
   },
 

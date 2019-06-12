@@ -21,7 +21,8 @@ export default new Vuex.Store({
       mission_pub_num: -1,
       mission_fin_num: -1
     },
-    message: []
+    message: [],
+    token: ''
   },
 
   mutations: {
@@ -63,7 +64,16 @@ export default new Vuex.Store({
 
     setEmail (state, email) {
       state.userInfo.email = email
+    },
+
+    setAll (state, info) {
+      state.userInfo = info
+    },
+
+    setToken (state, token) {
+      state.token = token
     }
+
   },
 
   actions: {
