@@ -10,7 +10,7 @@ let $axios = axios.create({
 })
 
 // Request Interceptor
-$axios.interceptors.request.use( config => {
+$axios.interceptors.request.use(config => {
   if ($vue.$cookies.isKey('u-token')) {
     config.headers.Authorization = `Bearer ${$vue.$cookies.get('u-token')}`
   }

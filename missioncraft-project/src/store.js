@@ -12,8 +12,8 @@ export default new Vuex.Store({
       email: '',
       avatar: '',
       school: '',
-      grade: -1,    // 0: male, 1: female
-      gender: '',
+      grade: '',
+      gender: -1, // 0: male, 1: female
       phone: '',
       weChat: '',
       qq: '',

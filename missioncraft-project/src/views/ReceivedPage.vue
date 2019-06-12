@@ -42,9 +42,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-dialog width="70%"
-               center
-               v-bind:visible.sync="dialogVisible">
+    <el-dialog
+      width="70%"
+      center
+      v-bind:visible.sync="dialogVisible">
       <template v-slot:title>
         <h2>{{ missionTitle }}</h2>
       </template>
