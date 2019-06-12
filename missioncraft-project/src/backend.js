@@ -5,14 +5,10 @@ import router from './router'
 import store from './store'
 
 let $axios = axios.create({
-  baseURL: 'http://127.0.0.1:5000/api/',
+  baseURL: 'http://qcloud.captainp.cn:5000/api/',
+  // baseURL: 'http://127.0.0.1:5000/api/',
   timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Authorization,Origin, X-Requested-With, Content-Type, Accept',
-    'Access-Control-Allow-Methods': 'GET,POST,PUT'
-  }
+  headers: { 'Content-Type': 'application/json' }
 })
 
 // Request Interceptor
@@ -32,6 +28,7 @@ $axios.interceptors.request.use( config => {
 $axios.interceptors.response.use(response => {
   return response
 }, error => {
+  console.log(error)
   switch (error.response.status) {
     case 401:
       Message.warning({message: '认证失效，请先登录'})

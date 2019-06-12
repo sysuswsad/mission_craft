@@ -46,7 +46,7 @@ export default {
   },
 
   created: function () {
-    if (this.$route.path !== '/login') {
+    if (this.$route.path !== '/login' && this.$route.path !== '/register') {
       if (this.$cookies.isKey('u-token')) {
         let token = this.$cookies.get('u-token')
         this.$store.commit('setToken', token)
