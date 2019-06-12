@@ -15,21 +15,21 @@
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item label="用户名">
-                  <el-input v-model="privateInfo.username" v-bind:disabled="!canEdit"></el-input>
+                  <el-input v-model="username" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item label="年级">
-                  <el-input v-model="privateInfo.grade" v-bind:disabled="!canEdit"></el-input>
+                  <el-input v-model="grade" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item label="学院">
-                  <el-input v-model="privateInfo.school" v-bind:disabled="!canEdit"></el-input>
+                  <el-input v-model="school" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -98,6 +98,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'UserInfoPage',
   data () {
@@ -105,11 +106,6 @@ export default {
       url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
       canEdit: false,
       imageUrl: '',
-      privateInfo: {
-        username: '',
-        school: '',
-        grade: ''
-      },
       passwordSet: {
         oldPassword: '',
         newPassword: '',
@@ -152,7 +148,13 @@ export default {
         console.log(err)
       })
     }
-  }
+  },
+
+  computed: mapState({
+    username: state => state.userInfo.username,
+    school: state => state.userInfo.school,
+    grade: state => state.userInfo.grade
+  })
 }
 </script>
 
