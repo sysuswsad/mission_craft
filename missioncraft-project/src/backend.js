@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Vue from 'vue'
+import $vue from './main.js'
 import { Message } from 'element-ui'
 
 let $axios = axios.create({
@@ -11,11 +11,9 @@ let $axios = axios.create({
 
 // Request Interceptor
 $axios.interceptors.request.use( config => {
-  /*
-  if (Vue.$cookies.isKey('u-token')) {
-    config.headers.Authorization = `Bearer ${Vue.$cookies.get('u-token')}`
+  if ($vue.$cookies.isKey('u-token')) {
+    config.headers.Authorization = `Bearer ${$vue.$cookies.get('u-token')}`
   }
-  */
   return config
 }, error => {
   Message.error({ 'message': '请求超时，请稍后重试' })
@@ -30,7 +28,7 @@ $axios.interceptors.response.use(response => {
   switch (error.response.status) {
     case 401:
       Message.warning({ message: '认证失效，请先登录' })
-      Vue.$router.replace({ name: 'login' })
+      $vue.$router.replace({ name: 'login' })
       break
 
     case 403:

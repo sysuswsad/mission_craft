@@ -89,13 +89,15 @@
     <el-dialog
       v-bind:visible.sync="profileVisible"
       v-bind:show-close="false"
+      v-loading="profileLoading"
+      ref="profileDialog"
       width="50%">
 
       <template v-slot:title>
         <el-row>
           <h3>任务详情</h3>
+          <el-divider></el-divider>
         </el-row>
-        <el-divider></el-divider>
       </template>
 
       <template v-slot:footer>
@@ -185,6 +187,7 @@ export default {
         { href: '#', type: '问卷', reward: 0.4 }
       ],
       dataLoading: true,
+      profileLoading: false,
       profileVisible: false,
       missionProfile: {
         username: '',
@@ -236,7 +239,7 @@ export default {
     },
 
     acceptMission () {
-
+      this.profileLoading = true
     },
 
     // --- same to ReceivedPage ---

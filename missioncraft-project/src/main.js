@@ -17,8 +17,10 @@ Vue.use(VueFab)
 
 Vue.config.productionTip = false
 
-new Vue({
+let $vue = new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
+
+export default $vue
