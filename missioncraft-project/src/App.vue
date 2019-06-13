@@ -45,7 +45,7 @@ export default {
     }
   },
 
-  created: function () {
+  mounted: function () {
     if (this.$route.path !== '/login' && this.$route.path !== '/register') {
       if (this.$cookies.isKey('u-token')) {
         backend.getRequest('user/')
