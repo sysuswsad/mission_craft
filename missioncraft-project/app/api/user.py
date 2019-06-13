@@ -53,15 +53,15 @@ def register():
     elif db.execute(
         'SELECT idUser FROM User WHERE username = ?', (username,)
     ).fetchone() is not None:
-        return bad_request('User {} is already registered.'.format(username))
+        return bad_request('100 User {} is already registered.'.format(username))
     elif db.execute(
         'SELECT idUser FROM User WHERE email = ?', (email,)
     ).fetchone() is not None:
-        return bad_request('Email {} is already registered.'.format(email))
+        return bad_request('101 Email {} is already registered.'.format(email))
     elif db.execute(
         'SELECT idUser FROM User WHERE sid = ?', (sid,)
     ).fetchone() is not None:
-        return bad_request('Sid {} is already registered.'.format(sid))
+        return bad_request('102 Sid {} is already registered.'.format(sid))
     # 检查验证码，使用redis时是这样的
     # elif redis_db.get('Email:'+email).decode('utf-8') != str(code):
     #     return bad_request('Verification code is not correct')
@@ -71,9 +71,9 @@ def register():
             'SELECT code, send_time FROM Verification WHERE email = ?', (email,)
         ).fetchone()
         if code_info['code'] != str(code):
-            return bad_request('Verification code is not correct')
+            return bad_request('103 Verification code is not correct')
         elif abs(datetime.datetime.strptime(code_info['send_time'], '%Y-%m-%d %H:%M:%S') - datetime.datetime.now()).seconds > 1800:
-            return bad_request('Verification code is out of time')
+            return bad_request('104 Verification code is out of time')
 
     db.execute(
         'INSERT INTO User (username, password, email, sid) VALUES (?, ?, ?, ?)',
@@ -113,9 +113,9 @@ def login():
         ).fetchone()
 
     if user is None:
-        return bad_request('Incorrect username or email')
+        return bad_request('105 Incorrect username or email')
     elif not check_password_hash(user['password'], password):
-        return bad_request('Incorrect password')
+        return bad_request('106 Incorrect password')
 
     # 新增通知功能，需要在登录时检查该用户有没有已发布的过期任务，如果有则在通知表生成新的表项????????????????待完成
     # 然后查通知表获取所有该用户的未读表项的数目，然后再response.body返回
@@ -139,13 +139,13 @@ def get_code():
 
 
     if not re.match(r'^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$', email):
-        return bad_request('Email format error')
+        return bad_request('107 Email format error')
 
     db = get_db()
     if db.execute(
         'SELECT idUser FROM User WHERE email = ?', (email,)
     ).fetchone() is not None:
-        return bad_request('Email {} is already registered.'.format(email))
+        return bad_request('108 Email {} is already registered.'.format(email))
     # 邮箱真实性验证，有点慢，不知道是否真的需要
     
     code = random.randint(100000, 999999)
@@ -201,7 +201,7 @@ def get_info():
     for item in [name_list[1] for name_list in db.execute('PRAGMA table_info(User)').fetchall()]:
         if item != 'password':
             user[item] = g.user[item]
-
+ 
     return ok('Get user info successfully', data=user)
 
 
@@ -230,7 +230,7 @@ def update_info():
     elif db.execute(
         'SELECT idUser FROM User WHERE username = ? AND username != ?', (username, g.user['username'],)
     ).fetchone() is not None:
-        return bad_request('User {} is already registered.'.format(username))
+        return bad_request('109 User {} is already registered.'.format(username))
 
     db.execute(
         'UPDATE User SET username = ?, realname = ?, id_card_num = ?, university = ?, school = ?, grade = ?, gender = ?, phone = ?, qq = ?, wechat = ?'
@@ -252,7 +252,7 @@ def get_avatar_url():
     if avatar['avatar']:
         return ok('Get user avatar successfully', data={'avatar':avatar['avatar']})      
     else:
-        return bad_request('User avatar is not available')
+        return bad_request('110 User avatar is not available')
 
 
 
@@ -286,7 +286,7 @@ def change_avatar():
         db.commit()
         return ok('change avatar successfully', data={'avatar':avatar})
     else:
-        return bad_request('file is supposed to be jpg or png')
+        return bad_request('111 file is supposed to be jpg or png')
 
 
 @bp.route('/password/', methods=['POST'])
@@ -304,7 +304,7 @@ def change_password():
         return bad_request('New password is required')
 
     if not check_password_hash(g.user['password'], old_password):
-        return bad_request('Old password wrong')
+        return bad_request('112 Old password wrong')
 
     db = get_db()
     db.execute(

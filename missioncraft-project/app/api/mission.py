@@ -38,7 +38,7 @@ def create_mission():
     # bounty等于0也会报错Missing some necessary parameter
     if (not mission_type and mission_type != 0) or (not deadline) or (not title) or (not description) or (not bounty):
         return bad_request('Missing some necessary parameter')
-    elif (not qq) and (not wechat) and (not phone) and (not other_way):
+    elif mission_type == 0 and (not qq) and (not wechat) and (not phone) and (not other_way):
         return bad_request('Missing contact info')
     elif not re.match(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}', deadline):
         return bad_request('Deadline format error')
