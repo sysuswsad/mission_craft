@@ -48,10 +48,11 @@ CREATE TABLE MissionInfo (
   description VARCHAR(45) NOT NULL,
   detail VARCHAR(45) DEFAULT '',
   bounty DOUBLE DEFAULT 0,
+-- 测试钱系统的时候bounty设置为100
   max_num INT DEFAULT 1,
   rcv_num INT DEFAULT 0,
   fin_num INT DEFAULT 0,
-  state DOUBLE DEFAULT 0,
+  state INT DEFAULT 0,
   FOREIGN KEY (publisher_id) REFERENCES User (idUser)
 );
 

@@ -8,6 +8,7 @@ from app.auth import auth
 from app.db import get_db
 from app.api import bp
 from app.response_code import bad_request, unauthorized, ok, created, forbidden
+from app.currency import get_by_confirm
 
 import json
 
@@ -83,14 +84,14 @@ def create_order():
         db.commit()
         return bad_request('mission reached its max rcv num')
     # 时间过期
-    
-    if(datetime.datetime.now() > datetime.datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')):
-        db.execute(
-        'UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?',
-            (1,mission_id)
-        )
-        db.commit()
-        return bad_request('mission reached its dealine')
+
+    # if(datetime.datetime.now() > datetime.datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')):
+    #     db.execute(
+    #     'UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?',
+    #         (1,mission_id)
+    #     )
+    #     db.commit()
+    #     return bad_request('mission reached its dealine')
 
     # 任务正常关闭
     state = 1 if rcv_num + 1 == max_num else 0
@@ -143,10 +144,10 @@ def confirm_order():
         return bad_request('No such mission')
 
     mission_info = db.execute(
-        'SELECT publisher_id, type FROM MissionInfo WHERE idMissionInfo = ?', (order_info['mission_id'],)
+        'SELECT publisher_id, type, bounty, max_num FROM MissionInfo WHERE idMissionInfo = ?', (order_info['mission_id'],)
     ).fetchone()
 
-    # 确认过的订单不能再确认，防止再次生成答案表
+    # 确认过的/过期的 订单不能再确认，防止再次生成答案表
     if order_info['order_state'] == 1:
         return bad_request('The order has been confirmed')
 
@@ -170,8 +171,9 @@ def confirm_order():
         if mission_info['publisher_id'] != g.user['idUser']:
             return forbidden('You can not submit for other publishers')
 
-        # 注意进行修改通知表??????后续完成
-    # 为接单人发钱??????后续完成
+    # 为接单人发钱
+    get_by_confirm(mission_info['bounty']/mission_info['max_num'], 
+    	g.user['idUser'] if mission_info['type'] == 0 else order_info['receiver_id'])
     
     # 更新其它表
     db.execute(
@@ -188,11 +190,10 @@ def confirm_order():
     )
     db.commit()
     db.execute(
-        'UPDATE MissionInfo SET state = 1.0*fin_num/max_num WHERE idMissionInfo = ? and state < 1', 
+        'UPDATE MissionInfo SET state = 1 WHERE idMissionInfo = ? AND fin_num==max_num', 
         (order_info['mission_id'],)
     )
     db.commit()
-
 
     # notification
     if mission_info['type'] == 0:
