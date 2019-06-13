@@ -31,13 +31,13 @@ VALUES
 INSERT INTO MissionInfo (publisher_id, phone, qq, wechat, other_way, type, create_time, deadline, title, description, bounty, max_num, rcv_num, fin_num, state)
 VALUES
   (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
-    10, 10, 2, 1, 0.1),
+    10, 10, 2, 1, 0),
   (2, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
-    20, 10, 2, 1, 0.1),
+    20, 10, 2, 1, 0),
   (2, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
-    15, 10, 2, 1, 0.1),
+    15, 10, 2, 1, 0),
   (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-06 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
-    5, 10, 2, 1, 0.1)
+    5, 10, 2, 1, 0)
 ;
 
 INSERT INTO MissionInfo (publisher_id, title, description, deadline,type,max_num,rcv_num,fin_num, state)

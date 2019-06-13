@@ -7,7 +7,22 @@ from flask import Flask
 from config import Config
 from flask_mail import Mail
 from flask_cors import *
+from threading import Timer
+import datetime
+from app.currency import refund_overdue
+
 mail = Mail()
+# 每隔1分钟扫一次数据库，把过期任务找出来标记state=1
+def check_mission_out_of_state(db):
+    # 为publisher返还金额
+    refund_overdue()
+
+    # 扫描数据库并更新：
+    db.execute('UPDATE MissionInfo SET state = 1 WHERE state == 0 AND deadline < datetime(CURRENT_TIMESTAMP,"localtime")')
+    db.commit()
+
+    t = Timer(60, check_mission_out_of_state, (db,))
+    t.start()
 
 
 def create_app(test_config=None):
@@ -48,5 +63,9 @@ def create_app(test_config=None):
     # 添加用户蓝图
     from app.api import bp as api_bp
     app.register_blueprint(api_bp)
+
+    # 扫描数据库更新过期任务
+    # with app.app_context():
+    #     check_mission_out_of_state(db.get_db())
 
     return app

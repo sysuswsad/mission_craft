@@ -9,13 +9,14 @@ from app.db import get_db
 from app.api import bp
 from app.response_code import bad_request, unauthorized, ok, created, forbidden, error_response
 from app.statistics import statistics_ana
+from app.currency import pay_for_create, refund_by_cancel
 
 from app.api.notification import create_notification_type_8, get_unread_num
 
 import json
 import re
 
-# ????????????需要有一个机制处理过期任务
+
 @bp.route('/mission/', methods=['POST'])
 @auth.login_required
 def create_mission():
@@ -24,7 +25,7 @@ def create_mission():
         return bad_request('ERROR DATA AT CREATE MISSION')
 
     mission_type = data.get('type')
-    deadline = data.get('deadline')
+    deadline = data.get('deadline', datetime.datetime.now() + datetime.timedelta(days=3))
     title = data.get('title')
     description = data.get('description')
     qq = data.get('qq')
@@ -35,10 +36,10 @@ def create_mission():
     max_num = data.get('max_num', 1)
     problems = data.get('problems')
 
-    # bounty等于0也会报错Missing some necessary parameter
-    if (not mission_type and mission_type != 0) or (not deadline) or (not title) or (not description) or (not bounty):
+    # 检查传参，bounty等于0也会报错Missing some necessary parameter
+    if (not mission_type and mission_type != 0) or (not title) or (not description) or (not bounty):
         return bad_request('Missing some necessary parameter')
-    elif (not qq) and (not wechat) and (not phone) and (not other_way):
+    elif int(mission_type) == 1 and (not qq) and (not wechat) and (not phone) and (not other_way):
         return bad_request('Missing contact info')
     elif not re.match(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}', deadline):
         return bad_request('Deadline format error')
@@ -53,6 +54,7 @@ def create_mission():
         return bad_request('Parse parameter error')
     deadline = datetime.datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
 
+    # 插入任务，并获取新插入元组的id
     db = get_db()
     db.execute(
         'INSERT INTO MissionInfo (publisher_id, type, deadline, title, description, qq, wechat, phone, other_way, bounty, max_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -61,14 +63,21 @@ def create_mission():
     db.commit()
     # 这里可以通过type(fetchone())来查看列值；通过fetchone().keys()查看列名
     mission_id = db.execute('SELECT last_insert_rowid() FROM MissionInfo').fetchone()[0]
+
     # 该用户发布任务数量+1
     db.execute(
         'UPDATE User SET mission_pub_num=mission_pub_num+1 WHERE idUser = ?', 
         (g.user['idUser'],)
     )
-    # 处理问卷任务
+
+    # 创建任务之前检查金额，金额足够才能创建并扣钱
+    if db.execute('SELECT idUser FROM User WHERE idUser = ? AND balance >= ?', (g.user['idUser'], bounty)).fetchone():
+        pay_for_create(bounty)
+    else:
+        return bad_request('Money not enough')
+
+    # 对于问卷任务需要处理问题信息
     if mission_type == 0:
-        # 创建任务之前检查金额，金额足够才能创建????????????待完成
         if not problems:
             return bad_request('Questionare should have problems')
         problems = json.loads(problems)
@@ -111,6 +120,7 @@ def get_mission():
     mission_array = []
     col_name = [name_list[1] for name_list in db.execute('PRAGMA table_info(MissionInfo)').fetchall()]
     col_name.remove('phone');col_name.remove('qq');col_name.remove('wechat');col_name.remove('other_way')
+
     # 若missionid不为空，说明是通过missionid查询特定订单信息，不需要提供任何其他信息
     if mission_id or mission_id == 0:
         try:
@@ -133,10 +143,10 @@ def get_mission():
             personal = int(personal)
         except Exception:
             return bad_request('Parse create_time, bounty or personal error')
-        # personal为0时表示广场查询，为1时表示私人查询
+        # personal为0时表示广场查询，为1时表示私人查询，广场查询只返回state=0的任务
         if personal == 0:
             mission_info = db.execute(
-                'SELECT * FROM MissionInfo WHERE bounty > ? AND create_time > ?', 
+                'SELECT * FROM MissionInfo WHERE bounty > ? AND create_time > ? AND state == 0', 
                 (bounty, create_time)
             ).fetchall()
         elif personal == 1:
@@ -151,6 +161,7 @@ def get_mission():
             mission_array.append(mission_json)
     else:
         return bad_request('Personal or mission_id are required')
+
     # 根据mission_type筛选
     if mission_type or mission_type == 0:
         try:
@@ -187,7 +198,6 @@ def get_mission():
             for num in range(0, len(problems)):
                 item['problems'][num]['answer'] = statistics_ana(problem_info[num]['type'], problem_info[num]['problem_detail'], problem_info[num]['idProblem'])
 
-    # 讨论过后发现不需要接单人信息
     # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
     for item in mission_array:
         item['receiver_id'] = ''
@@ -211,7 +221,6 @@ def get_mission():
         mission_array = mission_array[len(mission_array)-limit:len(mission_array)]
 
     # notification
-    # return ok('Get missions successfully', data={'missions':mission_array})
     return ok('Get missions successfully', data={'missions': mission_array, 'notification_num': get_unread_num(g.user['idUser'])})
 
 
@@ -231,7 +240,7 @@ def cancel_mission():
     ).fetchone()
     if(mission_info is None):
         return bad_request('Mission_id is invalid')
-    
+
     rcv_num = mission_info['rcv_num']
     max_num = mission_info['max_num']
     # 问卷
@@ -240,6 +249,8 @@ def cancel_mission():
         if(mission_info['publisher_id'] == g.user['idUser']):
             db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
             db.commit()
+            # 订单取消，发布人获得退款
+            refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rev_num'])
             return ok('cancel successfully')
         else:
             order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()
@@ -265,7 +276,9 @@ def cancel_mission():
             else:
                 db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
                 db.commit()
-                return ok('cancel successfully')        
+                # 订单取消，发布人获得退款
+                refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rev_num'])
+                return ok('cancel successfully')
         else:
             order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()
             if order_info['receiver_id'] == g.user['idUser']:
@@ -279,11 +292,11 @@ def cancel_mission():
                     mission_id=mission_info['idMissionInfo'], 
                     receiver_id=order_info['receiver_id'], 
                     cancel_time=datetime.datetime.now())
-                
+
                 return ok('cancel successfully')
             else:
                 return error_response(403, 'The operation is forbidden')
-            
+
     else:
         return error_response(500, 'Server Internal error')
 
