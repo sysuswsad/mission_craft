@@ -31,23 +31,6 @@
 import backend from '../backend'
 export default {
   name: 'LoginPage',
-
-  beforeCreate () {
-    let isLogin = this.$cookies.isKey('u-token')
-    backend.getRequest('user/')
-      .then((response) => {
-        this.$store.commit('setAll', response.data.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    if (isLogin) {
-      this.$router.push({ name: 'square' })
-    } else {
-      console.log('ooo')
-    }
-  },
-
   data () {
     return {
       info: {
