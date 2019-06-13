@@ -147,28 +147,24 @@ def get_code():
     ).fetchone() is not None:
         return bad_request('Email {} is already registered.'.format(email))
     # 邮箱真实性验证，有点慢，不知道是否真的需要
-    try:
-        if not verify_istrue(email)[email]:
-            return bad_request('We can not find such email, you should change one')
-        else:
-            code = random.randint(100000, 999999)
-            # 使用sqlite数据库的情况：
-            db.execute(
-                'REPLACE INTO Verification VALUES (?,?,?)',
-                (email, code, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            )
-            db.commit()
-            # 使用redis情况的代码如下：
-            # try:
-            #     redis_db.set('Email:'+email, code, 1800)    # 有效期半小时
-            # except Exception as e:
-            #     current_app.logger.debug(e)
-            #     return bad_request('Redis storing error '+str(e))
+    
+    code = random.randint(100000, 999999)
+    # 使用sqlite数据库的情况：
+    db.execute(
+        'REPLACE INTO Verification VALUES (?,?,?)',
+        (email, code, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    )
+    db.commit()
+    # 使用redis情况的代码如下：
+    # try:
+    #     redis_db.set('Email:'+email, code, 1800)    # 有效期半小时
+    # except Exception as e:
+    #     current_app.logger.debug(e)
+    #     return bad_request('Redis storing error '+str(e))
 
-            send_verification_code(email, code)
-            return created('Generate and send token successfully')
-    except Exception:
-        return bad_request('We can not find such email, you should change one')
+    send_verification_code(email, code)
+    return created('Generate and send token successfully')
+
 
 
 # @auth.error_handler
