@@ -84,6 +84,7 @@ export default {
             this.$store.commit('setUsername', this.info.username)
           }
           this.$cookies.set('u-token', response.data.data.token)
+          this.$router.push({ name: 'square' })
         })
         .catch(function (error) {
           console.log(error)

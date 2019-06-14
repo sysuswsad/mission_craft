@@ -46,18 +46,21 @@ export default {
   },
 
   mounted: function () {
+    console.log('000')
     if (this.$cookies.isKey('u-token')) {
       backend.getRequest('user/')
         .then((response) => {
           this.isLogin = true
           this.$store.commit('setAll', response.data.data)
-          if (this.$route.path === '/login') {
+          if (this.$route.path === '/login' || this.$route.path === '/') {
             this.$router.push({ name: 'square' })
           }
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          this.$router.push({ name: 'login' })
         })
+    } else {
+      this.$router.push({ name: 'login' })
     }
   },
 
