@@ -38,7 +38,7 @@ def get_notification():
 @bp.route('/notification/', methods=['put'])
 @auth.login_required
 def update_notification():
-    data = request.get_json()  # [{“n_id”:123,”has_read”:True}, ...]
+    data = request.get_json()  # {notification: [{“n_id”:123,”has_read”:True}, ...]}
     if not data:
         return bad_request('ERROR DATA AT GET NOTIFICATION')
 
@@ -53,7 +53,7 @@ def update_notification():
             'UPDATE Notification SET has_read = ? WHERE n_id = ?',
             (notification[i]["has_read"],notification[i]["n_id"])
         )
-    db.commit()
+        db.commit()
     return ok('Update the state of notifications successfully')
 
 
@@ -70,12 +70,13 @@ def delete_notification():
 
     db = get_db()
 
-    for i in notification:
+    for n_id in notification:
         db.execute(
             'DELETE FROM Notification WHERE n_id = ?',
-            (i)
+            (n_id)
         )
-    db.commit()
+        db.commit()
+        
     return ok('Delete notification successfully')
     
 
