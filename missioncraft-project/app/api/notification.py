@@ -18,9 +18,9 @@ import json
 def get_notification():
     """返回对应通知id的通知item
     """
-    data = request.get_json()
-    if not data:
-        return bad_request('ERROR DATA AT GET NOTIFICATION')
+#     data = request.get_json()
+#     if not data:
+#         return bad_request('ERROR DATA AT GET NOTIFICATION')
 
     db = get_db()
     notifications = db.execute(
@@ -33,6 +33,26 @@ def get_notification():
 
     return ok('Get notifications successfully', data={'notifications': notifications})
 
+
+@bp.route('/notification/', methods=['put'])
+@auth.login_required
+def update_notification():
+    data = request.get_json()  # [{“n_id”:123,”has_read”:True}, ...]
+    if not data:
+        return bad_request('ERROR DATA AT GET NOTIFICATION')
+
+    # n_id = data.get("n_id") # [123,123,2134,1532]
+    # has_read = data.get("has_read") # 
+    notification = data.get("notification")
+
+    db = get_db()
+
+    for i in range(len(notification)):
+        db.execute(
+            'UPDATE Notification SET has_read = ? WHERE n_id = ?',
+            (notification[i]["has_read"],notification[i]["n_id"],)
+        )
+    db.commit()
 
 ###########################################################
 def get_unread_num(user_id):
