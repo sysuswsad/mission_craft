@@ -18,9 +18,9 @@ import json
 def get_notification():
     """返回对应通知id的通知item
     """
-#     data = request.get_json()
-#     if not data:
-#         return bad_request('ERROR DATA AT GET NOTIFICATION')
+    # data = request.get_json()
+    # if not data:
+    #     return bad_request('ERROR DATA AT GET NOTIFICATION')
 
     db = get_db()
     notifications = db.execute(
@@ -32,6 +32,7 @@ def get_notification():
     ).fetchall()
 
     return ok('Get notifications successfully', data={'notifications': notifications})
+
 
 
 @bp.route('/notification/', methods=['put'])
@@ -50,9 +51,33 @@ def update_notification():
     for i in range(len(notification)):
         db.execute(
             'UPDATE Notification SET has_read = ? WHERE n_id = ?',
-            (notification[i]["has_read"],notification[i]["n_id"],)
+            (notification[i]["has_read"],notification[i]["n_id"])
         )
     db.commit()
+    return ok('Update the state of notifications successfully')
+
+
+@bp.route('/notification/', methods=['delete'])
+@auth.login_required
+def delete_notification():
+    data = request.get_json()  # {notification: [123,234]}
+    if not data:
+        return bad_request('ERROR DATA AT GET NOTIFICATION')
+
+    # n_id = data.get("n_id") # [123,123,2134,1532]
+    # has_read = data.get("has_read") #
+    notification = data.get("notification")
+
+    db = get_db()
+
+    for i in notification:
+        db.execute(
+            'DELETE FROM Notification WHERE n_id = ?',
+            (i)
+        )
+    db.commit()
+    return ok('Delete notification successfully')
+    
 
 ###########################################################
 def get_unread_num(user_id):
@@ -378,3 +403,17 @@ def update_notification_login(user_id):
     create_notification_type_7(user_id)
     return
 
+
+def create_notification_register():
+    """第一次注册成功后生成一个通知
+    """
+    n_type = 9
+    now_time = datetime.datetime.now()
+    message = "欢迎使用本产品！"
+    db.execute(
+        'INSERT INTO Notification (user_id, message, create_time, notification_type)'
+        ' VALUES (?, ?, ?, ?, ?)',
+        (g.user['idUser'], message, now_time, n_type,)
+    )
+    db.commit()
+    
