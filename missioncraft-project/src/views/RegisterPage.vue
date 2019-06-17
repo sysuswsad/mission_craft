@@ -172,10 +172,8 @@ export default {
   methods: {
     getCode () {
       backend.postRequest('code/', { email: this.info.email })
-        .then(function (response) {
-          console.log(response)
-        }).catch(function (error) {
-          console.log(error)
+        .then((response) => {
+        }).catch(() => {
         })
       if (!this.timer) {
         this.count = 60
@@ -212,9 +210,9 @@ export default {
             })
             .then((response) => {
               this.$router.push({ name: 'login' })
+              this.$message.success('注册成功！')
             })
-            .catch(function (error) {
-              console.log(error)
+            .catch(() => {
             })
         } else {
           alert('表单错误')

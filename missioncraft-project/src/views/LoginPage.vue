@@ -76,18 +76,24 @@ export default {
           password: this.info.password
         })
         .then((response) => {
-          this.$emit('login')
-          let pattern = /^[A-Za-z]+[A-Za-z0-9]{5,20}|^[A-Za-z]+[A-Za-z]*[1-9]*@mail2.sysu.edu.cn$/
-          if (pattern.test(this.info.username)) {
-            this.$store.commit('setEmail', this.info.username)
-          } else {
-            this.$store.commit('setUsername', this.info.username)
-          }
           this.$cookies.set('u-token', response.data.data.token)
-          this.$router.push({ name: 'square' })
+          setTimeout(() => {
+            backend.getRequest('user/')
+              .then((response) => {
+                this.isLogin = true
+                this.$store.commit('setAll', response.data.data)
+                if (this.$route.path === '/login' || this.$route.path === '/') {
+                  this.$router.push({ name: 'square' })
+                }
+                this.$store.commit('setLogin', true)
+                this.$router.push({ name: 'square' })
+              })
+              .catch(() => {
+                this.$router.push({ name: 'login' })
+              })
+          })
         })
-        .catch(function (error) {
-          console.log(error)
+        .catch(() => {
         })
     }
   }

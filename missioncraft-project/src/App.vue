@@ -10,7 +10,7 @@
         </el-header>
         <el-main class="inner-container">
           <transition name="fade" mode="out-in">
-            <router-view v-on:markMessage="markMessage" v-on:login="login"/>
+            <router-view v-on:markMessage="markMessage"/>
           </transition>
         </el-main>
       </el-container>
@@ -39,14 +39,14 @@ export default {
   data () {
     return {
       sideWidth: '64px',
-      isLogin: false, // 根据登录情况判断是否展示侧栏
+      // isLogin: false, // 根据登录情况判断是否展示侧栏
       sidebarCollapsed: true,
       unreadMsgNum: 7 // temp
     }
   },
 
-  mounted: function () {
-    console.log('000')
+  created () {
+    // console.log('000')
     if (this.$cookies.isKey('u-token')) {
       backend.getRequest('user/')
         .then((response) => {
@@ -55,6 +55,7 @@ export default {
           if (this.$route.path === '/login' || this.$route.path === '/') {
             this.$router.push({ name: 'square' })
           }
+          this.$store.commit('setLogin', true)
         })
         .catch(() => {
           this.$router.push({ name: 'login' })
@@ -85,11 +86,6 @@ export default {
 
     markMessage (count) {
       this.unreadMsgNum -= count
-    },
-
-    login () {
-      this.isLogin = true
-      this.$router.push({ name: 'square' })
     }
   },
 
@@ -97,7 +93,16 @@ export default {
     showMenu () {
       return !(this.$route.path === '/questionnaire' || this.$route.path === '/publishMission' ||
           this.$route.path === '/login' || this.$route.path === '/register' || this.$route.path === '/answerQuestionnaire' || this.$route.path === '/')
+    },
+    isLogin: {
+      get () {
+        return this.$store.state.isLogin
+      },
+      set (val) {
+        this.$store.state.isLogin = val
+      }
     }
+
   }
 }
 </script>

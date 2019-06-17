@@ -7,21 +7,29 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userInfo: {
-      username: '',
-      sid: '',
-      email: '',
       avatar: '',
-      school: '',
-      grade: -1,    // 0: male, 1: female
-      gender: '',
-      phone: '',
-      weChat: '',
-      qq: '',
-      other: '',
+      balance: 0,
+      check_man_id: '',
+      email: '',
+      gender: -1,
+      grade: '',
+      idUser: '',
+      id_card_num: '',
+      mission_fin_num: -1,
       mission_pub_num: -1,
-      mission_fin_num: -1
+      phone: '',
+      qq: '',
+      realname: '',
+      school: '',
+      sid: '',
+      tag: '',
+      type: '',
+      university: '',
+      username: '',
+      wechat: ''
     },
-    message: []
+    message: [],
+    isLogin: false
   },
 
   mutations: {
@@ -34,17 +42,26 @@ export default new Vuex.Store({
     },
 
     logout (state) {
-      state.userInfo.username = ''
-      state.userInfo.sid = ''
-      state.userInfo.email = ''
       state.userInfo.avatar = ''
-      state.userInfo.school = ''
-      state.userInfo.grade = ''
+      state.userInfo.balance = 0
+      state.userInfo.check_man_id = ''
+      state.userInfo.email = ''
       state.userInfo.gender = -1
-      state.userInfo.qq = ''
-      state.userInfo.wechat = ''
-      state.userInfo.mission_pub_num = -1
+      state.userInfo.grade = ''
+      state.userInfo.idUser = ''
+      state.userInfo.id_card_num = ''
       state.userInfo.mission_fin_num = -1
+      state.userInfo.mission_pub_num = -1
+      state.userInfo.phone = ''
+      state.userInfo.qq = ''
+      state.userInfo.realname = ''
+      state.userInfo.school = ''
+      state.userInfo.sid = ''
+      state.userInfo.tag = ''
+      state.userInfo.type = ''
+      state.userInfo.university = ''
+      state.userInfo.username = ''
+      state.userInfo.wechat = ''
     },
 
     setInRegister (state, username, studentId, email, phone, weChat, qq, other) {
@@ -67,6 +84,18 @@ export default new Vuex.Store({
 
     setAll (state, info) {
       state.userInfo = info
+    },
+
+    setGrade (state, grade) {
+      state.userInfo.grade = grade
+    },
+
+    setSchool (state, school) {
+      state.userInfo.school = school
+    },
+
+    setLogin (state, l) {
+      state.isLogin = l
     }
 
   },
