@@ -407,13 +407,13 @@ def update_notification_login(user_id):
 def create_notification_register():
     """第一次注册成功后生成一个通知
     """
+    db = get_db()
     n_type = 9
     now_time = datetime.datetime.now()
     message = "欢迎使用本产品！"
     db.execute(
         'INSERT INTO Notification (user_id, message, create_time, notification_type)'
-        ' VALUES (?, ?, ?, ?, ?)',
+        ' VALUES (?, ?, ?, ?)',
         (g.user['idUser'], message, now_time, n_type,)
     )
     db.commit()
-    
