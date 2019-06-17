@@ -25,5 +25,5 @@
 
 做任务者可以选择问卷任务，领取之后，系统会返回问卷信息，完成任务后会得到相应的报酬，问卷达到最大的接收数目的时候，任务结束，同时系统会通知发布者。
 
-![领取问卷泳道图](https://github.com/sysuswsad/mission_craft/blob/master/docs/imgs/wj_activity.png)
+![领取问卷泳道图](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/wj_activity.png)
 
