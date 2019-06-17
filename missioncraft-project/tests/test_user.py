@@ -38,9 +38,9 @@ def get_token_auth_headers(client, app, username_or_email, password, content_typ
     ('', 400, 'Email is required'),
     ('1473595322', 400, 'Email format error'),
     ('123@qq.com', 400, 'Email 123@qq.com is already registered.'),
-    ('ousx@ma.sy.edu.cn', 400, 'We can not find such email, you should change one'),
+    # ('ousx@ma.sy.edu.cn', 400, 'We can not find such email, you should change one'),
     # ('o@mail2.sysu.edu.cn', 400, 'We can not find such email, you should change one'),
-    ('ousx@mail2.sysu.edu.cn', 201, 'Generate and send token successfully'),
+    # ('ousx@mail2.sysu.edu.cn', 201, 'Generate and send token successfully'),
 ))
 def test_code(client, app, email, status_code, message):
     response = client.post('/api/code/', headers=get_basic_auth_headers(), data=json.dumps({'email':email}))
