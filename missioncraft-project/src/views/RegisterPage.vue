@@ -48,7 +48,7 @@
               <el-input type="text" v-model="info.other" placeholder="其他联系方式" auto-complete="off" prefix-icon="el-icon-s-home"></el-input>
             </el-form-item>
             <el-button type="primary" id="last-page-button" v-on:click="changeState">上一页</el-button>
-            <el-button type="primary" id="register-button" v-on:click="register">注册</el-button>
+            <el-button type="primary" id="register-button" v-on:click="register('info')">注册</el-button>
           </div>
         </transition>
       </el-form>
@@ -200,24 +200,27 @@ export default {
       this.state = !this.state
     },
 
-    register () {
-      if (this.info.password !== this.info.confirmPass) {
-        this.$message.error('两次输入的密码不对应!')
-        return
-      }
-      backend.postRequest('user/',
-        { username: this.info.username,
-          sid: this.info.studentId,
-          email: this.info.email,
-          password: this.info.password,
-          code: this.info.code
-        })
-        .then((response) => {
-          this.$router.push({ name: 'login' })
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+    register (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          backend.postRequest('user/',
+            { username: this.info.username,
+              sid: this.info.studentId,
+              email: this.info.email,
+              password: this.info.password,
+              code: this.info.code
+            })
+            .then((response) => {
+              this.$router.push({ name: 'login' })
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+        } else {
+          alert('表单错误')
+          return false
+        }
+      })
     }
   }
 }

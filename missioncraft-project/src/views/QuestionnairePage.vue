@@ -75,42 +75,47 @@
       </el-card>
       <el-button type="info" class="show-setting" v-on:click="showSetting">问卷信息设置</el-button>
       <el-card class="questionnaire-set-card" v-if="showMore">
-        <el-form v-bind:model="questionnaireSetting" status-icon labelWidth="100px">
+        <el-form v-bind:model="questionnaireSetting" status-icon labelWidth="110px" ref="questionnaireSetting">
           <el-form-item
             prop="recruitment"
             label="招募人数"
-            v-bind:rules="{required: true, message: '招募人数（人）', trigger: 'blur'}"
+            v-bind:rules="{required: true, message: '人数不能为空', trigger: 'blur'}"
           >
             <el-col :span="11">
-              <el-input v-model="questionnaireSetting.money" placeholder="招募人数" prefix-icon="el-icon-s-custom"></el-input>
+              <el-input v-model="questionnaireSetting.recruitment" placeholder="招募人数" prefix-icon="el-icon-s-custom"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item
             prop="money"
             label="悬赏金额"
-            v-bind:rules="{required: true, message: '悬赏金额（元/份）', trigger: 'blur'}"
+            v-bind:rules="{required: true, message: '金额不能为空', trigger: 'blur'}"
           >
             <el-col :span="11">
-              <el-input v-model="questionnaireSetting.money" placeholder="悬赏金额（元/份）" prefix-icon="el-icon-s-custom"></el-input>
+              <el-input v-model="questionnaireSetting.money" placeholder="悬赏金额（总金额）" prefix-icon="el-icon-s-custom"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item
-            prop="endTime"
-            label="截止时间"
-            v-bind:rules="{required: true, message: '问卷截至时间', trigger: 'blur'}"
-          >
-            <el-col :span="11">
-              <el-date-picker type="date" placeholder="问卷截至时间" v-model="questionnaireSetting.endTime" style="width: 100%;"></el-date-picker>
+          <el-form-item label="任务截至时间" >
+            <el-col v-bind:span="5">
+              <el-form-item prop="date1" v-bind:rules="{required: true, message: '日期不能为空', trigger: 'blur'}">
+                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="questionnaireSetting.date1" style="width: 100%;"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col v-bind:span="0.1">-</el-col>
+            <el-col v-bind:span="5">
+              <el-form-item prop="date2" v-bind:rules="{required: true, message: '日期不能为空', trigger: 'blur'}">
+                <el-time-picker placeholder="选择时间" value-format="hh:mm:ss" v-model="questionnaireSetting.date2" style="width: 100%;"></el-time-picker>
+              </el-form-item>
             </el-col>
           </el-form-item>
         </el-form>
-        <el-button class="summit-button" type="primary" id="login-button">发布问卷</el-button>
+        <el-button class="summit-button" type="primary" id="login-button" v-on:click="submit('questionnaireSetting')">发布问卷</el-button>
       </el-card>
     </div>
   </div>
 </template>
 
 <script>
+import backend from './../backend'
 export default {
   name: 'QuestionnairePage',
   data () {
@@ -123,7 +128,8 @@ export default {
       questionnaireSetting: {
         recruitment: '',
         money: '',
-        endTime: ''
+        date1: '',
+        date2: ''
       }
     }
   },
@@ -196,6 +202,45 @@ export default {
       let temp = this.edit[index]
       this.edit.splice(index, 1)
       this.edit.splice(index, 0, !temp)
+    },
+    submit (form) {
+      this.$refs[form].validate((valid) => {
+        if (!valid) {
+          return false
+        } else {
+          if (this.title === '') {
+            this.$message.error('问卷标题不能为空')
+          } else {
+            this.$confirm('确定发布此问卷?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              setTimeout(() => {
+                backend.postRequest('mission/',
+                  {
+                    type: '1',
+                    deadline: this.questionnaireSetting.date1 + ' ' + this.questionnaireSetting.date2,
+                    title: this.title,
+                    description: this.title,
+                    bounty: this.questionnaireSetting.money,
+                    problems: this.questions
+                  })
+                  .then((response) => {
+                    this.$message({
+                      type: 'success',
+                      message: '问卷发布成功!'
+                    })
+                    this.$router.push({ name: 'square' })
+                  })
+                  .catch(function (error) {
+                    console.log(error)
+                  })
+              })
+            })
+          }
+        }
+      })
     }
   }
 }

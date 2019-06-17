@@ -22,5 +22,22 @@ let $vue = new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
-
+/*
+router.beforeEach((to, from, next) => {
+  let isLogin = $vue.$cookies.isKey('u-token')
+  console.log('kkkk')
+  if (!isLogin) {
+    if (to.path !== '/login') {
+      return next({ path: '/login' })
+    } else {
+      next()
+    }
+  } else {
+    if (to.path === '/login') {
+      return next({ path: '/square' })
+    }
+    next()
+  }
+})
+*/
 export default $vue

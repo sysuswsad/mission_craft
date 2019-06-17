@@ -45,18 +45,22 @@ export default {
     }
   },
 
-  created: function () {
-    if (this.$route.path !== '/login' && this.$route.path !== '/register') {
-      if (this.$cookies.isKey('u-token')) {
-        backend.getRequest('user/')
-          .then((response) => {
-            this.isLogin = true
-            this.$store.commit('setAll', response.data.data)
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
+  mounted: function () {
+    console.log('000')
+    if (this.$cookies.isKey('u-token')) {
+      backend.getRequest('user/')
+        .then((response) => {
+          this.isLogin = true
+          this.$store.commit('setAll', response.data.data)
+          if (this.$route.path === '/login' || this.$route.path === '/') {
+            this.$router.push({ name: 'square' })
+          }
+        })
+        .catch(() => {
+          this.$router.push({ name: 'login' })
+        })
+    } else {
+      this.$router.push({ name: 'login' })
     }
   },
 
