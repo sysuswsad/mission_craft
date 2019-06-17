@@ -18,10 +18,6 @@ import json
 def get_notification():
     """返回对应通知id的通知item
     """
-    # data = request.get_json()
-    # if not data:
-    #     return bad_request('ERROR DATA AT GET NOTIFICATION')
-
     db = get_db()
     notifications = db.execute(
         'SELECT n_id, mission_id, message, create_time, has_read'
@@ -38,14 +34,13 @@ def get_notification():
 @bp.route('/notification/', methods=['put'])
 @auth.login_required
 def update_notification():
+    """更新通知已读状态
+    """
     data = request.get_json()  # {notification: [{“n_id”:123,”has_read”:True}, ...]}
     if not data:
         return bad_request('ERROR DATA AT GET NOTIFICATION')
 
-    # n_id = data.get("n_id") # [123,123,2134,1532]
-    # has_read = data.get("has_read") # 
     notification = data.get("notification")
-
     db = get_db()
 
     for i in range(len(notification)):
@@ -60,23 +55,21 @@ def update_notification():
 @bp.route('/notification/', methods=['delete'])
 @auth.login_required
 def delete_notification():
-    data = request.get_json()  # {notification: [123,234]}
+    """删除通知
+    """
+    data = request.get_json()  # {notification: [123, ...]}
     if not data:
         return bad_request('ERROR DATA AT GET NOTIFICATION')
 
-    # n_id = data.get("n_id") # [123,123,2134,1532]
-    # has_read = data.get("has_read") #
     notification = data.get("notification")
-
     db = get_db()
-
     for n_id in notification:
         db.execute(
             'DELETE FROM Notification WHERE n_id = ?',
             (n_id)
         )
         db.commit()
-        
+
     return ok('Delete notification successfully')
     
 
