@@ -26,7 +26,7 @@
           v-on:selection-change="handleSelectionChange"
           v-on:expand-change="handleExpendChange"
           v-on:row-click="rowClick"
-          row-key="id"
+          row-key="n_id"
           v-bind:expand-row-keys="expandRows">
           <el-table-column type="selection" width="50"></el-table-column>
           <el-table-column type="expand" v-on:click="markRead">
@@ -49,8 +49,8 @@
             prop="hasRead" label="已读"
             v-bind:filters="[{text:'未读', value: ''}, {text: '已读', value: '✔'}]"
             v-bind:filter-method="filtersHandler"
-            width="80"></el-table-column>
-          <el-table-column prop="date" label="日期" sortable width="150"></el-table-column>
+            width="70"></el-table-column>
+          <el-table-column prop="date" label="日期" sortable width="170"></el-table-column>
           <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>
         </el-table>
       </div>
@@ -59,63 +59,65 @@
 </template>
 
 <script>
+import backend from '../backend'
+
 export default {
   name: 'MessagePage',
   data () {
     return {
       messageData: [
         {
-          id: '1',
+          n_id: '1',
           hasRead: '✔',
-          date: '2016-05-02',
+          date: '2016-05-02 00:00:12',
           content: '您有新的任务。'
         },
         {
-          id: '2',
+          n_id: '2',
           hasRead: '',
-          date: '2016-05-04',
+          date: '2016-05-04 00:00:12',
           content: 'xxx任务发布成功。'
         },
         {
-          id: '3',
+          n_id: '3',
           hasRead: '✔',
-          date: '2016-05-01',
+          date: '2016-05-01 00:00:12',
           content: '你发布的xxx任务已完成，请确认。'
         },
         {
-          id: '4',
+          n_id: '4',
           hasRead: '',
-          date: '2016-05-03',
+          date: '2016-05-03 00:00:12',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
-          id: '5',
+          n_id: '5',
           hasRead: '',
-          date: '2016-05-04',
+          date: '2016-05-04 00:00:12',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
-          id: '6',
+          n_id: '6',
           hasRead: '',
-          date: '2016-05-06',
+          date: '2016-05-06 00:00:12',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
-          id: '7',
+          n_id: '7',
           hasRead: '',
-          date: '2016-05-05',
+          date: '2016-05-05 00:00:12',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
-          id: '8',
+          n_id: '8',
           hasRead: '',
-          date: '2016-05-07',
+          date: '2016-05-07 00:00:12',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
-          id: '9',
+          n_id: '9',
           hasRead: '',
-          date: '2016-05-08',
+          date: '2016-05-08 00:00:12',
           content: '您接收的xxx任务已完成，闲钱已到账。'
         }
       ],
@@ -223,6 +225,13 @@ export default {
         this.expandRows.splice(index, 1)
       }
     }
+  },
+
+  created: function () {
+    console.log(this.$cookies.get('u-token'))
+    backend.getRequest('notification/').then((response) => {
+      console.log(response.data.data)
+    })
   }
 }
 </script>

@@ -12,7 +12,7 @@ export default new Vuex.Store({
       email: '',
       avatar: '',
       school: '',
-      grade: -1,    // 0: male, 1: female
+      grade: -1, // 0: male, 1: female
       gender: '',
       phone: '',
       weChat: '',
