@@ -30,13 +30,24 @@ def get_rcv_order():
     for order in orders:
         mission_id = order['mission_id']
         # 查publisher_id
-        publisher_id = db.execute(
-            'SELECT publisher_id FROM MissionInfo WHERE idMissionInfo = ?', (mission_id,)
+        mission_info = db.execute(
+            'SELECT publisher_id, title, type, phone, qq, wechat, other_way FROM MissionInfo WHERE idMissionInfo = ?', (mission_id,)
         ).fetchone()
+
         obj = {}
         obj['order_id'] = order['idMissionOrder']
         obj['receiver_id'] = order['receiver_id']
-        obj['publisher_id'] = publisher_id['publisher_id']
+        # modified by ousx
+        obj['publisher_id'] = mission_info['publisher_id']
+        obj['mission_id'] = order['mission_id']
+        obj['title'] = mission_info['title']
+        obj['type'] = mission_info['type']
+        obj['phone'] = mission_info['phone']
+        obj['qq'] = mission_info['qq']
+        obj['wechat'] = mission_info['wechat']
+        obj['other_way'] = mission_info['other_way']
+        # end modified
+
         obj['order_state'] = order['order_state']
         obj['publisher_confirm'] = order['publisher_confirm']
         obj['receiver_confirm'] = order['receiver_confirm']
