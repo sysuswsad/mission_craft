@@ -18,9 +18,7 @@ import json
 def get_notification():
     """返回对应通知id的通知item
     """
-    data = request.get_json()
-    if not data:
-        return bad_request('ERROR DATA AT GET NOTIFICATION')
+    
 
     db = get_db()
     notifications = db.execute(
