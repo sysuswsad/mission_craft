@@ -96,27 +96,23 @@ def create_mission():
     return created('Create mission successfully', data={'mission_id':mission_id})
 
 
-@bp.route('/mission/', methods=['get'])
+@bp.route('/mission/', methods=['GET'])
 @auth.login_required
 def get_mission():
-    data = request.get_json()
-    if not data:
-        return bad_request('ERROR DATA AT GET MISSION')
+    limit = request.args.get('limit', None, type=int)
+    mission_type = request.args.get('type', None, type=int)
+    return_problems = request.args.get('return_problems', None, type=int)
+    return_statistics = request.args.get('return_statistics', None, type=int)
 
-    limit = data.get('limit')
-    mission_type = data.get('type')
-    return_problems = data.get('return_problems')
-    return_statistics = data.get('return_statistics')
-
-    bounty = data.get('bounty')
-    create_time = data.get('create_time')
+    bounty = request.args.get('bounty', None, type=float)
+    create_time = request.args.get('create_time', None, type=str)
     if not bounty:
         bounty = 0.0
     if not create_time:
         create_time = '2000-01-01 00:00:00'
 
-    personal = data.get('personal')
-    mission_id = data.get('mission_id')
+    personal = request.args.get('personal', None, type=int)
+    mission_id = request.args.get('mission_id', None, type=int)
 
     db = get_db()
     mission_array = []
