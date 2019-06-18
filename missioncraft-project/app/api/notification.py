@@ -22,7 +22,7 @@ def get_notification():
     notifications = db.execute(
         'SELECT n_id, mission_id, message, create_time, has_read'
         ' FROM Notification n'
-        ' WHERE n.user_id = ?'
+        ' WHERE n.user_id = ? AND n.has_deleted = 0'
         ' ORDER BY create_time DESC',
         (g.user['idUser'],)
     ).fetchall()
@@ -65,9 +65,13 @@ def delete_notification():
     db = get_db()
     for n_id in notification:
         db.execute(
-            'DELETE FROM Notification WHERE n_id = ?',
-            (n_id)
+            'UPDATE Notification SET has_deleted = ? WHERE n_id = ?',
+            (1, n_id)
         )
+        # db.execute(
+        #     'DELETE FROM Notification WHERE n_id = ?',
+        #     (n_id)
+        # )
         db.commit()
 
     return ok('Delete notification successfully')
