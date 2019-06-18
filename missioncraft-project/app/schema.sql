@@ -107,6 +107,7 @@ CREATE TABLE Notification (
   message VARCHAR(200) NOT NULL,
   create_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
   has_read INT DEFAULT 0,
+  has_deleted INT DEFAULT 0,
   notification_type INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES User (idUser),
   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),

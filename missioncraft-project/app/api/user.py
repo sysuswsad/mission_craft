@@ -17,6 +17,7 @@ from app.verification import  verify_istrue
 from app.api import bp
 from app.auth import auth
 # from app import redis_db
+from app.api.notification import create_notification_register
 
 # from flask_httpauth import HTTPTokenAuth
 # auth = HTTPTokenAuth()
@@ -80,6 +81,9 @@ def register():
         (username, generate_password_hash(password), email, sid)
     )
     db.commit()
+    
+    # notification
+    create_notification_register()
 
     return created('Register successfully')
 
