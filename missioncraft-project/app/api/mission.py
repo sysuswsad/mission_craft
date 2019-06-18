@@ -99,20 +99,20 @@ def create_mission():
 @bp.route('/mission/', methods=['GET'])
 @auth.login_required
 def get_mission():
-    limit = request.args.get('limit', None, type=int)
-    mission_type = request.args.get('type', None, type=int)
-    return_problems = request.args.get('return_problems', None, type=int)
-    return_statistics = request.args.get('return_statistics', None, type=int)
+    limit = request.args.get('limit')
+    mission_type = request.args.get('type')
+    return_problems = request.args.get('return_problems')
+    return_statistics = request.args.get('return_statistics')
 
-    bounty = request.args.get('bounty', None, type=float)
-    create_time = request.args.get('create_time', None, type=str)
+    bounty = request.args.get('bounty')
+    create_time = request.args.get('create_time')
     if not bounty:
         bounty = 0.0
     if not create_time:
         create_time = '2000-01-01 00:00:00'
 
-    personal = request.args.get('personal', None, type=int)
-    mission_id = request.args.get('mission_id', None, type=int)
+    personal = request.args.get('personal')
+    mission_id = request.args.get('mission_id')
 
     db = get_db()
     mission_array = []
