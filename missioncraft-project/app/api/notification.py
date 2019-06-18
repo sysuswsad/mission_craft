@@ -131,7 +131,7 @@ def create_notification_type_1(mission_id):
 
     # 生成新通知
     now_time = datetime.datetime.now()
-    massage = "您于 {} 发布的问卷 {} 已于 {} 全部填写完成。".format(
+    message = "您于 {} 发布的问卷 {} 已于 {} 全部填写完成。".format(
         info[0][2], info[0][1], info[0][3]
     )
     # 插入数据库
@@ -402,7 +402,7 @@ def update_notification_login(user_id):
     return
 
 
-def create_notification_register():
+def create_notification_register(user_id):
     """第一次注册成功后生成一个通知
     """
     db = get_db()
@@ -412,6 +412,6 @@ def create_notification_register():
     db.execute(
         'INSERT INTO Notification (user_id, message, create_time, notification_type)'
         ' VALUES (?, ?, ?, ?)',
-        (g.user['idUser'], message, now_time, n_type,)
+        (user_id, message, now_time, n_type,)
     )
     db.commit()

@@ -118,7 +118,7 @@ def get_mission():
     mission_array = []
     col_name = [name_list[1] for name_list in db.execute('PRAGMA table_info(MissionInfo)').fetchall()]
     col_name.remove('phone');col_name.remove('qq');col_name.remove('wechat');col_name.remove('other_way')
-
+    
     # 若missionid不为空，说明是通过missionid查询特定订单信息，不需要提供任何其他信息
     if mission_id or mission_id == 0:
         try:
@@ -158,6 +158,7 @@ def get_mission():
                 mission_json[item] = row[item]
             mission_array.append(mission_json)
     else:
+
         return bad_request('Personal or mission_id are required')
 
     # 根据mission_type筛选

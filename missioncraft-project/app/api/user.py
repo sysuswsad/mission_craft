@@ -82,8 +82,11 @@ def register():
     )
     db.commit()
     
+    user_id = db.execute(
+        'select last_insert_rowid() from User'
+    ).fetchone()
     # notification
-    create_notification_register()
+    create_notification_register(user_id[0])
 
     return created('Register successfully')
 

@@ -114,18 +114,7 @@ CREATE TABLE Notification (
   FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder)
 );
 
-INSERT INTO MissionInfo (publisher_id, phone, qq, wechat, other_way, type, create_time, deadline, title, description, bounty, max_num, rcv_num, fin_num, state)
-VALUES
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
-    10, 10, 3, 3, 0)
-;
 
-INSERT INTO Problem (mission_id, type, problem_stem, problem_detail)
-VALUES 
-  (1, 0, 'are you pj', '["yes", "no", "pardon"]'),
-  (1, 1, 'what do you like', '["apple", "banana", "watermelon"]'),
-  (1, 2, 'what is your name', '""')
-;
 
 INSERT INTO Answer (order_id, problem_id, result)
 VALUES 
