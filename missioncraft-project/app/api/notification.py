@@ -19,6 +19,7 @@ def get_notification():
     """返回对应通知id的通知item
     """
     db = get_db()
+
     notifications = db.execute(
         'SELECT n_id, mission_id, message, create_time, has_read'
         ' FROM Notification n'
@@ -27,7 +28,19 @@ def get_notification():
         (g.user['idUser'],)
     ).fetchall()
 
-    return ok('Get notifications successfully', data={'notifications': notifications})
+    array = []
+    for notification in notifications:
+        obj = {}
+        obj['n_id'] = notification['n_id']
+        obj['mission_id'] = notification['mission_id']
+        obj['message'] = notification['message']
+        obj['create_time'] = notification['create_time']
+        obj['has_read'] = notification['has_read']
+
+        array.append(obj)
+
+    return ok('Get notifications successfully', data={'notifications': array})
+
 
 
 
