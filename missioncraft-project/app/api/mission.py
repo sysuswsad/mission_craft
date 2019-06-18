@@ -41,6 +41,8 @@ def create_mission():
         return bad_request('Missing some necessary parameter')
     elif int(mission_type) == 1 and (not qq) and (not wechat) and (not phone) and (not other_way):
         return bad_request('Missing contact info')
+    elif int(bounty) <= 0:# 实际使用时改成<=0
+        return bad_request('bounty should bigger than 0')
     elif not re.match(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}', deadline):
         return bad_request('Deadline format error')
     elif datetime.datetime.now() > datetime.datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S'):
@@ -250,7 +252,7 @@ def cancel_mission():
             db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
             db.commit()
             # 订单取消，发布人获得退款
-            refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rev_num'])
+            refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rcv_num'])
             return ok('cancel successfully')
         else:
             order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()
@@ -277,7 +279,7 @@ def cancel_mission():
                 db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
                 db.commit()
                 # 订单取消，发布人获得退款
-                refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rev_num'])
+                refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rcv_num'])
                 return ok('cancel successfully')
         else:
             order_info = db.execute('SELECT * FROM MissionOrder WHERE mission_id = ?', (mission_id,)).fetchone()

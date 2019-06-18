@@ -30,7 +30,8 @@ CREATE TABLE User (
   mission_pub_num INT DEFAULT 0,
   -- mission_todo_num INT DEFAULT 0,
   mission_fin_num INT DEFAULT 0,
-  balance DOUBLE DEFAULT 0.0
+-- 测试钱系统的时候balance设置为100
+  balance DOUBLE DEFAULT 1000.0
 );
 
 CREATE TABLE MissionInfo (
@@ -48,7 +49,6 @@ CREATE TABLE MissionInfo (
   description VARCHAR(45) NOT NULL,
   detail VARCHAR(45) DEFAULT '',
   bounty DOUBLE DEFAULT 0,
--- 测试钱系统的时候bounty设置为100
   max_num INT DEFAULT 1,
   rcv_num INT DEFAULT 0,
   fin_num INT DEFAULT 0,
