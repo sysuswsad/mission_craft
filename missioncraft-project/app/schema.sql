@@ -112,7 +112,45 @@ CREATE TABLE Notification (
   FOREIGN KEY (user_id) REFERENCES User (idUser),
   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
   FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder)
-)
+);
+
+INSERT INTO MissionInfo (publisher_id, phone, qq, wechat, other_way, type, create_time, deadline, title, description, bounty, max_num, rcv_num, fin_num, state)
+VALUES
+  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description', 
+    10, 10, 3, 3, 0)
+;
+
+INSERT INTO Problem (mission_id, type, problem_stem, problem_detail)
+VALUES 
+  (1, 0, 'are you pj', '["yes", "no", "pardon"]'),
+  (1, 1, 'what do you like', '["apple", "banana", "watermelon"]'),
+  (1, 2, 'what is your name', '""')
+;
+
+INSERT INTO Answer (order_id, problem_id, result)
+VALUES 
+  (1, 1, '0'),
+  (1, 2, '[1,2]'),
+  (1, 3, '"panjian"'),
+  (2, 1, '2'),
+  (2, 2, '[1,2]'),
+  (2, 3, '"ouyangzixuan"'),
+  (3, 1, '2'),
+  (3, 2, '[0,1,2]'),
+  (3, 3, '"pengjinhan"'),
+  (4, 1, '1'),
+  (4, 2, '[0,2]'),
+  (4, 3, '"pengliusheng"'),
+  (5, 1, '1'),
+  (5, 2, '[0,1]'),
+  (5, 3, '"pengweilin"'),
+  (6, 1, '2'),
+  (6, 2, '[1,2]'),
+  (6, 3, '"ousuixin"'),
+  (7, 1, '2'),
+  (7, 2, '[0,1,2]'),
+  (7, 3, '"panxuezhi"')
+;
 
 -- 下面这些是整个sql数据库创建，mydb指的是数据库名字，这里我们可以去掉，因为数据库名字叫mission_craft
 
