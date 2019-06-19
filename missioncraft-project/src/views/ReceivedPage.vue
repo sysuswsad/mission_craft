@@ -21,6 +21,7 @@
       <el-table
         class="mission-table"
         stripe
+        row-key="mission_id"
         v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)"
         v-on:row-click="rowClick">
         <el-table-column
@@ -29,7 +30,7 @@
           v-bind:filters="[{text:'问卷调查', value: '问卷调查'}, {text: '其他任务', value: '其他任务'}]"
           v-bind:filter-method="filtersHandler">
         </el-table-column>
-        <el-table-column prop="status" label="任务摘要"></el-table-column>
+        <el-table-column prop="title" label="title"></el-table-column>
         <el-table-column align="right" v-if="activeTab === 'processing'">
           <template v-slot:default="scope">
             <el-button
@@ -62,7 +63,7 @@
                 </div>
               </el-col>
               <el-col class="username-container" v-bind:span="8">
-                <span>caixukun</span>
+                <span>{{ username }}</span>
                 <div style="margin-top: 10px">
                   <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
                 </div>
@@ -90,7 +91,7 @@
           </el-col>
           <el-col v-bind:span="14">
             <h1>任务详情</h1>
-            <el-col v-bind:span="20" v-bind:offset="2">caixukunhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...</el-col>
+            <el-col v-bind:span="20" v-bind:offset="2">{{ description }}</el-col>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -115,6 +116,8 @@
 </template>
 
 <script>
+import backend from '../backend'
+
 export default {
   name: 'ReceivedPage',
   data () {
@@ -122,45 +125,45 @@ export default {
       activeTab: 'processing',
       allMission: [
         {
-          id: '1',
+          mission_id: '1',
           missionType: '问卷调查',
-          missionTitle: '大学生就业调查',
+          title: '大学生就业调查',
           status: '已结束'
         },
         {
-          id: '2',
+          mission_id: '2',
           missionType: '其他任务',
-          missionTitle: '快递代取',
+          title: '快递代取',
           status: '已结束'
         },
         {
-          id: '3',
+          mission_id: '3',
           missionType: '其他任务',
-          missionTitle: '大学英语线下辅导',
+          title: '大学英语线下辅导',
           status: '已结束'
         },
         {
-          id: '4',
+          mission_id: '4',
           missionType: '问卷调查',
-          missionTitle: '第三饭堂饭菜调查',
+          title: '第三饭堂饭菜调查',
           status: '进行中'
         },
         {
-          id: '5',
+          mission_id: '5',
           missionType: '其他任务',
-          missionTitle: '篮球租赁请求',
+          title: '篮球租赁请求',
           status: '已结束'
         },
         {
-          id: '6',
+          mission_id: '6',
           missionType: '问卷调查',
-          missionTitle: '大学生就业调查',
+          title: '大学生就业调查',
           status: '已结束'
         },
         {
-          id: '7',
+          mission_id: '7',
           missionType: '其他任务',
-          missionTitle: '网上求夸找自信',
+          title: '网上求夸找自信',
           status: '已结束'
         }
       ],
@@ -170,6 +173,8 @@ export default {
       dialogVisible: false,
       missionTitle: '',
       url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
+      username: '',
+      description: '',
       integral: 8,
       contactWay: {
         phone: '17878787878',
@@ -179,14 +184,44 @@ export default {
       },
       emptyStr: '',
       startTime: '2019-06-09 00:00:00',
-      endTime: '2019-06-10 23:59:59'
+      endTime: '2019-06-20 23:59:59'
     }
   },
 
-  created: function () {
+  created () {
     if (this.tableMission.length !== 0) {
       this.tableMission = []
     }
+
+    // read all missions from db
+    backend.getRequest('order/').then((response) => {
+      let orders = response.data.data['orders']
+      if (orders.length !== 0) {
+        for (let i = 0; i < orders.length; ++i) {
+          let mission = {
+            mission_id: '',
+            missionType: '',
+            title: '',
+            status: ''
+          }
+          mission.mission_id = orders[i].mission_id
+          mission.title = orders[i].title
+          if (orders[i].type === 0) {
+            mission.missionType = '问卷调查'
+          } else {
+            mission.missionType = '其他任务'
+          }
+          if (orders[i].finish_time < orders[i].deadline) {
+            mission.status = '已结束'
+          } else {
+            mission.status = '进行中'
+          }
+          this.allMission.push(mission)
+        }
+      }
+    }).catch(() => {
+
+    })
 
     for (let i = 0; i < this.allMission.length; ++i) {
       if (this.allMission[i].status === '进行中') {
@@ -252,8 +287,19 @@ export default {
 
       } else {
         // dialog for other missions
-        this.missionTitle = row.missionTitle
-        this.dialogVisible = true
+        backend.getRequest('mission/', { mission_id: row.mission_id }).then((response) => {
+          let mission = response.data.data['missions']
+          this.url = mission[0].avatar
+          this.username = mission[0].username
+          this.description = mission[0].description
+          this.startTime = mission[0].create_time
+          this.endTime = mission[0].deadline
+          this.missionTitle = mission[0].title
+          this.dialogVisible = true
+          // contact way
+        }).catch(() => {
+
+        })
       }
     },
 
@@ -301,7 +347,7 @@ export default {
         let msDiff = nowTime - sTime.getTime()
         passHour = Math.ceil(msDiff / (1000 * 3600))
       }
-      return passHour * Math.floor(100 / this.$options.methods.timeDiff(startTime, this.endTime))
+      return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
     }
   }
 }

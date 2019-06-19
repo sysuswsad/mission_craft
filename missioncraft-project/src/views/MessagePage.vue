@@ -34,24 +34,24 @@
               <el-form label-position="left" inline class="table-expand">
                 <el-row>
                   <el-form-item label="消息日期：">
-                    <span class="expend-format">{{ props.row.date }}</span>
+                    <span class="expend-format">{{ props.row.create_time }}</span>
                   </el-form-item>
                 </el-row>
                 <el-row>
                   <el-form-item label="消息内容：">
-                    <span class="expend-format">{{ props.row.content }}</span>
+                    <span class="expend-format">{{ props.row.message }}</span>
                   </el-form-item>
                 </el-row>
               </el-form>
             </template>
           </el-table-column>
           <el-table-column
-            prop="hasRead" label="已读"
+            prop="has_read" label="已读"
             v-bind:filters="[{text:'未读', value: ''}, {text: '已读', value: '✔'}]"
             v-bind:filter-method="filtersHandler"
             width="70"></el-table-column>
-          <el-table-column prop="date" label="日期" sortable width="170"></el-table-column>
-          <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="create_time" label="日期" sortable width="170"></el-table-column>
+          <el-table-column prop="message" label="内容" show-overflow-tooltip></el-table-column>
         </el-table>
       </div>
     </el-card>
@@ -68,57 +68,57 @@ export default {
       messageData: [
         {
           n_id: '1',
-          hasRead: '✔',
-          date: '2016-05-02 00:00:12',
-          content: '您有新的任务。'
+          has_read: '✔',
+          create_time: '2016-05-02 00:00:12',
+          message: '您有新的任务。'
         },
         {
           n_id: '2',
-          hasRead: '',
-          date: '2016-05-04 00:00:12',
-          content: 'xxx任务发布成功。'
+          has_read: '',
+          create_time: '2016-05-04 00:00:12',
+          message: 'xxx任务发布成功。'
         },
         {
           n_id: '3',
-          hasRead: '✔',
-          date: '2016-05-01 00:00:12',
-          content: '你发布的xxx任务已完成，请确认。'
+          has_read: '✔',
+          create_time: '2016-05-01 00:00:12',
+          message: '你发布的xxx任务已完成，请确认。'
         },
         {
           n_id: '4',
-          hasRead: '',
-          date: '2016-05-03 00:00:12',
-          content: '您接收的xxx任务已完成，闲钱已到账。'
+          has_read: '',
+          create_time: '2016-05-03 00:00:12',
+          message: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
           n_id: '5',
-          hasRead: '',
-          date: '2016-05-04 00:00:12',
-          content: '您接收的xxx任务已完成，闲钱已到账。'
+          has_read: '',
+          create_time: '2016-05-04 00:00:12',
+          message: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
           n_id: '6',
-          hasRead: '',
-          date: '2016-05-06 00:00:12',
-          content: '您接收的xxx任务已完成，闲钱已到账。'
+          has_read: '',
+          create_time: '2016-05-06 00:00:12',
+          message: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
           n_id: '7',
-          hasRead: '',
-          date: '2016-05-05 00:00:12',
-          content: '您接收的xxx任务已完成，闲钱已到账。'
+          has_read: '',
+          create_time: '2016-05-05 00:00:12',
+          message: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
           n_id: '8',
-          hasRead: '',
-          date: '2016-05-07 00:00:12',
-          content: '您接收的xxx任务已完成，闲钱已到账。'
+          has_read: '',
+          create_time: '2016-05-07 00:00:12',
+          message: '您接收的xxx任务已完成，闲钱已到账。'
         },
         {
           n_id: '9',
-          hasRead: '',
-          date: '2016-05-08 00:00:12',
-          content: '您接收的xxx任务已完成，闲钱已到账。'
+          has_read: '',
+          create_time: '2016-05-08 00:00:12',
+          message: '您接收的xxx任务已完成，闲钱已到账。'
         }
       ],
       multipleSelection: [],
@@ -133,39 +133,76 @@ export default {
     },
 
     handleExpendChange (row, expandedRows) {
-      if (row.hasRead === '') {
-        row.hasRead = '✔'
-        this.$emit('markMessage', 1)
+      if (row.has_read === '') {
+        let notification = []
         // to-do: refresh data in db
+        notification.push({ 'n_id': row.n_id, 'has_read': 1 })
+        console.log(notification)
+        backend.putRequest('notification/', {
+          notification: notification
+        }).then((response) => {
+          console.log(response)
+          row.has_read = '✔'
+          this.$emit('markMessage', 1)
+        }).catch(() => {
+
+        })
       }
     },
 
     markRead () {
-      // to-do: refresh data in db
-      let count = 0
+      let notification = []
       for (let i = 0; i < this.multipleSelection.length; ++i) {
-        if (this.multipleSelection[i].hasRead === '') {
-          this.multipleSelection[i].hasRead = '✔'
-          count += 1
+        if (this.multipleSelection[i].has_read === '') {
+          notification.push({ 'n_id': this.multipleSelection[i].n_id, 'has_read': 1 })
         }
       }
-      this.$emit('markMessage', count)
-      // clear selection after operations
-      this.$refs.multipleTable.clearSelection()
+      // to-do: refresh data in db
+      backend.putRequest('notification/', {
+        notification: notification
+      }).then((response) => {
+        console.log(response)
+        let count = 0
+        for (let i = 0; i < this.multipleSelection.length; ++i) {
+          if (this.multipleSelection[i].has_read === '') {
+            this.multipleSelection[i].has_read = '✔'
+            count += 1
+          }
+        }
+        this.$emit('markMessage', count)
+        // clear selection after operations
+        this.$refs.multipleTable.clearSelection()
+      }).catch(() => {
+
+      })
     },
 
     unMarkRead () {
-      // to-do: refresh data in db
-      let count = 0
+      let notification = []
       for (let i = 0; i < this.multipleSelection.length; ++i) {
-        if (this.multipleSelection[i].hasRead === '✔') {
-          this.multipleSelection[i].hasRead = ''
-          count += 1
+        if (this.multipleSelection[i].has_read === '✔') {
+          notification.push({ 'n_id': this.multipleSelection[i].n_id, 'has_read': 0 })
         }
       }
-      this.$emit('markMessage', -count)
-      // clear selection after operations
-      this.$refs.multipleTable.clearSelection()
+
+      // to-do: refresh data in db
+      backend.putRequest('notification/', {
+        notification: notification
+      }).then((response) => {
+        console.log(response)
+        let count = 0
+        for (let i = 0; i < this.multipleSelection.length; ++i) {
+          if (this.multipleSelection[i].has_read === '✔') {
+            this.multipleSelection[i].has_read = ''
+            count += 1
+          }
+        }
+        this.$emit('markMessage', -count)
+        // clear selection after operations
+        this.$refs.multipleTable.clearSelection()
+      }).catch(() => {
+
+      })
     },
 
     deleteRow () {
@@ -184,12 +221,12 @@ export default {
     },
 
     onConfirmDelete () {
-      // to-do: refresh data in db
-
       for (let i = 0; i < this.multipleSelection.length; ++i) {
         let index = this.messageData.indexOf(this.multipleSelection[i])
         this.messageData.splice(index, 1)
       }
+      // to-do: refresh data in db
+
       console.log('delete')
     },
 
@@ -215,11 +252,20 @@ export default {
       // 在<table>里，我们已经设置row的key值设置为每行数据id：row-key="id"
       let index = this.expandRows.indexOf(row.id)
       if (index < 0) {
+        let notification = []
         this.expandRows.push(row.id)
-        if (row.hasRead === '') {
-          row.hasRead = '✔'
-          this.$emit('markMessage', 1)
+        if (row.has_read === '') {
           // to-do: refresh data in db
+          notification.push({ 'n_id': row.n_id, 'has_read': 1 })
+          backend.putRequest('notification/', {
+            notification: notification
+          }).then((response) => {
+            console.log(response)
+            row.has_read = '✔'
+            this.$emit('markMessage', 1)
+          }).catch(() => {
+
+          })
         }
       } else {
         this.expandRows.splice(index, 1)
@@ -227,10 +273,21 @@ export default {
     }
   },
 
-  created: function () {
-    console.log(this.$cookies.get('u-token'))
+  created () {
     backend.getRequest('notification/').then((response) => {
-      console.log(response.data.data)
+      if (response.data.data['notifications'].length !== 0) {
+        this.messageData = response.data.data['notifications']
+
+        for (let i = 0; i < this.messageData.length; ++i) {
+          if (this.messageData[i].has_read !== 0) {
+            this.messageData[i].has_read = '✔'
+          } else {
+            this.messageData[i].has_read = ''
+          }
+        }
+      }
+    }).catch(() => {
+
     })
   }
 }
