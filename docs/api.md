@@ -311,7 +311,7 @@ token|是|123|登录所返回的token
 ### 得到任务信息
 根据传递的参数获得所需的功能
 - 任务广场所使用的API，返回待领取的任务。使用游标分页设计，返回特定条件下的任务清单
-- 返回个人发布的任务，如果是问卷类型，则接收者为空(问卷为匿名)，否则带上接收者id和接收时间
+- 返回个人发布的任务，如果是问卷类型，则接收者为空(问卷为匿名)，否则带上接收者id和接收时间。只有发布快递类型的任务且被领取了，才返回领取者的个人信息
 - 返回某个任务的具体信息，通过mission id查找
 
 **请求地址**
@@ -360,7 +360,13 @@ mission_id|否|123|返回特定id对应的任务
             "publisher_id":10, 
             "username":"pj",
             "avatar":"www.domain.com/imgage/..",
-            "receiver_id":"ousx",
+            "receiver_id":1,
+            "receiver_name":'pj',
+            "receviver_avatar": "www.domain/image/1.png",
+            "recevier_qq": "12345648",
+            "receiver_wechat": "13246790",
+            "receiver_phone": "136976464",
+            "receiver_other_way": "facebook: 1232213",
             "receiver_time":"2010-10-10 11:11:11",
             "problems":[
                 { 'type': 0, 'question': '单选问题', 'choices': ['选项1', '选项2'], 'answer': [10,20]},
