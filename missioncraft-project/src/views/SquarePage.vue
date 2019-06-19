@@ -283,7 +283,7 @@ export default {
         let msDiff = nowTime - sTime.getTime()
         passHour = Math.ceil(msDiff / (1000 * 3600))
       }
-      return passHour * Math.floor(100 / this.$options.methods.timeDiff(startTime, this.endTime))
+      return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
     }
     // --- ---
   }

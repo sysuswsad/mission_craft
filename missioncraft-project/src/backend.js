@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 let $axios = axios.create({
   // baseURL: 'http://qcloud.captainp.cn:5000/api/',
   // baseURL: 'http://127.0.0.1:5000/api/',
-  baseURL: 'http://172.18.34.59:5000/api/',
+  baseURL: 'http://172.18.35.89:5000/api/',
   timeout: 5000,
   headers: { 'Content-Type': 'application/json' }
 })
@@ -25,23 +25,72 @@ $axios.interceptors.request.use(config => {
 $axios.interceptors.response.use(response => {
   return response
 }, error => {
-  console.log(error)
-  switch (error.response.status) {
-    case 401:
-      Message.warning({ message: '认证失效，请先登录' })
-      $vue.$router.replace({ name: 'login' })
+  console.log(`error keys: ${Object.keys(error)}`)
+  console.log(`error.response keys: ${Object.keys(error.response)}`)
+  console.log(`error.response.data keys: ${Object.keys(error.response.data)}`)
+  switch (parseInt(error.response.data.message)) {
+    case 100:
+      Message.warning('该用户名已被注册')
       break
 
-    case 403:
-      Message.error({ message: '权限不足' })
+    case 101:
+      Message.warning('该邮箱已被注册')
       break
 
-    case 404:
-      Message.error({ message: '资源错误' })
+    case 102:
+      Message.warning('该学号已注册')
+      break
+
+    case 103:
+      Message.error('验证码错误')
+      break
+
+    case 104:
+      Message.error('验证码已过期')
+      break
+
+    case 105:
+      // 登录时用户名或邮箱错误，在input中处理
+      break
+
+    case 106:
+      // 登录时密码错误，在input中处理
+      break
+
+    case 109:
+      // 修改用户名时，新的用户名已存在，在input中处理
+      break
+
+    case 110:
+      Message.error('上传头像错误')
+      break
+
+    case 111:
+      Message.error('头像文件必须是.jpg或.png格式文件')
+      break
+
+    case 112:
+      // 修改密码时，原密码输入错误，在input中处理
+      break
+
+    case 201:
+      Message.error('你不能取消已被人接受的任务')
+      break
+
+    case 301:
+      Message.error('任务已关闭')
+      break
+
+    case 302:
+      Message.error('任务以达到其最大接受数，不能再接受该任务了')
+      break
+
+    case 303:
+      Message.warning('该任务已经确认')
       break
 
     default:
-      Message.error({ message: '未知错误' })
+      console.log(`msg: ${error.response.data.message}`)
       break
   }
 
@@ -53,8 +102,8 @@ export default {
     return $axios.post(url, params, config)
   },
 
-  getRequest (url) {
-    return $axios.get(url)
+  getRequest (url, config = {}) {
+    return $axios.get(url, config)
   },
 
   putRequest (url, params, config = {}) {
