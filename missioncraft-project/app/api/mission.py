@@ -125,11 +125,18 @@ def get_mission():
             mission_id = int(mission_id)
         except Exception:
             return bad_request('Parse mission id error')
+
         mission_info = db.execute(
             'SELECT * FROM MissionInfo WHERE idMissionInfo = ?', (mission_id,)
         ).fetchone()
         if not mission_info:
             return bad_request('No such mission')
+
+        if mission_info['type'] == 1 and mission_info['rcv_num'] == 1 and g.user['idUser'] == db.execute(
+                'SELECT receiver_id FROM MissionOrder WHERE mission_id = ?', (mission_id,)
+            ).fetchone()['receiver_id']:
+            col_name.append('phone');col_name.append('qq');col_name.append('wechat');col_name.append('other_way')
+
         mission_json = {}
         for item in col_name:
             mission_json[item] = mission_info[item]
@@ -178,7 +185,7 @@ def get_mission():
     # 使用问题表完善missioninfo信息
     for item in mission_array:
         item['problems'] = ''
-        if item['type'] == 0 and return_problems:
+        if item['type'] == 0 and return_problems and int(return_problems):
             problem_info = db.execute(
                 'SELECT * FROM Problem WHERE mission_id = ?', (item['idMissionInfo'],)
             ).fetchall()
@@ -191,15 +198,21 @@ def get_mission():
                 problems.append(problem_json)
             item['problems'] = problems
             # 如果问卷任务还需要返回答案统计信息
-            if item['publisher_id'] != g.user['idUser'] or (not return_statistics):
+            if item['publisher_id'] != g.user['idUser'] or (not return_statistics) or (not int(return_statistics)):
                 continue
             for num in range(0, len(problems)):
                 item['problems'][num]['answer'] = statistics_ana(problem_info[num]['type'], problem_info[num]['problem_detail'], problem_info[num]['idProblem'])
 
     # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
     for item in mission_array:
-        item['receiver_id'] = ''
-        item['receiver_time'] = ''
+        # item['receiver_id'] = ''
+        # item['receiver_time'] = ''
+        item['receiver_name'] = ''
+        item['receiver_avatar'] = ''
+        item['receiver_qq'] = ''
+        item['receiver_wechat'] = ''
+        item['receiver_phone'] = ''
+        item['receiver_other_way'] = ''
         user_info = db.execute(
             'SELECT username, avatar FROM User WHERE idUser = ?', (item['publisher_id'],)
         ).fetchone()
@@ -208,10 +221,19 @@ def get_mission():
         # 暂时只考虑快递任务，如果有人接单且查询人是发布者，返回接单人信息
         if item['type'] == 1 and item['rcv_num'] == 1 and item['publisher_id'] == g.user['idUser']:
             mission_order = db.execute(
-                'SELECT receiver_id, receive_time FROM MissionOrder WHERE mission_id = ?', (item['idMissionInfo'],)
+                'SELECT * FROM MissionOrder WHERE mission_id = ?', (item['idMissionInfo'],)
             ).fetchone()
-            item['receiver_id'] = mission_order['receiver_id']
-            item['receiver_time'] = mission_order['receive_time']
+            receiver_info = db.execute(
+                'SELECT username, avatar FROM User WHERE idUser = ?', (mission_order['receiver_id'],)
+            ).fetchone()
+            # item['receiver_id'] = mission_order['receiver_id']
+            # item['receiver_time'] = mission_order['receive_time']
+            item['receiver_name'] = receiver_info['username']
+            item['receiver_avatar'] = receiver_info['avatar']
+            item['receiver_qq'] = mission_order['qq']
+            item['receiver_wechat'] = mission_order['wechat']
+            item['receiver_phone'] = mission_order['phone']
+            item['receiver_other_way'] = mission_order['other_way']
 
     # 选出后limit个
     if limit and int(limit) < len(mission_array):
