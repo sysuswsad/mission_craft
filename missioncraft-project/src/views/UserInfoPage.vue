@@ -2,9 +2,9 @@
   <div class="user-info-container">
     <div class="head-container">
       <div class="image-name-container">
-        <img class="head-image" alt="加载失败" v-bind:src=url>
+        <img class="head-image" alt="加载失败" v-bind:src=selectUrl>
         <div class="user-name">
-          Apple
+          {{interUsername}}
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
               <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px" v-if="!canEdit" v-on:click="editButtonClick">修改</el-button>
               <el-col>
                 <el-button type="primary" style="margin-left: 100px" v-if="canEdit" v-on:click="cancelButtonClick">取消</el-button>
-                <el-button type="primary" style="margin-left: 100px" v-if="canEdit">确认</el-button>
+                <el-button type="primary" style="margin-left: 100px" v-if="canEdit" v-on:click="submitInfo">确认</el-button>
               </el-col>
             </el-row>
           </el-form>
@@ -75,7 +75,7 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px">修改</el-button>
+              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px" v-on:click="changePassword">修改</el-button>
             </el-row>
           </el-form>
         </el-tab-pane>
@@ -83,7 +83,7 @@
           <el-upload
             class="avatar-uploader"
             :http-request="uploadImage"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://172.18.34.59:5000/api/avatar/"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -98,14 +98,17 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import backend from '../backend'
 export default {
   name: 'UserInfoPage',
   data () {
     return {
-      url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
+      defaultUrl: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
       canEdit: false,
       imageUrl: '',
+      interUsername: '',
+      interSchool: '',
+      interGrade: '',
       passwordSet: {
         oldPassword: '',
         newPassword: '',
@@ -116,9 +119,15 @@ export default {
   methods: {
     editButtonClick () {
       this.canEdit = !this.canEdit
+      this.interUsername = this.username
+      this.interGrade = this.grade
+      this.interSchool = this.school
     },
     cancelButtonClick () {
       this.canEdit = !this.canEdit
+      this.username = this.interUsername
+      this.grade = this.interGrade
+      this.school = this.interSchool
     },
     handleAvatarSuccess (res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
@@ -136,25 +145,93 @@ export default {
       return isJPG && isLt2M
     },
     uploadImage (p) {
-      let param = new FormData()
-      let config = {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }
-      param.append('TOKEN', '2152162')
-      param.append('file', p.file.toString())
-      this.$axios.post('http://127.0.0.1:5000/', param, config).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
-      })
+      backend.postRequest('avatar/',
+        {
+          image: p.file
+        })
+        .then((response) => {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(p.file)
+          console.log(error)
+        })
+    },
+    submitInfo () {
+      backend.putRequest('user/',
+        {
+          username: this.username,
+          grade: this.grade,
+          school: this.school
+        })
+        .then((response) => {
+          this.$message.success('用户信息修改成功！')
+        })
+        .catch(function (error) {
+          console.log(error)
+          this.username = this.interUsername
+          this.grade = this.interGrade
+          this.school = this.interSchool
+          this.$message.error('用户信息修改失败！')
+        })
+    },
+    changePassword () {
+      backend.postRequest('password/',
+        {
+          username: this.username,
+          old_password: this.passwordSet.oldPassword,
+          new_password: this.passwordSet.newPassword
+        })
+        .then((response) => {
+          this.$message.success('密码修改成功！')
+        })
+        .catch(() => {
+          this.$message.error('密码修改失败！')
+        })
     }
   },
 
-  computed: mapState({
-    username: state => state.userInfo.username,
-    school: state => state.userInfo.school,
-    grade: state => state.userInfo.grade
-  })
+  computed: {
+    school: {
+      get () {
+        return this.$store.state.userInfo.school
+      },
+      set (val) {
+        this.$store.state.userInfo.school = val
+      }
+    },
+    grade: {
+      get () {
+        return this.$store.state.userInfo.grade
+      },
+      set (val) {
+        this.$store.state.userInfo.grade = val
+      }
+    },
+    username: {
+      get () {
+        return this.$store.state.userInfo.username
+      },
+      set (val) {
+        this.$store.state.userInfo.username = val
+      }
+    },
+    url: {
+      get () {
+        return this.$store.state.userInfo.avatar
+      },
+      set (val) {
+        this.$store.state.userInfo.avatar = val
+      }
+    },
+    selectUrl () {
+      if (this.url !== '') {
+        return this.url
+      } else {
+        return this.defaultUrl
+      }
+    }
+  }
 }
 </script>
 

@@ -54,7 +54,7 @@
     </el-main>
     <el-footer>
       <div class="logout-button-wrapper" v-show="!isCollapsed">
-        <el-button type="danger" plain icon="el-icon-switch-button" class="logout-button">退出登录</el-button>
+        <el-button type="danger" plain icon="el-icon-switch-button" class="logout-button" v-on:click="logout">退出登录</el-button>
       </div>
     </el-footer>
   </el-container>
@@ -91,6 +91,13 @@ export default {
 
     checkIdx (idx, idxPath) {
       this.activeIdx = idx
+    },
+
+    logout () {
+      this.$store.commit('logout')
+      this.$cookies.remove('u-token')
+      this.$router.push({ name: 'login' })
+      this.$store.commit('setLogin', false)
     }
   },
 
