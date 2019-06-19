@@ -36,8 +36,8 @@ def get_token_auth_headers(client, app, username_or_email, password, content_typ
 # 下面这个测过了，不用测了
 @pytest.mark.parametrize(('email', 'status_code', 'message'), (
     ('', 400, 'Email is required'),
-    ('1473595322', 400, 'Email format error'),
-    ('123@qq.com', 400, 'Email 123@qq.com is already registered.'),
+    ('1473595322', 400, '107 Email format error'),
+    ('123@qq.com', 400, '108 Email 123@qq.com is already registered.'),
     # ('ousx@ma.sy.edu.cn', 400, 'We can not find such email, you should change one'),
     # ('o@mail2.sysu.edu.cn', 400, 'We can not find such email, you should change one'),
     # ('ousx@mail2.sysu.edu.cn', 201, 'Generate and send token successfully'),
@@ -60,11 +60,11 @@ def test_code(client, app, email, status_code, message):
     ('test1', '123456', '', '', '', 400, 'Email is required'),
     ('test1', '123456', '123@qq.com', '', '', 400, 'Sid is required'),
     ('test1', '123456', '123@qq.com', '16340001', '', 400, 'Verification code is required'),
-    ('test1', '123456', '123@qq.com', '16340001', '111111', 400, 'User test1 is already registered.'),
-    ('test2', '123456', '123@qq.com', '16340001', '111111', 400, 'Email 123@qq.com is already registered.'),
-    ('test2', '123456', '1234@qq.com', '16340001', '111111', 400, 'Sid 16340001 is already registered.'),
-    ('test2', '123456', '1234@qq.com', '16340002', '111111', 400, 'Verification code is not correct'),
-    ('test2', '123456', '12345@qq.com', '16340002', '123456', 400, 'Verification code is out of time')
+    ('test1', '123456', '123@qq.com', '16340001', '111111', 400, '100 User test1 is already registered.'),
+    ('test2', '123456', '123@qq.com', '16340001', '111111', 400, '101 Email 123@qq.com is already registered.'),
+    ('test2', '123456', '1234@qq.com', '16340001', '111111', 400, '102 Sid 16340001 is already registered.'),
+    ('test2', '123456', '1234@qq.com', '16340002', '111111', 400, '103 Verification code is not correct'),
+    ('test2', '123456', '12345@qq.com', '16340002', '123456', 400, '104 Verification code is out of time')
 ))
 def test_register_validate_input(client, app, username, password, email, sid, code, status_code, message):
     response = client.post('/api/user/', headers=get_basic_auth_headers(), data=json.dumps({
@@ -96,10 +96,10 @@ def test_register(client, app, username, password, email, sid, code, status_code
 @pytest.mark.parametrize(('username_or_email', 'password', 'status_code', 'message'), (
     ('', '', 400, 'Username or email is required'),
     ('test', '', 400, 'Password is required'),
-    ('test', '123', 400, 'Incorrect username or email'),
-    ('12@qq.com', '123', 400, 'Incorrect username or email'),
-    ('test1', '123', 400, 'Incorrect password'),
-    ('123@qq.com', '123', 400, 'Incorrect password'),
+    ('test', '123', 400, '105 Incorrect username or email'),
+    ('12@qq.com', '123', 400, '105 Incorrect username or email'),
+    ('test1', '123', 400, '106 Incorrect password'),
+    ('123@qq.com', '123', 400, '106 Incorrect password'),
 ))
 def test_login_validate_input(client, app, username_or_email, password, status_code, message):
     response = client.post('/api/token/', headers=get_basic_auth_headers(), data=json.dumps({
@@ -161,7 +161,7 @@ def test_get_info(client, app, username_or_email, password, status_code, message
 
 @pytest.mark.parametrize(('origin_username', 'password', 'username', 'realname', 'id_card_num', 'university', 'school', 'grade', 'gender', 'phone', 'qq', 'wechat', 'status_code', 'message'), (
     ('test1', '123456', '', 'oooooo', '123234435', 'Sysu', '', '', '', '', '', '', 400, 'Username is required'),
-    ('test1', '123456', 'test10', 'oooooo', '123234435', 'Sysu', '', '', '', '', '', '', 400, 'User test10 is already registered.')
+    ('test1', '123456', 'test10', 'oooooo', '123234435', 'Sysu', '', '', '', '', '', '', 400, '109 User test10 is already registered.')
 ))
 def test_update_info_validate_input(client, app, origin_username, password, username, realname, id_card_num, university, school, grade, gender, phone, qq, wechat, status_code, message):
     response = client.put('/api/user/', headers=get_token_auth_headers(client, app, origin_username, password), data=json.dumps({
@@ -210,7 +210,7 @@ def test_update_info(client, app, origin_username, password, username, realname,
 @pytest.mark.parametrize(('username', 'password', 'old_password', 'new_password', 'status_code', 'message'), (
     ('test1', '123456', None, None, 400, 'Old password is required'),
     ('test1', '123456', '12345', None, 400, 'New password is required'),
-    ('test1', '123456', '12345', '12345678', 400, 'Old password wrong'),
+    ('test1', '123456', '12345', '12345678', 400, '112 Old password wrong'),
 ))
 def test_change_password_validate_input(client, app, username, password, old_password, new_password, status_code, message):
     response = client.post('/api/password/', headers=get_token_auth_headers(client, app, username, password), data=json.dumps({
@@ -248,7 +248,7 @@ def test_change_password(client, app, username, old_password, new_password, stat
 # 测试文件放在tests文件夹里面
 @pytest.mark.parametrize(('username', 'password', 'filename', 'status_code', 'message', 'avatar_url', 'get_url'), (
     ('pj', '123456', 'test_avatar.jpg', 200, 'change avatar successfully',  'localhost:5000/api/image/3.jpg', '/api/image/3.jpg'),
-    ('pj', '123456', 'test_avatar.txt', 400, 'file is supposed to be jpg or png',  '', ''),
+    ('pj', '123456', 'test_avatar.txt', 400, '111 file is supposed to be jpg or png',  '', ''),
     
 ))
 def test_upload_file(client, app, username, password, filename, status_code, message, avatar_url, get_url):
@@ -274,7 +274,7 @@ def test_upload_file(client, app, username, password, filename, status_code, mes
         assert response.status_code == status_code
 
 @pytest.mark.parametrize(('username', 'password', 'status_code', 'message', 'avatar_url'), (
-    ('test1', '123456', 400, 'User avatar is not available',  ''),
+    ('test1', '123456', 400, '110 User avatar is not available',  ''),
 ))
 
 def test_get_url(client, app, username, password, status_code, message, avatar_url):
