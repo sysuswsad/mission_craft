@@ -46,7 +46,6 @@ export default {
   },
 
   created () {
-    // console.log('000')
     if (this.$cookies.isKey('u-token')) {
       backend.getRequest('user/')
         .then((response) => {

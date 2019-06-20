@@ -61,12 +61,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'SideBar',
 
   data () {
     return {
-      avatarSrc: 'default-avatar.png',
       activeIdx: null
     }
   },
@@ -104,7 +104,11 @@ export default {
   computed: {
     hideUnread () {
       return this.unread <= 0
-    }
+    },
+
+    ...mapState({
+      avatarSrc: state => 'http://172.18.34.59:5000' + state.userInfo.avatar
+    })
   }
 }
 </script>
