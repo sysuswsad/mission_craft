@@ -21,6 +21,7 @@
       <el-table
         class="mission-table"
         stripe
+        row-key="mission_id"
         v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)"
         v-on:row-click="rowClick">
         <el-table-column
@@ -28,7 +29,7 @@
           prop="missionType"
           v-bind:filters="[{text:'问卷调查', value: '问卷调查'}, {text: '其他任务', value: '其他任务'}]"
           v-bind:filter-method="filtersHandler"></el-table-column>
-        <el-table-column prop="status" label="任务摘要"></el-table-column>
+        <el-table-column prop="title" label="title"></el-table-column>
         <el-table-column align="right" v-if="activeTab === 'processing'">
           <template v-slot:default="scope">
             <el-button
@@ -41,9 +42,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-dialog width="70%"
-               center
-               v-bind:visible.sync="dialogVisible">
+    <el-dialog
+      width="70%"
+      center
+      v-bind:visible.sync="dialogVisible">
       <template v-slot:title>
         <h2>{{ missionTitle }}</h2>
       </template>
@@ -61,7 +63,7 @@
                 </div>
               </el-col>
               <el-col class="username-container" v-bind:span="8">
-                <span>caixukun</span>
+                <span>{{ username }}</span>
                 <div style="margin-top: 10px">
                   <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
                 </div>
@@ -89,17 +91,18 @@
           </el-col>
           <el-col v-bind:span="14">
             <h1>任务详情</h1>
-            <el-col v-bind:span="20" v-bind:offset="2">caixukunhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...</el-col>
+            <el-col v-bind:span="20" v-bind:offset="2">{{ description }}</el-col>
           </el-col>
         </el-row>
         <el-divider></el-divider>
         <el-row v-bind:gutter="15" style="margin-top: 30px">
           <el-col v-bind:span="5" style="padding: 8px 0 0 40px">{{ startTime }}</el-col>
           <el-col v-bind:span="14">
-            <el-slider v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
-                       v-bind:value="passTime(startTime)"
-                       v-bind:format-tooltip="formatTooltip"
-                       disabled></el-slider>
+            <el-slider
+              v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
+              v-bind:value="passTime(startTime)"
+              v-bind:format-tooltip="formatTooltip"
+              disabled></el-slider>
           </el-col>
           <el-col v-bind:span="5" style="padding: 8px 0 0 0">{{ endTime }}</el-col>
         </el-row>
@@ -112,6 +115,8 @@
 </template>
 
 <script>
+import backend from '../backend'
+
 export default {
   name: 'PublicationPage',
   data () {
@@ -119,45 +124,45 @@ export default {
       activeTab: 'processing',
       allMission: [
         {
-          id: '1',
+          mission_id: '1',
           missionType: '问卷调查',
-          missionTitle: '大学生就业调查',
+          title: '大学生就业调查',
           status: '已完成'
         },
         {
-          id: '2',
+          mission_id: '2',
           missionType: '其他任务',
-          missionTitle: '快递代取',
+          title: '快递代取',
           status: '已完成'
         },
         {
-          id: '3',
+          mission_id: '3',
           missionType: '其他任务',
-          missionTitle: '大学英语线下辅导',
+          title: '大学英语线下辅导',
           status: '已完成'
         },
         {
-          id: '4',
+          mission_id: '4',
           missionType: '问卷调查',
-          missionTitle: '第三饭堂饭菜调查',
+          title: '第三饭堂饭菜调查',
           status: '进行中'
         },
         {
-          id: '5',
+          mission_id: '5',
           missionType: '其他任务',
-          missionTitle: '篮球租赁请求',
+          title: '篮球租赁请求',
           status: '已完成'
         },
         {
-          id: '6',
+          mission_id: '6',
           missionType: '问卷调查',
-          missionTitle: '大学生就业调查',
+          title: '大学生就业调查',
           status: '已完成'
         },
         {
-          id: '7',
+          mission_id: '7',
           missionType: '其他任务',
-          missionTitle: '网上求夸找自信',
+          title: '网上求夸找自信',
           status: '已完成'
         }
       ],
@@ -167,23 +172,59 @@ export default {
       dialogVisible: false,
       missionTitle: '',
       url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
+      username: 'caixukun',
+      description: '',
       integral: 8,
       contactWay: {
-        phone: '17878787878',
-        weChat: 'we-chat',
+        phone: '',
+        weChat: '',
         qq: '',
         other: ''
       },
       emptyStr: '',
-      startTime: '2019-06-09 00:00:00',
-      endTime: '2019-06-10 23:59:59'
+      startTime: '',
+      endTime: ''
     }
   },
 
-  created: function () {
+  created () {
     if (this.tableMission.length !== 0) {
       this.tableMission = []
     }
+
+    // read all missions from db
+    backend.getRequest('mission/', {
+      params: {
+        personal: 1
+      }
+    }).then((response) => {
+      let missions = response.data.data['missions']
+      if (missions.length !== 0) {
+        for (let i = 0; i < missions.length; ++i) {
+          let mission = {
+            mission_id: '',
+            missionType: '',
+            title: '',
+            status: ''
+          }
+          mission.mission_id = missions[i].mission_id
+          mission.title = missions[i].title
+          if (missions[i].type === 0) {
+            mission.missionType = '问卷调查'
+          } else {
+            mission.missionType = '其他任务'
+          }
+          if (missions[i].finish_time < missions[i].deadline) {
+            mission.status = '已完成'
+          } else {
+            mission.status = '进行中'
+          }
+          this.allMission.push(mission)
+        }
+      }
+    }).catch(() => {
+
+    })
 
     for (let i = 0; i < this.allMission.length; ++i) {
       if (this.allMission[i].status === '进行中') {
@@ -249,8 +290,23 @@ export default {
 
       } else {
         // dialog for other missions
-        this.missionTitle = row.missionTitle
-        this.dialogVisible = true
+        backend.getRequest('mission/', {
+          params: {
+            mission_id: row.mission_id
+          }
+        }).then((response) => {
+          let mission = response.data.data['missions']
+          this.url = mission[0].avatar
+          this.username = mission[0].username
+          this.description = mission[0].description
+          this.startTime = mission[0].create_time
+          this.endTime = mission[0].deadline
+          this.missionTitle = mission[0].title
+          this.dialogVisible = true
+          // contact way
+        }).catch(() => {
+
+        })
       }
     },
 
@@ -298,7 +354,7 @@ export default {
         let msDiff = nowTime - sTime.getTime()
         passHour = Math.ceil(msDiff / (1000 * 3600))
       }
-      return passHour * Math.floor(100 / this.$options.methods.timeDiff(startTime, this.endTime))
+      return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
     }
   }
 }

@@ -79,8 +79,7 @@
           <el-form-item
             prop="recruitment"
             label="招募人数"
-            v-bind:rules="{required: true, message: '人数不能为空', trigger: 'blur'}"
-          >
+            v-bind:rules="{required: true, message: '人数不能为空', trigger: 'blur'}">
             <el-col :span="11">
               <el-input v-model="questionnaireSetting.recruitment" placeholder="招募人数" prefix-icon="el-icon-s-custom"></el-input>
             </el-col>
@@ -88,8 +87,7 @@
           <el-form-item
             prop="money"
             label="悬赏金额"
-            v-bind:rules="{required: true, message: '金额不能为空', trigger: 'blur'}"
-          >
+            v-bind:rules="{required: true, message: '金额不能为空', trigger: 'blur'}">
             <el-col :span="11">
               <el-input v-model="questionnaireSetting.money" placeholder="悬赏金额（总金额）" prefix-icon="el-icon-s-custom"></el-input>
             </el-col>
