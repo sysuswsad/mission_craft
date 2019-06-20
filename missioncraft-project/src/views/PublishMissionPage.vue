@@ -35,8 +35,8 @@
           <el-row>
             <el-col v-bind:span="18">
               <el-form-item
-                      label="电话"
-                      v-bind:rules="{message: '请输入电话号码'}">
+                label="电话"
+                v-bind:rules="{message: '请输入电话号码'}">
                 <el-input v-model="contactWay.phone" placeholder="电话号码" type="text" prefix-icon="el-icon-mobile-phone"></el-input>
               </el-form-item>
             </el-col>
@@ -53,8 +53,8 @@
           <el-row>
             <el-col v-bind:span="18">
               <el-form-item
-                      label="QQ"
-                      v-bind:rules="{message: '请输入QQ'}">
+                label="QQ"
+                v-bind:rules="{message: '请输入QQ'}">
                 <el-input v-model="contactWay.qq" placeholder="QQ" type="text" prefix-icon="el-icon-position"></el-input>
               </el-form-item>
             </el-col>
@@ -62,8 +62,8 @@
           <el-row>
             <el-col v-bind:span="18">
               <el-form-item
-                      label="其他"
-                      v-bind:rules="{message: '请输入其他联系方式'}">
+                label="其他"
+                v-bind:rules="{message: '请输入其他联系方式'}">
                 <el-input v-model="contactWay.other" placeholder="其他" type="text" prefix-icon="el-icon-s-home"></el-input>
               </el-form-item>
             </el-col>
@@ -72,9 +72,9 @@
       </div>
       <div style="width:45%;height:100%;position:absolute;right:0;bottom:0">
         <el-image
-                :src="url"
-                fit="cover"
-                style="position: absolute;bottom: 0"
+          :src="url"
+          fit="cover"
+          style="position: absolute;bottom: 0"
         ></el-image>
       </div>
     </el-card>
@@ -86,13 +86,12 @@
         <el-row>
           <el-col v-bind:span="12">
             <el-form-item
-                    label="报酬"
-                    prop="payment"
-                    v-bind:rules="[
-                      { required: true, message: '报酬不能为空', trigger: 'blur' },
-                      { pattern: /^[0-9]*$/, message: '输入必须是数字', trigger: ['blur', 'change'] }
-                     ]"
-            >
+              label="报酬"
+              prop="payment"
+              v-bind:rules="[
+                { required: true, message: '报酬不能为空', trigger: 'blur' },
+                { pattern: /^[0-9]*$/, message: '输入必须是数字', trigger: ['blur', 'change'] }
+               ]">
               <el-input v-model="payForm.payment" placeholder="报酬" type="text"></el-input>
             </el-form-item>
           </el-col>

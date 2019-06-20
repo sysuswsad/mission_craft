@@ -34,9 +34,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-dialog width="70%"
-               center
-               v-bind:visible.sync="dialogVisible">
+    <el-dialog
+      width="70%"
+      center
+      v-bind:visible.sync="dialogVisible">
       <template v-slot:title>
         <h2>{{ missionTitle }}</h2>
       </template>
@@ -94,10 +95,11 @@
         <el-row v-bind:gutter="15" style="margin-top: 30px">
           <el-col v-bind:span="5" style="padding: 8px 0 0 40px">{{ startTime }}</el-col>
           <el-col v-bind:span="14">
-            <el-slider v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
-                       v-bind:value="passTime(startTime)"
-                       v-bind:format-tooltip="formatTooltip"
-                       disabled></el-slider>
+            <el-slider
+              v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
+              v-bind:value="passTime(startTime)"
+              v-bind:format-tooltip="formatTooltip"
+              disabled></el-slider>
           </el-col>
           <el-col v-bind:span="5" style="padding: 8px 0 0 0">{{ endTime }}</el-col>
         </el-row>

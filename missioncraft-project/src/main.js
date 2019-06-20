@@ -7,6 +7,7 @@ import './theme/element/index.css'
 import * as VueCookies from 'vue-cookies'
 import vueWaterfallEasy from 'vue-waterfall-easy'
 import VueFab from 'vue-float-action-button'
+import ECharts from 'vue-echarts'
 
 import './filters'
 
@@ -14,6 +15,7 @@ Vue.use(ElementUI)
 Vue.use(VueCookies)
 Vue.use(vueWaterfallEasy)
 Vue.use(VueFab)
+Vue.component('v-chart', ECharts)
 
 Vue.config.productionTip = false
 
