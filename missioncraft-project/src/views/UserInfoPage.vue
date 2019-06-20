@@ -82,15 +82,17 @@
         <el-tab-pane label="更换头像">
           <el-upload
             class="avatar-uploader"
-            :http-request="uploadImage"
             action="http://172.18.34.59:5000/api/avatar/"
+            name="image"
+            :headers="getToken"
             :show-file-list="false"
+            ref="upload"
+            :auto-upload="true"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-button type="primary" style="margin-top: 10px">确认修改</el-button>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -130,7 +132,8 @@ export default {
       this.school = this.interSchool
     },
     handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+      this.url = res.data.avatar
+      this.$message.success('头像上传成功')
     },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
@@ -143,19 +146,6 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
-    },
-    uploadImage (p) {
-      backend.postRequest('avatar/',
-        {
-          image: p.file
-        })
-        .then((response) => {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(p.file)
-          console.log(error)
-        })
     },
     submitInfo () {
       backend.putRequest('user/',
@@ -226,10 +216,14 @@ export default {
     },
     selectUrl () {
       if (this.url !== '') {
-        return this.url
+        return 'http://172.18.34.59:5000' + this.url
       } else {
         return this.defaultUrl
       }
+    },
+    getToken () {
+      return { 'Authorization': `Bearer ${this.$cookies.get('u-token')}`,
+        'Accept': 'application/json, text/plain, */*' }
     }
   }
 }

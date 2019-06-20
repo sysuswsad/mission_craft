@@ -27,7 +27,6 @@ let $vue = new Vue({
 /*
 router.beforeEach((to, from, next) => {
   let isLogin = $vue.$cookies.isKey('u-token')
-  console.log('kkkk')
   if (!isLogin) {
     if (to.path !== '/login') {
       return next({ path: '/login' })
