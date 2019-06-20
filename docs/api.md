@@ -584,6 +584,8 @@ PUT
 --|--|--|--|
 token|是|123|登录返回的token
 notification|是|[{"not_id":123,"if_read":1}]|一个
+put_type|是|0/1|更新阅读情况/删除通知
+
 
 **返回示例**
 ```json
@@ -597,7 +599,8 @@ notification|是|[{"not_id":123,"if_read":1}]|一个
             "create_time":"2019-6-1 14:40:20",
             "if_read": 1
         }...
-        ]
+        ],
+        "put_type": 0
     },
     "message": "ok"
 }
