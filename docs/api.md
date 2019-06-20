@@ -599,8 +599,7 @@ put_type|是|0/1|更新阅读情况/删除通知
             "create_time":"2019-6-1 14:40:20",
             "if_read": 1
         }...
-        ],
-        "put_type": 0
+        ]
     },
     "message": "ok"
 }
