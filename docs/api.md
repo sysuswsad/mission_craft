@@ -633,3 +633,36 @@ notification|是|[{"n_id":123,"has_read":True}]|一个列表
 }
 ```
 ----
+
+----
+### 删除通知 
+**请求地址**
+```
+/notification/
+```
+**HTTP方法**
+
+DELETE
+
+**请求参数**
+
+参数名 | 是否必须 | 示例值 | 描述
+--|--|--|--|
+token|是|123|登录返回的token
+notification|是|[{"n_id":123},...]|一个
+
+
+**返回示例**
+```json
+{
+    "staus" : 200,
+    "data" : {
+        "notification" : [{
+            "n_id" : 123
+        }, ...
+        ]
+    },
+    "message": "ok"
+}
+```
+----
