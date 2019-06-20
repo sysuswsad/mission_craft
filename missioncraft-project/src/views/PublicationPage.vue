@@ -103,18 +103,18 @@
                 disabled>
             </el-slider>
           </el-col>
-          <el-col v-bind:span="5" style="text-align: center">{{ missionProfile.deadline }}</el-col>
+          <el-col v-bind:span="5" style="text-align: center">{{ endTime }}</el-col>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-row>
-          <el-col v-bind:span="12">
+          <el-col v-bind:span="18" align="right">
             <el-button
                 v-bind:disabled="cancelButtonDisable"
                 type="warning"
                 v-on:click="handleMissionFinish()">确认完成</el-button>
           </el-col>
-          <el-col v-bind:span="12">
+          <el-col v-bind:span="6">
             <el-button
                 v-bind:disabled="cancelButtonDisable"
                 type="danger"
@@ -194,8 +194,8 @@ export default {
         other: ''
       },
       emptyStr: '',
-      startTime: '',
-      endTime: '',
+      startTime: '2019-06-01 23:59:59',
+      endTime: '2019-06-22 23:59:59',
       finishTime: '2019-06-19 23:59:59',
       rcv_num: 0,
       fin_num: 0,
@@ -372,39 +372,40 @@ export default {
 
       } else {
         // dialog for other missions
-        backend.getRequest('mission/', {
-          params: {
-            personal: 1,
-            mission_id: row.mission_id
-          }
-        }).then((response) => {
-          let mission = response.data.data['missions']
-          if (mission.length !== 0) {
-            this.rcv_num = mission[0].rcv_num
-            if (mission[0].type !== 0 && this.rcv_num !== 0) {
-              if (mission[0].avatar !== '') {
-                this.url = mission[0].receviver_avatar
-              }
-              this.username = mission[0].receiver_name
-              this.contactWay.phone = mission[0].receiver_phone
-              this.contactWay.qq = mission[0].recevier_qq
-              this.contactWay.weChat = mission[0].receiver_wechat
-              this.contactWay.other = mission[0].receiver_other_way
-              this.fin_num = mission[0].fin_num
-            }
-            this.missionState = mission[0].state
-            this.cancelMissionId = mission[0].idMissionInfo
-            this.finishOrderId = mission[0].order_id
-            this.description = mission[0].description
-            this.startTime = mission[0].create_time
-            this.endTime = mission[0].deadline
-            this.finishTime = mission[0].finish_time
-            this.missionTitle = mission[0].title
-          }
-          this.dialogVisible = true
-        }).catch(() => {
-
-        })
+        // backend.getRequest('mission/', {
+        //   params: {
+        //     personal: 1,
+        //     mission_id: row.mission_id
+        //   }
+        // }).then((response) => {
+        //   let mission = response.data.data['missions']
+        //   if (mission.length !== 0) {
+        //     this.rcv_num = mission[0].rcv_num
+        //     if (mission[0].type !== 0 && this.rcv_num !== 0) {
+        //       if (mission[0].avatar !== '') {
+        //         this.url = mission[0].receviver_avatar
+        //       }
+        //       this.username = mission[0].receiver_name
+        //       this.contactWay.phone = mission[0].receiver_phone
+        //       this.contactWay.qq = mission[0].recevier_qq
+        //       this.contactWay.weChat = mission[0].receiver_wechat
+        //       this.contactWay.other = mission[0].receiver_other_way
+        //       this.fin_num = mission[0].fin_num
+        //     }
+        //     this.missionState = mission[0].state
+        //     this.cancelMissionId = mission[0].idMissionInfo
+        //     this.finishOrderId = mission[0].order_id
+        //     this.description = mission[0].description
+        //     this.startTime = mission[0].create_time
+        //     this.endTime = mission[0].deadline
+        //     this.finishTime = mission[0].finish_time
+        //     this.missionTitle = mission[0].title
+        //   }
+        //   this.dialogVisible = true
+        // }).catch(() => {
+        //
+        // })
+        this.dialogVisible = true
       }
     },
 

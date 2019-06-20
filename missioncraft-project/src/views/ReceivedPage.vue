@@ -98,7 +98,7 @@
                 disabled>
             </el-slider>
           </el-col>
-          <el-col v-bind:span="5" style="text-align: center">{{ missionProfile.deadline }}</el-col>
+          <el-col v-bind:span="5" style="text-align: center">{{ endTime }}</el-col>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">

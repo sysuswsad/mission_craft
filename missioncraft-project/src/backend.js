@@ -111,7 +111,7 @@ export default {
     return $axios.put(url, params, config)
   },
 
-  deleteRequest (url,  config={}) {
+  deleteRequest (url, config={}) {
     return $axios.delete(url, config)
   }
 }
