@@ -164,7 +164,7 @@ def confirm_order():
     ).fetchone()
 
     # 确认过的/过期的 订单不能再确认，防止再次生成答案表
-    if order_info['order_state'] == 1:
+    if order_info['order_state'] != 0:
         return bad_request('The order has been confirmed')
 
     # 分成两类，问卷由接收人确认即可，其他任务由发布人确认
@@ -216,6 +216,5 @@ def confirm_order():
         create_notification_type_1(order_info['mission_id'])
     elif mission_info['type'] == 1:
         create_notification_type_4(order_info['mission_id'])
-
 
     return ok('Confirm order successfully')

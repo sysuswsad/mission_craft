@@ -27,4 +27,3 @@ class Config(object):
     # REDIS_HOST = '127.0.0.1'
     # REDIS_PORT = 6379
     # VERIFICATION_CODE_FILE = 0 # 这里要用0-15，不然就会报错
-    

@@ -109,7 +109,7 @@ def get_mission():
     if not bounty:
         bounty = 0.0
     if not create_time:
-        create_time = '2000-01-01 00:00:00'
+        create_time = '3000-01-01 00:00:00'
 
     personal = request.args.get('personal')
     mission_id = request.args.get('mission_id')
@@ -151,18 +151,19 @@ def get_mission():
         # personal为0时表示广场查询，为1时表示私人查询，广场查询只返回state=0的任务
         if personal == 0:
             mission_info = db.execute(
-                'SELECT * FROM MissionInfo WHERE bounty > ? AND create_time > ? AND state == 0', 
+                'SELECT * FROM MissionInfo WHERE bounty > ? AND create_time < ? AND state == 0', 
                 (bounty, create_time)
             ).fetchall()
         elif personal == 1:
             mission_info = db.execute(
-                'SELECT * FROM MissionInfo WHERE publisher_id = ? AND bounty > ? AND create_time > ?', 
+                'SELECT * FROM MissionInfo WHERE publisher_id = ? AND bounty > ? AND create_time < ?', 
                 (g.user['idUser'], bounty, create_time)
             ).fetchall()
         for row in mission_info:
             mission_json = {}
             for item in col_name:
                 mission_json[item] = row[item]
+            mission_json['href'] = '#'
             mission_array.append(mission_json)
     else:
 
@@ -180,8 +181,8 @@ def get_mission():
                 mission_temp.append(item)
         mission_array = mission_temp
 
-    if len(mission_array) == 0:
-        return bad_request('No search result for the param')
+    # if len(mission_array) == 0:
+    #     return bad_request('No search result for the param')
 
     # 使用问题表完善missioninfo信息
     for item in mission_array:
@@ -242,7 +243,8 @@ def get_mission():
         mission_array = mission_array[len(mission_array)-limit:len(mission_array)]
 
     # notification
-    return ok('Get missions successfully', data={'missions': mission_array})
+    return ok('Get missions successfully', data={'missions': mission_array
+        })
 
 
 @bp.route('/mission/', methods=['put'])

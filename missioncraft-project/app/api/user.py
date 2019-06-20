@@ -17,8 +17,7 @@ from app.verification import  verify_istrue
 from app.api import bp
 from app.auth import auth
 # from app import redis_db
-from app.api.notification import create_notification_register
-
+from app.api.notification import create_notification_register, get_unread_num
 # from flask_httpauth import HTTPTokenAuth
 # auth = HTTPTokenAuth()
 
@@ -131,7 +130,7 @@ def login():
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
     return created('Login successfully', data={
             'token':s.dumps({'idUser': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8'),
-            'notification_num': get_unread_num(g.user['idUser'])
+            'notification_num': get_unread_num(user['idUser'])
         })
 
 

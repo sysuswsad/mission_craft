@@ -18,7 +18,8 @@ def check_mission_out_of_state(db):
     refund_overdue()
 
     # 扫描数据库并更新：
-    db.execute('UPDATE MissionInfo SET state = 1 WHERE state == 0 AND deadline < datetime(CURRENT_TIMESTAMP,"localtime")')
+    db.execute('UPDATE MissionInfo SET state = 2 WHERE state == 0 AND deadline < datetime(CURRENT_TIMESTAMP,"localtime")')
+    db.execute('UPDATE MissionOrder o, MissionInfo m SET o.order_state = 2 WHERE o.order_state == 0 AND m.deadline < datetime(CURRENT_TIMESTAMP,"localtime")')
     db.commit()
 
     t = Timer(60, check_mission_out_of_state, (db,))
