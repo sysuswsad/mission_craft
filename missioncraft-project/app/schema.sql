@@ -44,6 +44,7 @@ CREATE TABLE MissionInfo (
   type INT DEFAULT 0,
   tag VARCHAR(45) NULL,
   create_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+  finish_time DATETIME DEFAULT NULL,
   deadline DATETIME NOT NULL,
   title VARCHAR(45) NOT NULL,
   description VARCHAR(45) NOT NULL,

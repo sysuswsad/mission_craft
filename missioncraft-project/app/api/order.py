@@ -206,7 +206,7 @@ def confirm_order():
     )
     db.commit()
     db.execute(
-        'UPDATE MissionInfo SET state = 1 WHERE idMissionInfo = ? AND fin_num==max_num', 
+        'UPDATE MissionInfo SET state = 1, finish_time = datetime(CURRENT_TIMESTAMP,"localtime") WHERE idMissionInfo = ? AND fin_num==max_num', 
         (order_info['mission_id'],)
     )
     db.commit()

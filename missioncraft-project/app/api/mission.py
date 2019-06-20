@@ -242,7 +242,7 @@ def get_mission():
         mission_array = mission_array[len(mission_array)-limit:len(mission_array)]
 
     # notification
-    return ok('Get missions successfully', data={'missions': mission_array, 'notification_num': get_unread_num(g.user['idUser'])})
+    return ok('Get missions successfully', data={'missions': mission_array})
 
 
 @bp.route('/mission/', methods=['put'])
