@@ -225,20 +225,35 @@ export default {
         type: 'warning'
       }).then(() => {
         this.onConfirmDelete()
-        this.$message({
-          type: 'success',
-          message: '删除成功！'
-        })
       })
     },
 
     onConfirmDelete () {
+      let notification = []
       for (let i = 0; i < this.multipleSelection.length; ++i) {
-        let index = this.messageData.indexOf(this.multipleSelection[i])
-        this.messageData.splice(index, 1)
+        notification.push({ 'n_id': this.multipleSelection[i].n_id })
       }
-      // to-do: refresh data in db
 
+      // to-do: refresh data in db
+      backend.deleteRequest('notification', {
+        params: {
+          notification: notification
+        }
+      }).then((response) => {
+        this.$message({
+          type: 'success',
+          message: '删除成功！'
+        })
+        for (let i = 0; i < this.multipleSelection.length; ++i) {
+          let index = this.messageData.indexOf(this.multipleSelection[i])
+          this.messageData.splice(index, 1)
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '删除失败！'
+        })
+      })
       console.log('delete')
     },
 
@@ -262,10 +277,10 @@ export default {
 
     rowClick (row) {
       // 在<table>里，我们已经设置row的key值设置为每行数据id：row-key="id"
-      let index = this.expandRows.indexOf(row.id)
+      let index = this.expandRows.indexOf(row.n_id)
       if (index < 0) {
         let notification = []
-        this.expandRows.push(row.id)
+        this.expandRows.push(row.n_id)
         if (row.has_read === '') {
           // to-do: refresh data in db
           notification.push({ 'n_id': row.n_id, 'has_read': 1 })

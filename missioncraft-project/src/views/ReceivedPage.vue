@@ -4,6 +4,7 @@
       <template v-slot:header>
         <el-tabs v-model="activeTab" v-on:tab-click="handleClick">
           <el-tab-pane label="进行中" name="processing"></el-tab-pane>
+          <el-tab-pane label="已完成" name="complete"></el-tab-pane>
           <el-tab-pane label="已结束" name="over"></el-tab-pane>
           <div>
             <el-pagination
@@ -87,8 +88,8 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-        <el-row v-bind:gutter="15" style="margin-top: 30px">
-          <el-col v-bind:span="5" style="padding: 8px 0 0 40px">{{ startTime }}</el-col>
+        <el-row style="margin-top: 40px">
+          <el-col v-bind:span="5" style="padding: 8px 0 0 15px">{{ startTime }}</el-col>
           <el-col v-bind:span="14">
             <el-slider
               v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
@@ -97,7 +98,7 @@
               disabled>
             </el-slider>
           </el-col>
-          <el-col v-bind:span="5" style="padding: 8px 0 0 0">{{ endTime }}</el-col>
+          <el-col v-bind:span="5" style="padding: 8px 0 0 20px">{{ endTime }}</el-col>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -105,7 +106,7 @@
             v-bind:disabled="cancelButtonDisable"
             type="danger"
             v-on:click="handleMissionCancel()">
-          取消任务
+          放弃任务
         </el-button>
       </span>
     </el-dialog>
@@ -221,22 +222,23 @@ export default {
             mission.missionType = '其他任务'
           }
           if (orders[i].order_state === 1) {
-            mission.status = '已结束'
-          } else {
+            mission.status = '已完成'
+          } else if (orders[i].order_state === 0) {
             mission.status = '进行中'
+          } else {
+            mission.status = '已结束'
           }
           this.allMission.push(mission)
+        }
+      }
+      for (let i = 0; i < this.allMission.length; ++i) {
+        if (this.allMission[i].status === '进行中') {
+          this.tableMission.push(this.allMission[i])
         }
       }
     }).catch(() => {
 
     })
-
-    for (let i = 0; i < this.allMission.length; ++i) {
-      if (this.allMission[i].status === '进行中') {
-        this.tableMission.push(this.allMission[i])
-      }
-    }
   },
 
   methods: {
@@ -249,6 +251,9 @@ export default {
         if (tab.name === 'processing' && this.allMission[i].status === '进行中') {
           this.tableMission.push(this.allMission[i])
           this.cancelButtonDisable = false
+        } else if (tab.name === 'complete' && this.allMission[i].status === '已完成') {
+          this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = true
         } else if (tab.name === 'over' && this.allMission[i].status === '已结束') {
           this.tableMission.push(this.allMission[i])
           this.cancelButtonDisable = true
@@ -270,7 +275,7 @@ export default {
     },
 
     handleMissionCancel () {
-      this.$confirm('确认取消该任务？', '提示', {
+      this.$confirm('确认放弃该任务？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -282,27 +287,38 @@ export default {
           }
         }
         this.onConfirmCancel(index)
-        this.$message({
-          type: 'success',
-          message: '任务取消成功！'
-        })
       })
     },
 
     onConfirmCancel (i) {
       // to-do: refresh data in db
-      let index = this.allMission.indexOf(this.tableMission[i])
-      this.allMission.splice(index, 1)
-      this.tableMission.splice(i, 1)
-      this.dialogVisible = false
+      backend.putRequest('mission/', {
+        mission_id: this.cancelMissionId
+      }).then((response) => {
+        this.$message({
+          type: 'success',
+          message: '任务放弃成功！'
+        })
+        let index = this.allMission.indexOf(this.tableMission[i])
+        this.allMission[index].status = '已结束'
+        this.tableMission.splice(i, 1)
+        this.dialogVisible = false
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '任务放弃失败！'
+        })
+      })
     },
 
     rowClick (row) {
       this.finishTime = row.finish_time
       if (row.status === '进行中') {
         this.finishState = 0
-      } else {
+      } else if (row.status === '已完成') {
         this.finishState = 1
+      } else {
+        this.finishState = 2
       }
       // judge and jump to the detail page
       if (row.missionType === '问卷调查') {
@@ -338,8 +354,10 @@ export default {
     },
 
     formatTooltip () {
-      if (this.finishState !== 0) {
+      if (this.finishState === 1) {
         return '已完成'
+      } else if (this.finishState === 2) {
+        return '已结束'
       }
       let startTime = Date.now()
       let endTime = new Date(this.endTime)
@@ -374,7 +392,7 @@ export default {
     },
 
     passTime (startTime) {
-      if (this.finishState !== 0) {
+      if (this.finishState === 1) {
         let finTime = new Date(this.finishTime)
         let sTime = new Date(startTime)
         let passHour = 0
@@ -383,6 +401,8 @@ export default {
           passHour = Math.ceil(msDiff / (1000 * 3600))
         }
         return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
+      } else if (this.finishState === 2) {
+        return 100
       }
       let nowTime = Date.now()
       let sTime = new Date(startTime)

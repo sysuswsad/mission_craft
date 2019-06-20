@@ -5,10 +5,11 @@
         <el-tabs v-model="activeTab" v-on:tab-click="handleClick">
           <el-tab-pane label="进行中" name="processing"></el-tab-pane>
           <el-tab-pane label="已完成" name="complete"></el-tab-pane>
+          <el-tab-pane label="已结束" name="over"></el-tab-pane>
           <div>
             <el-pagination
               class="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
-              v-bind:page-sizes="[5, 10, 20, 30]"
+              v-bind:page-sizes="[20, 50, 100]"
               v-bind:page-size="pageSize"
               v-bind:current-page.sync="currentPage"
               v-bind:total="tableMission.length"
@@ -92,8 +93,8 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-        <el-row v-bind:gutter="15" style="margin-top: 30px">
-          <el-col v-bind:span="5" style="padding: 8px 0 0 40px">{{ startTime }}</el-col>
+        <el-row style="margin-top: 40px">
+          <el-col v-bind:span="5" style="padding: 8px 0 0 15px">{{ startTime }}</el-col>
           <el-col v-bind:span="14">
             <el-slider
               v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
@@ -101,16 +102,24 @@
               v-bind:format-tooltip="formatTooltip"
               disabled></el-slider>
           </el-col>
-          <el-col v-bind:span="5" style="padding: 8px 0 0 0">{{ endTime }}</el-col>
+          <el-col v-bind:span="5" style="padding: 8px 0 0 20px">{{ endTime }}</el-col>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button
-            v-bind:disabled="cancelButtonDisable"
-            type="danger"
-            v-on:click="handleMissionCancel()">
-          取消任务
-        </el-button>
+        <el-row>
+          <el-col v-bind:span="12">
+            <el-button
+                v-bind:disabled="cancelButtonDisable"
+                type="warning"
+                v-on:click="handleMissionFinish()">确认完成</el-button>
+          </el-col>
+          <el-col v-bind:span="12">
+            <el-button
+                v-bind:disabled="cancelButtonDisable"
+                type="danger"
+                v-on:click="handleMissionCancel()">取消任务</el-button>
+          </el-col>
+        </el-row>
       </span>
     </el-dialog>
   </div>
@@ -168,7 +177,7 @@ export default {
           status: '已完成'
         }
       ],
-      pageSize: 5,
+      pageSize: 20,
       currentPage: 1,
       tableMission: [],
       dialogVisible: false,
@@ -189,8 +198,10 @@ export default {
       finishTime: '2019-06-19 23:59:59',
       rcv_num: 0,
       fin_num: 0,
+      missionState: 0,
       cancelMissionId: -1,
-      cancelButtonDisable: false
+      cancelButtonDisable: false,
+      finishOrderId: -1
     }
   },
 
@@ -207,32 +218,35 @@ export default {
     }).then((response) => {
       let missions = response.data.data['missions']
       if (missions.length !== 0) {
+        console.log(missions[0])
         this.allMission = []
         for (let i = 0; i < missions.length; ++i) {
           let mission = {
-            mission_id: '',
+            mission_id: 0,
             missionType: '',
             title: '',
             status: ''
           }
-          mission.mission_id = missions[i].mission_id
+          mission.mission_id = missions[i].idMissionInfo
           mission.title = missions[i].title
           if (missions[i].type === 0) {
             mission.missionType = '问卷调查'
           } else {
             mission.missionType = '其他任务'
           }
-          if (missions[i].finish_time < missions[i].deadline) {
+          if (missions[i].state === 1 && missions[i].fin_num >= missions[i].max_num) {
             mission.status = '已完成'
-          } else {
+          } else if (missions[i].state === 0 && missions[i].fin_num < missions[i].max_num) {
             mission.status = '进行中'
+          } else {
+            mission.status = '已结束'
           }
           this.allMission.push(mission)
         }
-        for (let i = 0; i < this.allMission.length; ++i) {
-          if (this.allMission[i].status === '进行中') {
-            this.tableMission.push(this.allMission[i])
-          }
+      }
+      for (let i = 0; i < this.allMission.length; ++i) {
+        if (this.allMission[i].status === '进行中') {
+          this.tableMission.push(this.allMission[i])
         }
       }
     }).catch(() => {
@@ -251,6 +265,9 @@ export default {
           this.tableMission.push(this.allMission[i])
           this.cancelButtonDisable = false
         } else if (tab.name === 'complete' && this.allMission[i].status === '已完成') {
+          this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = true
+        } else if (tab.name === 'over' && this.allMission[i].status === '已结束') {
           this.tableMission.push(this.allMission[i])
           this.cancelButtonDisable = true
         }
@@ -283,19 +300,67 @@ export default {
           }
         }
         this.onConfirmCancel(index)
-        this.$message({
-          type: 'success',
-          message: '任务取消成功！'
-        })
       })
     },
 
     onConfirmCancel (i) {
       // to-do: refresh data in db
-      let index = this.allMission.indexOf(this.tableMission[i])
-      this.allMission.splice(index, 1)
-      this.tableMission.splice(i, 1)
-      this.dialogVisible = false
+      backend.putRequest('mission/', {
+        mission_id: this.cancelMissionId
+      }).then((response) => {
+        this.$message({
+          type: 'success',
+          message: '任务取消成功！'
+        })
+
+        let index = this.allMission.indexOf(this.tableMission[i])
+        this.allMission[index].status = '已结束'
+        this.tableMission.splice(i, 1)
+        this.dialogVisible = false
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '任务取消失败！'
+        })
+      })
+    },
+
+    handleMissionFinish () {
+      this.$confirm('确认该任务已完成？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let index = -1
+        for (let i = 0; i < this.tableMission.length; ++i) {
+          if (this.cancelMissionId === this.tableMission[i].mission_id) {
+            index = i
+          }
+        }
+        this.onConfirmFinish(index)
+      })
+    },
+
+    onConfirmFinish (i) {
+      // to-do: refresh data in db
+      backend.putRequest('order/', {
+        order_id: this.cancelMissionId
+      }).then((response) => {
+        this.$message({
+          type: 'success',
+          message: '任务确认完成成功！'
+        })
+
+        let index = this.allMission.indexOf(this.tableMission[i])
+        this.allMission[index].status = '已完成'
+        this.tableMission.splice(i, 1)
+        this.dialogVisible = false
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '任务确认完成失败！'
+        })
+      })
     },
 
     rowClick (row) {
@@ -313,27 +378,28 @@ export default {
           }
         }).then((response) => {
           let mission = response.data.data['missions']
-          console.log(mission)
-          this.rcv_num = mission[0].rcv_num
-          if (this.rcv_num !== 0) {
-            if (mission[0].avatar !== '') {
-              this.url = mission[0].receviver_avatar
+          if (mission.length !== 0) {
+            this.rcv_num = mission[0].rcv_num
+            if (mission[0].type !== 0 && this.rcv_num !== 0) {
+              if (mission[0].avatar !== '') {
+                this.url = mission[0].receviver_avatar
+              }
+              this.username = mission[0].receiver_name
+              this.contactWay.phone = mission[0].receiver_phone
+              this.contactWay.qq = mission[0].recevier_qq
+              this.contactWay.weChat = mission[0].receiver_wechat
+              this.contactWay.other = mission[0].receiver_other_way
+              this.fin_num = mission[0].fin_num
             }
-            this.username = mission[0].receiver_name
-            this.contactWay.phone = mission[0].receiver_phone
-            this.contactWay.qq = mission[0].recevier_qq
-            this.contactWay.weChat = mission[0].receiver_wechat
-            this.contactWay.other = mission[0].receiver_other_way
-            this.fin_num = mission[0].fin_num
-          } else {
-            this.cancelMissionId = mission[0].mission_id
+            this.missionState = mission[0].state
+            this.cancelMissionId = mission[0].idMissionInfo
+            this.finishOrderId = mission[0].order_id
+            this.description = mission[0].description
+            this.startTime = mission[0].create_time
+            this.endTime = mission[0].deadline
+            this.finishTime = mission[0].finish_time
+            this.missionTitle = mission[0].title
           }
-
-          this.description = mission[0].description
-          this.startTime = mission[0].create_time
-          this.endTime = mission[0].deadline
-          this.finishTime = mission[0].finish_time
-          this.missionTitle = mission[0].title
           this.dialogVisible = true
         }).catch(() => {
 
@@ -348,10 +414,12 @@ export default {
     formatTooltip () {
       if (this.fin_num !== 0) {
         return '已完成'
+      } else if (this.missionState === 1 && this.fin_num === 0) {
+        return '任务未完成，已结束'
       }
       let startTime = Date.now()
       let endTime = new Date(this.endTime)
-      let left = '已结束'
+      let left = '任务未完成，已结束'
       if (endTime.getTime() > startTime) {
         let msDiff = endTime.getTime() - startTime
         // compute day left
@@ -391,6 +459,8 @@ export default {
           passHour = Math.ceil(msDiff / (1000 * 3600))
         }
         return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
+      } else if (this.missionState === 1 && this.fin_num === 0) {
+        return 100
       }
       let nowTime = Date.now()
       let sTime = new Date(startTime)
