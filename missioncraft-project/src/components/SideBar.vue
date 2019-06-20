@@ -106,9 +106,15 @@ export default {
       return this.unread <= 0
     },
 
-    ...mapState({
-      avatarSrc: state => 'http://172.18.34.59:5000' + state.userInfo.avatar
-    })
+    avatarSrc: {
+      get () {
+        if (this.$store.state.userInfo.avatar === '') {
+          return 'default-avatar.png'
+        } else {
+          return 'http://172.18.34.59:5000' + this.$store.state.userInfo.avatar
+        }
+      }
+    }
   }
 }
 </script>
