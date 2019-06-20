@@ -88,17 +88,17 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-        <el-row style="margin-top: 40px">
-          <el-col v-bind:span="5" style="padding: 8px 0 0 15px">{{ startTime }}</el-col>
+        <el-row style="margin-top: 40px" type="flex" align="middle">
+          <el-col v-bind:span="5" style="text-align: center">{{ startTime }}</el-col>
           <el-col v-bind:span="14">
             <el-slider
-              v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
-              v-bind:value="passTime(startTime)"
-              v-bind:format-tooltip="formatTooltip"
-              disabled>
+                v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
+                v-bind:value="passTime(startTime)"
+                v-bind:format-tooltip="formatTooltip"
+                disabled>
             </el-slider>
           </el-col>
-          <el-col v-bind:span="5" style="padding: 8px 0 0 20px">{{ endTime }}</el-col>
+          <el-col v-bind:span="5" style="text-align: center">{{ missionProfile.deadline }}</el-col>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
