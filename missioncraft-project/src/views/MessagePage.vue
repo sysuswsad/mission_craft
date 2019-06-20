@@ -137,13 +137,16 @@ export default {
         let notification = []
         // to-do: refresh data in db
         notification.push({ 'n_id': row.n_id, 'has_read': 1 })
-        console.log(notification)
         backend.putRequest('notification/', {
           notification: notification
         }).then((response) => {
-          console.log(response)
           row.has_read = '✔'
-          this.$emit('markMessage', 1)
+          // this.$emit('markMessage', 1)
+          this.$store.dispatch('getMessageRemotely', {
+            msg: this.messageData
+          }).then(() => {
+
+          })
         }).catch(() => {
 
         })
@@ -161,7 +164,6 @@ export default {
       backend.putRequest('notification/', {
         notification: notification
       }).then((response) => {
-        console.log(response)
         let count = 0
         for (let i = 0; i < this.multipleSelection.length; ++i) {
           if (this.multipleSelection[i].has_read === '') {
@@ -169,7 +171,13 @@ export default {
             count += 1
           }
         }
-        this.$emit('markMessage', count)
+
+        this.$store.dispatch('getMessageRemotely', {
+          msg: this.messageData
+        }).then(() => {
+
+        })
+        // this.$emit('markMessage', count)
         // clear selection after operations
         this.$refs.multipleTable.clearSelection()
       }).catch(() => {
@@ -189,7 +197,6 @@ export default {
       backend.putRequest('notification/', {
         notification: notification
       }).then((response) => {
-        console.log(response)
         let count = 0
         for (let i = 0; i < this.multipleSelection.length; ++i) {
           if (this.multipleSelection[i].has_read === '✔') {
@@ -197,7 +204,12 @@ export default {
             count += 1
           }
         }
-        this.$emit('markMessage', -count)
+        this.$store.dispatch('getMessageRemotely', {
+          msg: this.messageData
+        }).then(() => {
+
+        })
+        // this.$emit('markMessage', -count)
         // clear selection after operations
         this.$refs.multipleTable.clearSelection()
       }).catch(() => {
@@ -260,9 +272,13 @@ export default {
           backend.putRequest('notification/', {
             notification: notification
           }).then((response) => {
-            console.log(response)
             row.has_read = '✔'
-            this.$emit('markMessage', 1)
+            this.$store.dispatch('getMessageRemotely', {
+              msg: this.messageData
+            }).then(() => {
+
+            })
+            // this.$emit('markMessage', 1)
           }).catch(() => {
 
           })

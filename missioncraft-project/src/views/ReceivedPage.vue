@@ -31,16 +31,7 @@
           v-bind:filter-method="filtersHandler">
         </el-table-column>
         <el-table-column prop="title" label="title"></el-table-column>
-        <el-table-column align="right" v-if="activeTab === 'processing'">
-          <template v-slot:default="scope">
-            <el-button
-              size="mini"
-              type="danger"
-              v-on:click="handleDelete(scope.$index, scope.row)">
-              放弃任务
-            </el-button>
-          </template>
-        </el-table-column>
+        <el-table-column align="right">{{ '>' }}</el-table-column>
       </el-table>
     </el-card>
     <el-dialog width="70%"
@@ -109,7 +100,12 @@
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button v-on:click="dialogVisible = false">关 闭</el-button>
+        <el-button
+            v-bind:disabled="cancelButtonDisable"
+            type="danger"
+            v-on:click="handleMissionCancel()">
+          取消任务
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -128,13 +124,15 @@ export default {
           mission_id: '1',
           missionType: '问卷调查',
           title: '大学生就业调查',
-          status: '已结束'
+          status: '已结束',
+          finish_time: ''
         },
         {
           mission_id: '2',
           missionType: '其他任务',
           title: '快递代取',
-          status: '已结束'
+          status: '已结束',
+          finish_time: ''
         },
         {
           mission_id: '3',
@@ -146,25 +144,29 @@ export default {
           mission_id: '4',
           missionType: '问卷调查',
           title: '第三饭堂饭菜调查',
-          status: '进行中'
+          status: '进行中',
+          finish_time: ''
         },
         {
           mission_id: '5',
           missionType: '其他任务',
           title: '篮球租赁请求',
-          status: '已结束'
+          status: '进行中',
+          finish_time: ''
         },
         {
           mission_id: '6',
           missionType: '问卷调查',
           title: '大学生就业调查',
-          status: '已结束'
+          status: '已结束',
+          finish_time: ''
         },
         {
           mission_id: '7',
           missionType: '其他任务',
           title: '网上求夸找自信',
-          status: '已结束'
+          status: '进行中',
+          finish_time: ''
         }
       ],
       pageSize: 5,
@@ -184,7 +186,11 @@ export default {
       },
       emptyStr: '',
       startTime: '2019-06-09 00:00:00',
-      endTime: '2019-06-20 23:59:59'
+      endTime: '2019-06-20 23:59:59',
+      finishTime: '',
+      finishState: 0,
+      cancelMissionId: -1,
+      cancelButtonDisable: false
     }
   },
 
@@ -197,6 +203,7 @@ export default {
     backend.getRequest('order/').then((response) => {
       let orders = response.data.data['orders']
       if (orders.length !== 0) {
+        this.allMission = []
         for (let i = 0; i < orders.length; ++i) {
           let mission = {
             mission_id: '',
@@ -206,12 +213,13 @@ export default {
           }
           mission.mission_id = orders[i].mission_id
           mission.title = orders[i].title
+          mission.finish_time = orders[i].finish_time
           if (orders[i].type === 0) {
             mission.missionType = '问卷调查'
           } else {
             mission.missionType = '其他任务'
           }
-          if (orders[i].finish_time < orders[i].deadline) {
+          if (orders[i].order_state === 1) {
             mission.status = '已结束'
           } else {
             mission.status = '进行中'
@@ -239,8 +247,10 @@ export default {
       for (let i = 0; i < this.allMission.length; ++i) {
         if (tab.name === 'processing' && this.allMission[i].status === '进行中') {
           this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = false
         } else if (tab.name === 'over' && this.allMission[i].status === '已结束') {
           this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = true
         }
       }
     },
@@ -258,28 +268,41 @@ export default {
       return row[property] === value
     },
 
-    handleDelete (index, row) {
-      this.$confirm('确认放弃该任务？', '提示', {
+    handleMissionCancel () {
+      this.$confirm('确认取消该任务？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.onConfirmDelete(index)
+        let index = -1
+        for (let i = 0; i < this.tableMission.length; ++i) {
+          if (this.cancelMissionId === this.tableMission[i].mission_id) {
+            index = i
+          }
+        }
+        this.onConfirmCancel(index)
         this.$message({
           type: 'success',
-          message: '任务放弃成功！'
+          message: '任务取消成功！'
         })
       })
     },
 
-    onConfirmDelete (i) {
+    onConfirmCancel (i) {
       // to-do: refresh data in db
       let index = this.allMission.indexOf(this.tableMission[i])
       this.allMission.splice(index, 1)
       this.tableMission.splice(i, 1)
+      this.dialogVisible = false
     },
 
     rowClick (row) {
+      this.finishTime = row.finish_time
+      if (row.status === '进行中') {
+        this.finishState = 0
+      } else {
+        this.finishState = 1
+      }
       // judge and jump to the detail page
       if (row.missionType === '问卷调查') {
         // to-do: route to detail page and pass some parameters to sign if the mission is over/finished or
@@ -287,10 +310,16 @@ export default {
 
       } else {
         // dialog for other missions
-        backend.getRequest('mission/', { mission_id: row.mission_id }).then((response) => {
+        backend.getRequest('mission/', {
+          params: {
+            mission_id: row.mission_id
+          }
+        }).then((response) => {
           let mission = response.data.data['missions']
-          this.url = mission[0].avatar
-          this.username = mission[0].username
+          if (mission[0].avatar !== '') {
+            this.url = mission[0].receviver_avatar
+          }
+          this.username = mission[0].publisher_name
           this.description = mission[0].description
           this.startTime = mission[0].create_time
           this.endTime = mission[0].deadline
@@ -308,9 +337,12 @@ export default {
     },
 
     formatTooltip () {
+      if (this.finishState !== 0) {
+        return '已完成'
+      }
       let startTime = Date.now()
       let endTime = new Date(this.endTime)
-      let left = '剩余0天0时0分0秒'
+      let left = '已结束'
       if (endTime.getTime() > startTime) {
         let msDiff = endTime.getTime() - startTime
         // compute day left
@@ -325,6 +357,7 @@ export default {
         let leftSecond = Math.round(leaveForSecond / 1000)
         left = '剩余' + leftDay + '天' + leftHour + '时' + leftMinute + '分' + leftSecond + '秒'
       }
+
       return left
     },
 
@@ -340,6 +373,16 @@ export default {
     },
 
     passTime (startTime) {
+      if (this.finishState !== 0) {
+        let finTime = new Date(this.finishTime)
+        let sTime = new Date(startTime)
+        let passHour = 0
+        if (finTime.getTime() > sTime.getTime()) {
+          let msDiff = finTime.getTime() - sTime.getTime()
+          passHour = Math.ceil(msDiff / (1000 * 3600))
+        }
+        return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
+      }
       let nowTime = Date.now()
       let sTime = new Date(startTime)
       let passHour = 0

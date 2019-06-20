@@ -30,15 +30,7 @@
           v-bind:filters="[{text:'问卷调查', value: '问卷调查'}, {text: '其他任务', value: '其他任务'}]"
           v-bind:filter-method="filtersHandler"></el-table-column>
         <el-table-column prop="title" label="title"></el-table-column>
-        <el-table-column align="right" v-if="activeTab === 'processing'">
-          <template v-slot:default="scope">
-            <el-button
-              size="mini"
-              type="danger"
-              v-on:click="handleDelete(scope.$index, scope.row)">
-              取消任务
-            </el-button>
-          </template>
+        <el-table-column align="right"> {{ '>' }}
         </el-table-column>
       </el-table>
     </el-card>
@@ -53,9 +45,9 @@
         <el-row type="flex">
           <el-col v-bind:span="8">
             <el-row>
-              <h1>发布者</h1>
+              <h1>领取者</h1>
             </el-row>
-            <el-row>
+            <el-row v-if="rcv_num !== 0">
               <el-col v-bind:span="8" v-bind:offset="1" class="img-wrapper">
                 <div>
                   <img class="img-container" v-bind:src=url alt="加载失败"/>
@@ -66,6 +58,11 @@
                 <div style="margin-top: 10px">
                   <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
                 </div>
+              </el-col>
+            </el-row>
+            <el-row v-else>
+              <el-col v-bind:offset="4">
+                <span>暂无</span>
               </el-col>
             </el-row>
             <div v-for="(index, value) in contactWay" v-bind:key="value">
@@ -106,7 +103,12 @@
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button v-on:click="dialogVisible = false">关 闭</el-button>
+        <el-button
+            v-bind:disabled="cancelButtonDisable"
+            type="danger"
+            v-on:click="handleMissionCancel()">
+          取消任务
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -181,7 +183,12 @@ export default {
       },
       emptyStr: '',
       startTime: '',
-      endTime: ''
+      endTime: '',
+      finishTime: '2019-06-19 23:59:59',
+      rcv_num: 0,
+      fin_num: 0,
+      cancelMissionId: -1,
+      cancelButtonDisable: false
     }
   },
 
@@ -198,6 +205,7 @@ export default {
     }).then((response) => {
       let missions = response.data.data['missions']
       if (missions.length !== 0) {
+        this.allMission = []
         for (let i = 0; i < missions.length; ++i) {
           let mission = {
             mission_id: '',
@@ -219,16 +227,15 @@ export default {
           }
           this.allMission.push(mission)
         }
+        for (let i = 0; i < this.allMission.length; ++i) {
+          if (this.allMission[i].status === '进行中') {
+            this.tableMission.push(this.allMission[i])
+          }
+        }
       }
     }).catch(() => {
 
     })
-
-    for (let i = 0; i < this.allMission.length; ++i) {
-      if (this.allMission[i].status === '进行中') {
-        this.tableMission.push(this.allMission[i])
-      }
-    }
   },
 
   methods: {
@@ -240,8 +247,10 @@ export default {
       for (let i = 0; i < this.allMission.length; ++i) {
         if (tab.name === 'processing' && this.allMission[i].status === '进行中') {
           this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = false
         } else if (tab.name === 'complete' && this.allMission[i].status === '已完成') {
           this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = true
         }
       }
     },
@@ -259,13 +268,19 @@ export default {
       return row[property] === value
     },
 
-    handleDelete (index, row) {
+    handleMissionCancel () {
       this.$confirm('确认取消该任务？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.onConfirmDelete(index)
+        let index = -1
+        for (let i = 0; i < this.tableMission.length; ++i) {
+          if (this.cancelMissionId === this.tableMission[i].mission_id) {
+            index = i
+          }
+        }
+        this.onConfirmCancel(index)
         this.$message({
           type: 'success',
           message: '任务取消成功！'
@@ -273,11 +288,12 @@ export default {
       })
     },
 
-    onConfirmDelete (i) {
+    onConfirmCancel (i) {
       // to-do: refresh data in db
       let index = this.allMission.indexOf(this.tableMission[i])
       this.allMission.splice(index, 1)
       this.tableMission.splice(i, 1)
+      this.dialogVisible = false
     },
 
     rowClick (row) {
@@ -290,18 +306,33 @@ export default {
         // dialog for other missions
         backend.getRequest('mission/', {
           params: {
+            personal: 1,
             mission_id: row.mission_id
           }
         }).then((response) => {
           let mission = response.data.data['missions']
-          this.url = mission[0].avatar
-          this.username = mission[0].username
+          console.log(mission)
+          this.rcv_num = mission[0].rcv_num
+          if (this.rcv_num !== 0) {
+            if (mission[0].avatar !== '') {
+              this.url = mission[0].receviver_avatar
+            }
+            this.username = mission[0].receiver_name
+            this.contactWay.phone = mission[0].receiver_phone
+            this.contactWay.qq = mission[0].recevier_qq
+            this.contactWay.weChat = mission[0].receiver_wechat
+            this.contactWay.other = mission[0].receiver_other_way
+            this.fin_num = mission[0].fin_num
+          } else {
+            this.cancelMissionId = mission[0].mission_id
+          }
+
           this.description = mission[0].description
           this.startTime = mission[0].create_time
           this.endTime = mission[0].deadline
+          this.finishTime = mission[0].finish_time
           this.missionTitle = mission[0].title
           this.dialogVisible = true
-          // contact way
         }).catch(() => {
 
         })
@@ -313,9 +344,12 @@ export default {
     },
 
     formatTooltip () {
+      if (this.fin_num !== 0) {
+        return '已完成'
+      }
       let startTime = Date.now()
       let endTime = new Date(this.endTime)
-      let left = '剩余0天0时0分0秒'
+      let left = '已结束'
       if (endTime.getTime() > startTime) {
         let msDiff = endTime.getTime() - startTime
         // compute day left
@@ -330,6 +364,7 @@ export default {
         let leftSecond = Math.round(leaveForSecond / 1000)
         left = '剩余' + leftDay + '天' + leftHour + '时' + leftMinute + '分' + leftSecond + '秒'
       }
+
       return left
     },
 
@@ -345,6 +380,16 @@ export default {
     },
 
     passTime (startTime) {
+      if (this.fin_num !== 0) {
+        let finTime = new Date(this.finishTime)
+        let sTime = new Date(startTime)
+        let passHour = 0
+        if (finTime.getTime() > sTime.getTime()) {
+          let msDiff = finTime.getTime() - sTime.getTime()
+          passHour = Math.ceil(msDiff / (1000 * 3600))
+        }
+        return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
+      }
       let nowTime = Date.now()
       let sTime = new Date(startTime)
       let passHour = 0
