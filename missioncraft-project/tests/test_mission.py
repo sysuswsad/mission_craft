@@ -75,8 +75,8 @@ def test_create_mission(client, app, type, deadline, title, description, qq, wec
     (4, 0, 1, '2019-06-07 11:20:12', 1, None, 200, 'Get missions successfully', 1),
 ))
 def test_get_mission(client, app, limit, type, bounty, create_time, personal, mission_id, status_code, message, res_num):
-    response = client.get('/api/mission/', headers=get_token_auth_headers(client, app, 'test1', '123456'), data=json.dumps({
-        'limit':limit, 'type':type, 'bounty':bounty, 'create_time':create_time, 'personal':personal, 'mission_id':mission_id}))
+    response = client.get('/api/mission/', headers=get_token_auth_headers(client, app, 'test1', '123456'), query_string={
+        'limit':limit, 'type':type, 'bounty':bounty, 'create_time':create_time, 'personal':personal, 'mission_id':mission_id})
     # assert response.status_code == status_code
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
@@ -120,8 +120,8 @@ def test_get_mission(client, app, limit, type, bounty, create_time, personal, mi
     (0, None, 1, 1, 'Get missions successfully'),
 ))
 def test_get_mission_with_problems(client, app, personal, mission_id, return_problems, return_statistics, message):
-    response = client.get('/api/mission/', headers=get_token_auth_headers(client, app, 'test10', '123456'), data=json.dumps({
-        'bounty':16, 'personal':personal, 'mission_id':mission_id, 'return_problems':return_problems, 'return_statistics':return_statistics}))
+    response = client.get('/api/mission/', headers=get_token_auth_headers(client, app, 'test10', '123456'), query_string={
+        'bounty':16, 'personal':personal, 'mission_id':mission_id, 'return_problems':return_problems, 'return_statistics':return_statistics})
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
     missions = response_data.get('data').get('missions')

@@ -53,13 +53,14 @@ def update_notification():
     if not data:
         return bad_request('ERROR DATA AT GET NOTIFICATION')
 
-    notification = data.get("notification")
+    notifications = data.get("notification")
+
     db = get_db()
 
-    for i in range(len(notification)):
+    for notification in notifications:
         db.execute(
             'UPDATE Notification SET has_read = ? WHERE n_id = ?',
-            (notification[i]["has_read"],notification[i]["n_id"])
+            (notification["has_read"], notification["n_id"])
         )
         db.commit()
     return ok('Update the state of notifications successfully')
@@ -143,7 +144,7 @@ def create_notification_type_1(mission_id):
         return
 
     # 生成新通知
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     message = "您于 {} 发布的问卷 {} 已于 {} 全部填写完成。".format(
         info[0][2], info[0][1], info[0][3]
     )
@@ -163,7 +164,7 @@ def create_notification_type_2(user_id):
         user_id, 待检查的user的id
     """
     n_type = 2
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     db = get_db()
 
     info = db.execute(
@@ -207,7 +208,7 @@ def create_notification_type_3(mission_id):
         mission_id, 待生成通知所对应的mission的id
     """
     n_type = 3
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     db = get_db()
 
     info = db.execute(
@@ -239,7 +240,7 @@ def create_notification_type_4(mission_id):
         time, 接收时间
     """
     n_type = 4
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     db = get_db()
 
     info = db.execute(
@@ -270,7 +271,7 @@ def create_notification_type_5(user_id):
         user_id, 待检查的user的id
     """
     n_type = 5
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     db = get_db()
 
     info = db.execute(
@@ -306,7 +307,7 @@ def create_notification_type_6(user_id):
         user_id, 待检查的user的id
     """
     n_type = 6
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     db = get_db()
 
     info = db.execute(
@@ -343,7 +344,7 @@ def create_notification_type_7(user_id):
         user_id, 待检查的user的id
     """
     n_type = 7
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     db = get_db()
 
     info = db.execute(
@@ -381,7 +382,7 @@ def create_notification_type_8(mission_id, receiver_id, cancel_time):
         cancel_time, 取消接收时间
     """
     n_type = 8
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     db = get_db()
 
     info = db.execute(
@@ -420,7 +421,7 @@ def create_notification_register(user_id):
     """
     db = get_db()
     n_type = 9
-    now_time = datetime.datetime.now()
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     message = "欢迎使用本产品！"
     db.execute(
         'INSERT INTO Notification (user_id, message, create_time, notification_type)'

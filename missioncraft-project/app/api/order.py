@@ -42,10 +42,6 @@ def get_rcv_order():
         obj['mission_id'] = order['mission_id']
         obj['title'] = mission_info['title']
         obj['type'] = mission_info['type']
-        obj['phone'] = mission_info['phone']
-        obj['qq'] = mission_info['qq']
-        obj['wechat'] = mission_info['wechat']
-        obj['other_way'] = mission_info['other_way']
         # end modified
 
         obj['order_state'] = order['order_state']
@@ -68,6 +64,12 @@ def create_order():
         return bad_request('ERROR PARAM AT CREATING ORDER')
     # 得到任务ID
     mission_id = data.get('mission_id')
+    # modified by ousx
+    qq = data.get('qq')
+    wechat = data.get('wechat')
+    phone = data.get('phone')
+    other_way = data.get('other_way')
+    # end modified
  
     db = get_db()
     mission = db.execute(
@@ -77,7 +79,10 @@ def create_order():
   
     if(mission is None):
         return bad_request('mission_id is invalid')
-  
+
+    if int(mission['type']) == 1 and (not qq) and (not wechat) and (not phone) and (not other_way):
+        return bad_request('Missing contact info')
+
     # 已经结束
     if(mission['state'] == 1):
         return bad_request('Mission is closed') 
@@ -215,7 +220,7 @@ def confirm_order():
     )
     db.commit()
     db.execute(
-        'UPDATE MissionInfo SET state = 1 WHERE idMissionInfo = ? AND fin_num==max_num', 
+        'UPDATE MissionInfo SET state = 1, finish_time = datetime(CURRENT_TIMESTAMP,"localtime") WHERE idMissionInfo = ? AND fin_num==max_num', 
         (order_info['mission_id'],)
     )
     db.commit()

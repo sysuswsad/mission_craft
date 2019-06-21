@@ -130,7 +130,8 @@ def login():
     # 登录成功，服务器生成token并返回给用户端
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=3600)
     return created('Login successfully', data={
-            'token':s.dumps({'idUser': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8')
+            'token':s.dumps({'idUser': user['idUser'], 'email': user['email'], 'randnum': random.randint(0, 1000000)}).decode('utf-8'),
+            'notification_num': get_unread_num(g.user['idUser'])
         })
 
 
