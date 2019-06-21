@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-aside v-bind:width="sideWidth" v-if="isLogin" class="sidebar-container">
-        <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="unreadMsgNum"></side-bar>
+        <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="getUnreadMsgNum"></side-bar>
       </el-aside>
       <el-container>
         <el-header id="top-menu">
@@ -41,7 +41,7 @@ export default {
       sideWidth: '64px',
       // isLogin: false, // 根据登录情况判断是否展示侧栏
       sidebarCollapsed: true,
-      unreadMsgNum: 7 // temp
+      unreadMsgNum: 0 // temp
     }
   },
 
@@ -100,8 +100,17 @@ export default {
       set (val) {
         this.$store.state.isLogin = val
       }
-    }
+    },
 
+    getUnreadMsgNum () {
+      this.unreadMsgNum = 0
+      for (let i = 0; i < this.$store.state.message.length; ++i) {
+        if (this.$store.state.message[i].has_read === '') {
+          this.unreadMsgNum += 1
+        }
+      }
+      return this.unreadMsgNum
+    }
   }
 }
 </script>

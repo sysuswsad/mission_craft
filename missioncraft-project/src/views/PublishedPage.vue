@@ -218,7 +218,6 @@ export default {
     }).then((response) => {
       let missions = response.data.data['missions']
       if (missions.length !== 0) {
-        console.log(missions[0])
         this.allMission = []
         for (let i = 0; i < missions.length; ++i) {
           let mission = {

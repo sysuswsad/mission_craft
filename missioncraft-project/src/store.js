@@ -37,8 +37,8 @@ export default new Vuex.Store({
       Vue.set(state, userInfo, { ...info })
     },
 
-    updateMessage (state, newMsg) {
-      state.message = newMsg.newMsg.msg
+    updateMessage (state, payload) {
+      state.message = payload.message
     },
 
     logout (state) {
@@ -101,13 +101,8 @@ export default new Vuex.Store({
   },
 
   actions: {
-    getMessageRemotely (context, msg) {
-      return new Promise((resolve, reject) => {
-        context.commit('updateMessage', {
-          newMsg: msg
-        })
-        resolve()
-      })
+    getMessageRemotely (context) {
+
     }
   }
 })

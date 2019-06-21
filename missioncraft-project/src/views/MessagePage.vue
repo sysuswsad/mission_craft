@@ -142,10 +142,8 @@ export default {
         }).then((response) => {
           row.has_read = '✔'
           // this.$emit('markMessage', 1)
-          this.$store.dispatch('getMessageRemotely', {
-            msg: this.messageData
-          }).then(() => {
-
+          this.$store.commit('updateMessage', {
+            message: this.messageData
           })
         }).catch(() => {
 
@@ -172,10 +170,8 @@ export default {
           }
         }
 
-        this.$store.dispatch('getMessageRemotely', {
-          msg: this.messageData
-        }).then(() => {
-
+        this.$store.commit('updateMessage', {
+          message: this.messageData
         })
         // this.$emit('markMessage', count)
         // clear selection after operations
@@ -204,10 +200,9 @@ export default {
             count += 1
           }
         }
-        this.$store.dispatch('getMessageRemotely', {
-          msg: this.messageData
-        }).then(() => {
 
+        this.$store.commit('updateMessage', {
+          message: this.messageData
         })
         // this.$emit('markMessage', -count)
         // clear selection after operations
@@ -248,6 +243,10 @@ export default {
           let index = this.messageData.indexOf(this.multipleSelection[i])
           this.messageData.splice(index, 1)
         }
+
+        this.$store.commit('updateMessage', {
+          message: this.messageData
+        })
       }).catch(() => {
         this.$message({
           type: 'error',
@@ -287,11 +286,8 @@ export default {
           backend.putRequest('notification/', {
             notification: notification
           }).then((response) => {
-            row.has_read = '✔'
-            this.$store.dispatch('getMessageRemotely', {
-              msg: this.messageData
-            }).then(() => {
-
+            this.$store.commit('updateMessage', {
+              message: this.messageData
             })
             // this.$emit('markMessage', 1)
           }).catch(() => {
