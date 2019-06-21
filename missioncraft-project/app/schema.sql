@@ -26,6 +26,7 @@ CREATE TABLE User (
   qq VARCHAR(45) DEFAULT '',
   wechat VARCHAR(45) DEFAULT '',
   avatar VARCHAR(45) DEFAULT '',
+  other_way VARCHAR(45) DEFAULT '',
   tag VARCHAR(45) DEFAULT '',
   mission_pub_num INT DEFAULT 0,
   -- mission_todo_num INT DEFAULT 0,

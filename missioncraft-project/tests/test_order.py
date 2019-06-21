@@ -56,7 +56,7 @@ from tests.test_user import get_token_auth_headers
 
 
 @pytest.mark.parametrize(('username', 'password', 'order_id', 'answers', 'status_code', 'message', 'finish_number', 'state_num'), (
-    ('pj', '123456', None, None, 400, 'Parse order id error', None, None),
+    ('pj', '123456', None, None, 400, 'you should pass either mission_id or order_id', None, None),
     ('pj', '123456', 100000, None, 400, 'No such mission', None, None),
     ('pj', '123456', 3, None, 400, 'The order has been confirmed', None, None),
     ('test1', '123456', 4, None, 403, 'You can not submit for other receivers', None, None),

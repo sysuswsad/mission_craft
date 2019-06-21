@@ -21,7 +21,7 @@ class Config(object):
 
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app', 'static')
-    BASE_STATIC_URL = 'localhost:5000/api/image/'
+    BASE_STATIC_URL = '/api/image/'
 
     # 配置redis数据库
     # REDIS_HOST = '127.0.0.1'

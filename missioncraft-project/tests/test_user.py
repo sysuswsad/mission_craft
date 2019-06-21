@@ -259,7 +259,7 @@ def test_upload_file(client, app, username, password, filename, status_code, mes
 
     response_data = json.loads(response.get_data(as_text=True))
     assert response_data.get('message') == message
-
+    assert 0
     if (response.status_code == 200):
         #查看返回的url
         assert response_data.get('data').get('avatar') == avatar_url

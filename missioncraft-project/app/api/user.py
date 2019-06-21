@@ -280,6 +280,9 @@ def get_uploaded_file(filename):
 def change_avatar():
     # 先得到文件
     file = request.files['image']
+    print(file)
+    print(file.name)
+    
     if file and allowed_file(file.filename):
         filename = file.filename
         extention = filename.rsplit('.', 1)[1]
@@ -292,6 +295,8 @@ def change_avatar():
         )
         db.commit()
         return ok('change avatar successfully', data={'avatar':avatar})
+    elif file is None:
+        bad_request('111 file is None')
     else:
         return bad_request('111 file is supposed to be jpg or png')
 
