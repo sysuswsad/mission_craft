@@ -8,7 +8,7 @@ import MessagePage from './views/MessagePage.vue'
 import SquarePage from './views/SquarePage'
 import QuestionnairePage from './views/QuestionnairePage'
 import AnswerQuestionnairePage from './views/AnswerQuestionnairePage'
-import PublicationPage from './views/PublicationPage'
+import PublishedPage from './views/PublishedPage'
 import ReceivedPage from './views/ReceivedPage'
 import PublishMissionPage from './views/PublishMissionPage'
 import StatisticPage from './views/StatisticPage'
@@ -58,9 +58,9 @@ export default new Router({
       component: AnswerQuestionnairePage
     },
     {
-      path: '/publication',
-      name: 'publication',
-      component: PublicationPage
+      path: '/published',
+      name: 'published',
+      component: PublishedPage
     },
     {
       path: '/received',
