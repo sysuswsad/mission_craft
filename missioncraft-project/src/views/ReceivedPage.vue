@@ -88,17 +88,10 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-        <el-row style="margin-top: 40px" type="flex" align="middle">
-          <el-col v-bind:span="5" style="text-align: center">{{ startTime }}</el-col>
-          <el-col v-bind:span="14">
-            <el-slider
-                v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
-                v-bind:value="passTime(startTime)"
-                v-bind:format-tooltip="formatTooltip"
-                disabled>
-            </el-slider>
-          </el-col>
-          <el-col v-bind:span="5" style="text-align: center">{{ endTime }}</el-col>
+        <el-row>
+          <time-slider v-bind:start-time="startTime"
+                       v-bind:end-time="endTime"
+                       v-bind:order-state="finishState"></time-slider>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -115,9 +108,14 @@
 
 <script>
 import backend from '../backend'
+import TimeSlider from '../components/TimeSlider'
+
 
 export default {
   name: 'ReceivedPage',
+
+  components: { TimeSlider },
+
   data () {
     return {
       activeTab: 'processing',
@@ -126,14 +124,14 @@ export default {
           mission_id: '1',
           missionType: '问卷调查',
           title: '大学生就业调查',
-          status: '已结束',
+          status: '已完成',
           finish_time: ''
         },
         {
           mission_id: '2',
           missionType: '其他任务',
           title: '快递代取',
-          status: '已结束',
+          status: '已完成',
           finish_time: ''
         },
         {
@@ -188,7 +186,7 @@ export default {
       },
       emptyStr: '',
       startTime: '2019-06-09 00:00:00',
-      endTime: '2019-06-20 23:59:59',
+      endTime: '2019-06-22 23:59:59',
       finishTime: '',
       finishState: 0,
       cancelMissionId: -1,
@@ -347,71 +345,6 @@ export default {
 
         })
       }
-    },
-
-    showInfo () {
-      console.log('show info')
-    },
-
-    formatTooltip () {
-      if (this.finishState === 1) {
-        return '已完成'
-      } else if (this.finishState === 2) {
-        return '已结束'
-      }
-      let startTime = Date.now()
-      let endTime = new Date(this.endTime)
-      let left = '已结束'
-      if (endTime.getTime() > startTime) {
-        let msDiff = endTime.getTime() - startTime
-        // compute day left
-        let leftDay = Math.floor(msDiff / (1000 * 24 * 60 * 60))
-        // hours left after computing day left
-        let leaveForHour = msDiff % (1000 * 24 * 60 * 60)
-        // compute hour left
-        let leftHour = Math.floor(leaveForHour / (1000 * 60 * 60))
-        let leaveForMinute = leaveForHour % (1000 * 3600)
-        let leftMinute = Math.floor(leaveForMinute / (1000 * 60))
-        let leaveForSecond = leaveForMinute % (1000 * 60)
-        let leftSecond = Math.round(leaveForSecond / 1000)
-        left = '剩余' + leftDay + '天' + leftHour + '时' + leftMinute + '分' + leftSecond + '秒'
-      }
-
-      return left
-    },
-
-    timeDiff (sTime, eTime) {
-      let startTime = new Date(sTime)
-      let endTime = new Date(eTime)
-      let leftHour = 0
-      if (endTime.getTime() > startTime.getTime()) {
-        let msDiff = endTime.getTime() - startTime.getTime()
-        leftHour = Math.floor(msDiff / (1000 * 3600))
-      }
-      return leftHour
-    },
-
-    passTime (startTime) {
-      if (this.finishState === 1) {
-        let finTime = new Date(this.finishTime)
-        let sTime = new Date(startTime)
-        let passHour = 0
-        if (finTime.getTime() > sTime.getTime()) {
-          let msDiff = finTime.getTime() - sTime.getTime()
-          passHour = Math.ceil(msDiff / (1000 * 3600))
-        }
-        return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
-      } else if (this.finishState === 2) {
-        return 100
-      }
-      let nowTime = Date.now()
-      let sTime = new Date(startTime)
-      let passHour = 0
-      if (nowTime > sTime.getTime()) {
-        let msDiff = nowTime - sTime.getTime()
-        passHour = Math.ceil(msDiff / (1000 * 3600))
-      }
-      return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
     }
   }
 }
