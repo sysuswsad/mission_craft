@@ -371,40 +371,39 @@ export default {
 
       } else {
         // dialog for other missions
-        // backend.getRequest('mission/', {
-        //   params: {
-        //     personal: 1,
-        //     mission_id: row.mission_id
-        //   }
-        // }).then((response) => {
-        //   let mission = response.data.data['missions']
-        //   if (mission.length !== 0) {
-        //     this.rcv_num = mission[0].rcv_num
-        //     if (mission[0].type !== 0 && this.rcv_num !== 0) {
-        //       if (mission[0].avatar !== '') {
-        //         this.url = mission[0].receviver_avatar
-        //       }
-        //       this.username = mission[0].receiver_name
-        //       this.contactWay.phone = mission[0].receiver_phone
-        //       this.contactWay.qq = mission[0].recevier_qq
-        //       this.contactWay.weChat = mission[0].receiver_wechat
-        //       this.contactWay.other = mission[0].receiver_other_way
-        //       this.fin_num = mission[0].fin_num
-        //       this.finishTime = mission[0].finish_time
-        //     }
-        //     this.missionState = mission[0].state
-        //     this.cancelMissionId = mission[0].idMissionInfo
-        //     this.finishOrderId = mission[0].order_id
-        //     this.description = mission[0].description
-        //     this.startTime = mission[0].create_time
-        //     this.endTime = mission[0].deadline
-        //     this.missionTitle = mission[0].title
-        //   }
-        //   this.dialogVisible = true
-        // }).catch(() => {
-        //
-        // })
-        this.dialogVisible = true
+        backend.getRequest('mission/', {
+          params: {
+            personal: 1,
+            mission_id: row.mission_id
+          }
+        }).then((response) => {
+          let mission = response.data.data['missions']
+          if (mission.length !== 0) {
+            this.rcv_num = mission[0].rcv_num
+            if (mission[0].type !== 0 && this.rcv_num !== 0) {
+              if (mission[0].avatar !== '') {
+                this.url = mission[0].receviver_avatar
+              }
+              this.username = mission[0].receiver_name
+              this.contactWay.phone = mission[0].receiver_phone
+              this.contactWay.qq = mission[0].recevier_qq
+              this.contactWay.weChat = mission[0].receiver_wechat
+              this.contactWay.other = mission[0].receiver_other_way
+              this.fin_num = mission[0].fin_num
+              this.finishTime = mission[0].finish_time
+            }
+            this.missionState = mission[0].state
+            this.cancelMissionId = mission[0].idMissionInfo
+            this.finishOrderId = mission[0].order_id
+            this.description = mission[0].description
+            this.startTime = mission[0].create_time
+            this.endTime = mission[0].deadline
+            this.missionTitle = mission[0].title
+          }
+          this.dialogVisible = true
+        }).catch(() => {
+
+        })
       }
     }
   }

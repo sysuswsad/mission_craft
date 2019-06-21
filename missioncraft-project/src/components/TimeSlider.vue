@@ -65,10 +65,10 @@ export default {
     formatTooltip () {
       if (this.finNum !== 0 || this.orderState === 1) {
         return '已完成'
-      } else if (this.state === 1 && this.finNum === 0 && this.orderState !== 2) {
-        return '任务未完成，已结束'
+      } else if (this.missionState === 1 && this.finNum === 0 && this.orderState !== 2) {
+        return '任务已结束或已取消（未完成）'
       } else if (this.orderState === 2) {
-        return '任务已结束或已放弃'
+        return '任务已结束或已放弃（未完成）'
       }
       let startTime = Date.now()
       let eTime = new Date(this.deadline)
@@ -112,7 +112,7 @@ export default {
           passHour = Math.ceil(msDiff / (1000 * 3600))
         }
         return passHour * (100.0 / this.timeDiff(startTime, endTime))
-      } else if ((this.state === 1 && this.finNum === 0) || this.orderState === 2) {
+      } else if ((this.missionState === 1 && this.finNum === 0) || this.orderState === 2) {
         return 100
       }
       let nowTime = Date.now()
