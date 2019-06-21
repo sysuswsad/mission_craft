@@ -110,7 +110,6 @@
 import backend from '../backend'
 import TimeSlider from '../components/TimeSlider'
 
-
 export default {
   name: 'ReceivedPage',
 
