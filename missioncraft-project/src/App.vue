@@ -103,13 +103,13 @@ export default {
     },
 
     getUnreadMsgNum () {
-      this.unreadMsgNum = 0
+      let count = 0
       for (let i = 0; i < this.$store.state.message.length; ++i) {
         if (this.$store.state.message[i].has_read === '') {
-          this.unreadMsgNum += 1
+          count += 1
         }
       }
-      return this.unreadMsgNum
+      return count
     }
   }
 }

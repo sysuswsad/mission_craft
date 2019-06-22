@@ -162,11 +162,9 @@ export default {
       backend.putRequest('notification/', {
         notification: notification
       }).then((response) => {
-        let count = 0
         for (let i = 0; i < this.multipleSelection.length; ++i) {
           if (this.multipleSelection[i].has_read === '') {
             this.multipleSelection[i].has_read = '✔'
-            count += 1
           }
         }
 
@@ -193,11 +191,9 @@ export default {
       backend.putRequest('notification/', {
         notification: notification
       }).then((response) => {
-        let count = 0
         for (let i = 0; i < this.multipleSelection.length; ++i) {
           if (this.multipleSelection[i].has_read === '✔') {
             this.multipleSelection[i].has_read = ''
-            count += 1
           }
         }
 

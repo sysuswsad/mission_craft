@@ -321,7 +321,13 @@ export default {
       if (row.missionType === '问卷调查') {
         // to-do: route to detail page and pass some parameters to sign if the mission is over/finished or
         // if the mission is published by the one clicking the row
-
+        this.$router.push({
+          name: 'answerQuestionnaire',
+          params: {
+            showResult: true,
+            mission_id: row.mission_id
+          }
+        })
       } else {
         // dialog for other missions
         backend.getRequest('mission/', {
