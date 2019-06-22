@@ -149,13 +149,27 @@ def confirm_order():
     db = get_db()
 
     order_id = data.get('order_id')	
-    try:
-        order_id = int(order_id)
-    except Exception:
-        return bad_request('Parse order id error')
-    order_info = db.execute(
-        'SELECT mission_id, receiver_id, order_state FROM MissionOrder WHERE idMissionOrder = ?', (order_id,)
-    ).fetchone()
+    mission_id = data.get('mission_id')
+    # 发布者通过mission_id取消
+    if mission_id and order_id is None:
+        order_info = db.execute(
+            'SELECT mission_id, receiver_id, order_state FROM MissionOrder WHERE mission_id = ?', (mission_id,)
+        ).fetchone()
+    # 领取者通过order_id取消
+    elif order_id and mission_id is None:
+        order_info = db.execute(
+            'SELECT mission_id, receiver_id, order_state FROM MissionOrder WHERE idMissionOrder = ?', (order_id,)
+        ).fetchone()
+    else:
+        return bad_request('you should pass either mission_id or order_id')
+    # if order_id is not None
+    # # try:
+    # #     order_id = int(order_id)
+    # # except Exception:
+    # #     return bad_request('Parse order id error')
+    # order_info = db.execute(
+    #     'SELECT mission_id, receiver_id, order_state FROM MissionOrder WHERE idMissionOrder = ?', (order_id,)
+    # ).fetchone()
     if not order_info:
         return bad_request('No such mission')
 
