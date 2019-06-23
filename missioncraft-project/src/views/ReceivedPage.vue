@@ -4,6 +4,7 @@
       <template v-slot:header>
         <el-tabs v-model="activeTab" v-on:tab-click="handleClick">
           <el-tab-pane label="进行中" name="processing"></el-tab-pane>
+          <el-tab-pane label="已完成" name="complete"></el-tab-pane>
           <el-tab-pane label="已结束" name="over"></el-tab-pane>
           <div>
             <el-pagination
@@ -31,16 +32,7 @@
           v-bind:filter-method="filtersHandler">
         </el-table-column>
         <el-table-column prop="title" label="title"></el-table-column>
-        <el-table-column align="right" v-if="activeTab === 'processing'">
-          <template v-slot:default="scope">
-            <el-button
-              size="mini"
-              type="danger"
-              v-on:click="handleDelete(scope.$index, scope.row)">
-              放弃任务
-            </el-button>
-          </template>
-        </el-table-column>
+        <el-table-column align="right">{{ '>' }}</el-table-column>
       </el-table>
     </el-card>
     <el-dialog
@@ -96,21 +88,19 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-        <el-row v-bind:gutter="15" style="margin-top: 30px">
-          <el-col v-bind:span="5" style="padding: 8px 0 0 40px">{{ startTime }}</el-col>
-          <el-col v-bind:span="14">
-            <el-slider
-              v-bind:step="Math.floor(100 / timeDiff(startTime, endTime))"
-              v-bind:value="passTime(startTime)"
-              v-bind:format-tooltip="formatTooltip"
-              disabled>
-            </el-slider>
-          </el-col>
-          <el-col v-bind:span="5" style="padding: 8px 0 0 0">{{ endTime }}</el-col>
+        <el-row>
+          <time-slider v-bind:start-time="startTime"
+                       v-bind:end-time="endTime"
+                       v-bind:order-state="finishState"></time-slider>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button v-on:click="dialogVisible = false">关 闭</el-button>
+        <el-button
+            v-bind:disabled="cancelButtonDisable"
+            type="danger"
+            v-on:click="handleMissionCancel()">
+          放弃任务
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -118,9 +108,13 @@
 
 <script>
 import backend from '../backend'
+import TimeSlider from '../components/TimeSlider'
 
 export default {
   name: 'ReceivedPage',
+
+  components: { TimeSlider },
+
   data () {
     return {
       activeTab: 'processing',
@@ -129,13 +123,15 @@ export default {
           mission_id: '1',
           missionType: '问卷调查',
           title: '大学生就业调查',
-          status: '已结束'
+          status: '已完成',
+          finish_time: ''
         },
         {
           mission_id: '2',
           missionType: '其他任务',
           title: '快递代取',
-          status: '已结束'
+          status: '已完成',
+          finish_time: ''
         },
         {
           mission_id: '3',
@@ -147,25 +143,29 @@ export default {
           mission_id: '4',
           missionType: '问卷调查',
           title: '第三饭堂饭菜调查',
-          status: '进行中'
+          status: '进行中',
+          finish_time: ''
         },
         {
           mission_id: '5',
           missionType: '其他任务',
           title: '篮球租赁请求',
-          status: '已结束'
+          status: '进行中',
+          finish_time: ''
         },
         {
           mission_id: '6',
           missionType: '问卷调查',
           title: '大学生就业调查',
-          status: '已结束'
+          status: '已结束',
+          finish_time: ''
         },
         {
           mission_id: '7',
           missionType: '其他任务',
           title: '网上求夸找自信',
-          status: '已结束'
+          status: '进行中',
+          finish_time: ''
         }
       ],
       pageSize: 5,
@@ -185,7 +185,11 @@ export default {
       },
       emptyStr: '',
       startTime: '2019-06-09 00:00:00',
-      endTime: '2019-06-20 23:59:59'
+      endTime: '2019-06-22 23:59:59',
+      finishTime: '',
+      finishState: 0,
+      cancelMissionId: -1,
+      cancelButtonDisable: false
     }
   },
 
@@ -198,6 +202,7 @@ export default {
     backend.getRequest('order/').then((response) => {
       let orders = response.data.data['orders']
       if (orders.length !== 0) {
+        this.allMission = []
         for (let i = 0; i < orders.length; ++i) {
           let mission = {
             mission_id: '',
@@ -207,28 +212,30 @@ export default {
           }
           mission.mission_id = orders[i].mission_id
           mission.title = orders[i].title
+          mission.finish_time = orders[i].finish_time
           if (orders[i].type === 0) {
             mission.missionType = '问卷调查'
           } else {
             mission.missionType = '其他任务'
           }
-          if (orders[i].finish_time < orders[i].deadline) {
-            mission.status = '已结束'
-          } else {
+          if (orders[i].order_state === 1) {
+            mission.status = '已完成'
+          } else if (orders[i].order_state === 0) {
             mission.status = '进行中'
+          } else {
+            mission.status = '已结束'
           }
           this.allMission.push(mission)
+        }
+      }
+      for (let i = 0; i < this.allMission.length; ++i) {
+        if (this.allMission[i].status === '进行中') {
+          this.tableMission.push(this.allMission[i])
         }
       }
     }).catch(() => {
 
     })
-
-    for (let i = 0; i < this.allMission.length; ++i) {
-      if (this.allMission[i].status === '进行中') {
-        this.tableMission.push(this.allMission[i])
-      }
-    }
   },
 
   methods: {
@@ -240,8 +247,13 @@ export default {
       for (let i = 0; i < this.allMission.length; ++i) {
         if (tab.name === 'processing' && this.allMission[i].status === '进行中') {
           this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = false
+        } else if (tab.name === 'complete' && this.allMission[i].status === '已完成') {
+          this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = true
         } else if (tab.name === 'over' && this.allMission[i].status === '已结束') {
           this.tableMission.push(this.allMission[i])
+          this.cancelButtonDisable = true
         }
       }
     },
@@ -259,39 +271,75 @@ export default {
       return row[property] === value
     },
 
-    handleDelete (index, row) {
+    handleMissionCancel () {
       this.$confirm('确认放弃该任务？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.onConfirmDelete(index)
+        let index = -1
+        for (let i = 0; i < this.tableMission.length; ++i) {
+          if (this.cancelMissionId === this.tableMission[i].mission_id) {
+            index = i
+          }
+        }
+        this.onConfirmCancel(index)
+      })
+    },
+
+    onConfirmCancel (i) {
+      // to-do: refresh data in db
+      backend.putRequest('mission/', {
+        mission_id: this.cancelMissionId
+      }).then((response) => {
         this.$message({
           type: 'success',
           message: '任务放弃成功！'
         })
+        let index = this.allMission.indexOf(this.tableMission[i])
+        this.allMission[index].status = '已结束'
+        this.tableMission.splice(i, 1)
+        this.dialogVisible = false
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '任务放弃失败！'
+        })
       })
     },
 
-    onConfirmDelete (i) {
-      // to-do: refresh data in db
-      let index = this.allMission.indexOf(this.tableMission[i])
-      this.allMission.splice(index, 1)
-      this.tableMission.splice(i, 1)
-    },
-
     rowClick (row) {
+      this.finishTime = row.finish_time
+      if (row.status === '进行中') {
+        this.finishState = 0
+      } else if (row.status === '已完成') {
+        this.finishState = 1
+      } else {
+        this.finishState = 2
+      }
       // judge and jump to the detail page
       if (row.missionType === '问卷调查') {
         // to-do: route to detail page and pass some parameters to sign if the mission is over/finished or
         // if the mission is published by the one clicking the row
-
+        this.$router.push({
+          name: 'answerQuestionnaire',
+          params: {
+            showResult: true,
+            mission_id: row.mission_id
+          }
+        })
       } else {
         // dialog for other missions
-        backend.getRequest('mission/', { mission_id: row.mission_id }).then((response) => {
+        backend.getRequest('mission/', {
+          params: {
+            mission_id: row.mission_id
+          }
+        }).then((response) => {
           let mission = response.data.data['missions']
-          this.url = mission[0].avatar
-          this.username = mission[0].username
+          if (mission[0].avatar !== '') {
+            this.url = mission[0].receviver_avatar
+          }
+          this.username = mission[0].publisher_name
           this.description = mission[0].description
           this.startTime = mission[0].create_time
           this.endTime = mission[0].deadline
@@ -302,53 +350,6 @@ export default {
 
         })
       }
-    },
-
-    showInfo () {
-      console.log('show info')
-    },
-
-    formatTooltip () {
-      let startTime = Date.now()
-      let endTime = new Date(this.endTime)
-      let left = '剩余0天0时0分0秒'
-      if (endTime.getTime() > startTime) {
-        let msDiff = endTime.getTime() - startTime
-        // compute day left
-        let leftDay = Math.floor(msDiff / (1000 * 24 * 60 * 60))
-        // hours left after computing day left
-        let leaveForHour = msDiff % (1000 * 24 * 60 * 60)
-        // compute hour left
-        let leftHour = Math.floor(leaveForHour / (1000 * 60 * 60))
-        let leaveForMinute = leaveForHour % (1000 * 3600)
-        let leftMinute = Math.floor(leaveForMinute / (1000 * 60))
-        let leaveForSecond = leaveForMinute % (1000 * 60)
-        let leftSecond = Math.round(leaveForSecond / 1000)
-        left = '剩余' + leftDay + '天' + leftHour + '时' + leftMinute + '分' + leftSecond + '秒'
-      }
-      return left
-    },
-
-    timeDiff (sTime, eTime) {
-      let startTime = new Date(sTime)
-      let endTime = new Date(eTime)
-      let leftHour = 0
-      if (endTime.getTime() > startTime.getTime()) {
-        let msDiff = endTime.getTime() - startTime.getTime()
-        leftHour = Math.floor(msDiff / (1000 * 3600))
-      }
-      return leftHour
-    },
-
-    passTime (startTime) {
-      let nowTime = Date.now()
-      let sTime = new Date(startTime)
-      let passHour = 0
-      if (nowTime > sTime.getTime()) {
-        let msDiff = nowTime - sTime.getTime()
-        passHour = Math.ceil(msDiff / (1000 * 3600))
-      }
-      return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
     }
   }
 }

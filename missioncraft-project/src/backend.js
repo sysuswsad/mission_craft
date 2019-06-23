@@ -4,9 +4,9 @@ import { Message } from 'element-ui'
 
 let $axios = axios.create({
   // baseURL: 'http://qcloud.captainp.cn:5000/api/',
-  // baseURL: 'http://127.0.0.1:5000/api/',
-  // baseURL: 'http://172.18.35.89:5000/api/',
-  baseURL: 'http://172.18.34.59:5000/api/',
+  // baseURL: 'http://172.18.33.181:5000/api/',
+  baseURL: 'http://172.18.35.89:5000/api/',
+  // baseURL: 'http://172.18.34.59:5000/api/',
   timeout: 5000,
   headers: { 'Content-Type': 'application/json' }
 })
@@ -109,5 +109,9 @@ export default {
 
   putRequest (url, params, config = {}) {
     return $axios.put(url, params, config)
+  },
+
+  deleteRequest (url, config={}) {
+    return $axios.delete(url, config)
   }
 }

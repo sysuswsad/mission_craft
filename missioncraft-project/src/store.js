@@ -37,8 +37,8 @@ export default new Vuex.Store({
       Vue.set(state, userInfo, { ...info })
     },
 
-    updateMessage (state, newMsg) {
-      Vue.set(state, message, [...newMsg])
+    updateMessage (state, payload) {
+      state.message = payload.message
     },
 
     logout (state) {
