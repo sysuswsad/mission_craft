@@ -327,8 +327,6 @@ export default {
       }
       // judge and jump to the detail page
       if (row.missionType === '问卷调查') {
-        // to-do: route to detail page and pass some parameters to sign if the mission is over/finished or
-        // if the mission is published by the one clicking the row
         // dialog for other missions
         if (this.finishState === 0) {
           this.$router.push({
