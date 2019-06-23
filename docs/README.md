@@ -16,7 +16,7 @@
    - 6.3 [Domian Models](https://sysuswsad.github.io/mission_craft/DomainModels.html)（领域模型）
    - 6.4 [State Models](https://sysuswsad.github.io/mission_craft/StateModel.html)（状态模型）
    - 6.5  [System Sequence](https://sysuswsad.github.io/mission_craft/SystemSequenceDiagram.html)（功能模型）
-   - 6.6 Supplementary Requirements（补充需求）
+   - 6.6 [Supplementary Requirements](https://sysuswsad.github.io/mission_craft/SR.html)（补充需求）
 
 7. Design（设计说明书）
    - 7.1 [UI design](https://sysuswsad.github.io/mission_craft/UI_design.html)（界面设计）
