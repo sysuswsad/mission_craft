@@ -96,6 +96,12 @@ export default new Vuex.Store({
 
     setLogin (state, l) {
       state.isLogin = l
+    },
+
+    changeInfo (state, payload) {
+      state.userInfo.username = payload.username
+      state.userInfo.school = payload.school
+      state.userInfo.grade = payload.grade
     }
 
   },

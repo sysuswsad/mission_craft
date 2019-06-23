@@ -15,21 +15,21 @@
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item label="用户名">
-                  <el-input v-model="username" v-bind:disabled="!canEdit"></el-input>
+                  <el-input v-model="interUsername" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item label="年级">
-                  <el-input v-model="grade" v-bind:disabled="!canEdit"></el-input>
+                  <el-input v-model="interGrade" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item label="学院">
-                  <el-input v-model="school" v-bind:disabled="!canEdit"></el-input>
+                  <el-input v-model="interSchool" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -43,13 +43,12 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="修改密码">
-          <el-form v-bind:model="passwordSet" label-width="100px" status-icon>
+          <el-form v-bind:model="passwordSet" label-width="100px" status-icon ref="passwordSet" v-bind:rules="rules">
             <el-row>
               <el-col v-bind:span="12">
                 <el-form-item
                   label="旧密码"
-                  prop="oldPassword"
-                  v-bind:rules="{required: true, message: '请输入旧密码', trigger: 'blur'}">
+                  prop="oldPassword">
                   <el-input v-model="passwordSet.oldPassword" placeholder="旧密码" type="password"></el-input>
                 </el-form-item>
               </el-col>
@@ -58,8 +57,7 @@
               <el-col v-bind:span="12">
                 <el-form-item
                   label="新密码"
-                  prop="newPassword"
-                  v-bind:rules="{required: true, message: '请输入新密码', trigger: 'blur'}">
+                  prop="newPassword">
                   <el-input v-model="passwordSet.newPassword" placeholder="新密码" type="password"></el-input>
                 </el-form-item>
               </el-col>
@@ -68,14 +66,13 @@
               <el-col v-bind:span="12">
                 <el-form-item
                   label="确认密码"
-                  prop="confirmPassword"
-                  v-bind:rules="{required: true, message: '请再次确认密码', trigger: 'blur'}">
+                  prop="confirmPassword">
                   <el-input v-model="passwordSet.confirmPassword" placeholder="确认密码" type="password"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px" v-on:click="changePassword">修改</el-button>
+              <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px" v-on:click="changePassword('passwordSet')">修改</el-button>
             </el-row>
           </el-form>
         </el-tab-pane>
@@ -103,7 +100,29 @@
 import backend from '../backend'
 export default {
   name: 'UserInfoPage',
+  created () {
+    if (this.$cookies.isKey('u-token')) {
+      backend.getRequest('user/')
+        .then((response) => {
+          this.interUsername = response.data.data['username']
+          this.interSchool = response.data.data['school']
+          this.interGrade = response.data.data['grade']
+        })
+        .catch(() => {
+        })
+    } else {
+      this.$router.push({ name: 'login' })
+    }
+  },
+
   data () {
+    let validatePass = (rule, value, callback) => {
+      if (value !== this.passwordSet.newPassword) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
       defaultUrl: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
       canEdit: false,
@@ -115,57 +134,92 @@ export default {
         oldPassword: '',
         newPassword: '',
         confirmPassword: ''
+      },
+      rules: {
+        newPassword: [
+          {
+            required: true,
+            message: '密码不能为空'
+          },
+          {
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\s\S]{8,16}$/,
+            message: '密码至少包含1个大写字母，1个小写字母和1个数字的8位串'
+          }
+        ],
+        confirmPassword: [
+          {
+            required: true,
+            message: '请再次输入密码',
+            trigger: 'blur'
+          },
+          {
+            validator: validatePass,
+            trigger: 'change'
+          }
+        ]
       }
     }
   },
   methods: {
     editButtonClick () {
       this.canEdit = !this.canEdit
-      this.interUsername = this.username
-      this.interGrade = this.grade
-      this.interSchool = this.school
     },
     cancelButtonClick () {
       this.canEdit = !this.canEdit
-      this.username = this.interUsername
-      this.grade = this.interGrade
-      this.school = this.interSchool
+      this.interUsername = this.$store.state.userInfo.username
+      this.interGrade = this.$store.state.userInfo.grade
+      this.interSchool = this.$store.state.userInfo.school
     },
     handleAvatarSuccess (res, file) {
       this.url = res.data.avatar
       this.$message.success('头像上传成功')
     },
     beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M
+      return isLt2M
     },
     submitInfo () {
       backend.putRequest('user/',
         {
-          username: this.username,
-          grade: this.grade,
-          school: this.school
+          username: this.interUsername,
+          grade: this.interGrade,
+          school: this.interSchool
         })
         .then((response) => {
           this.$message.success('用户信息修改成功！')
+          this.$store.commit('changeInfo', { 'username': this.interUsername, 'school': this.interSchool, 'grade': this.interGrade })
+          this.canEdit = !this.canEdit
         })
         .catch(function (error) {
           console.log(error)
-          this.username = this.interUsername
-          this.grade = this.interGrade
-          this.school = this.interSchool
           this.$message.error('用户信息修改失败！')
         })
     },
-    changePassword () {
+    changePassword (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          backend.postRequest('user/',
+            { username: this.info.username,
+              sid: this.info.studentId,
+              email: this.info.email,
+              password: this.info.password,
+              code: this.info.code
+            })
+            .then((response) => {
+              this.$router.push({ name: 'login' })
+              this.$message.success('注册成功！')
+            })
+            .catch(() => {
+            })
+        } else {
+          alert('表单错误')
+          return false
+        }
+      })
       backend.postRequest('password/',
         {
           username: this.username,
@@ -182,30 +236,6 @@ export default {
   },
 
   computed: {
-    school: {
-      get () {
-        return this.$store.state.userInfo.school
-      },
-      set (val) {
-        this.$store.state.userInfo.school = val
-      }
-    },
-    grade: {
-      get () {
-        return this.$store.state.userInfo.grade
-      },
-      set (val) {
-        this.$store.state.userInfo.grade = val
-      }
-    },
-    username: {
-      get () {
-        return this.$store.state.userInfo.username
-      },
-      set (val) {
-        this.$store.state.userInfo.username = val
-      }
-    },
     url: {
       get () {
         return this.$store.state.userInfo.avatar

@@ -10,7 +10,7 @@
             <el-input v-model="info.username" placeholder="用户名/邮箱" prefix-icon="el-icon-s-custom"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" v-model="info.password" placeholder="密码" autocomplete="off" prefix-icon="el-icon-lock"></el-input>
+            <el-input type="password" v-model="info.password" placeholder="密码" autocomplete="off" prefix-icon="el-icon-lock" v-on:keyup.enter="login"></el-input>
           </el-form-item>
           <div id="func-container">
             <el-row>
@@ -54,10 +54,6 @@ export default {
             required: true,
             message: '请输入密码',
             trigger: 'blur'
-          },
-          {
-            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\s\S]{8,16}$/,
-            message: '至少8位且包含大写字母，小写字母和数字各一个'
           }
         ]
       }
