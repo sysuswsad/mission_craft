@@ -88,8 +88,14 @@
             <div class="vertical-divider"></div>
           </el-col>
           <el-col v-bind:span="14">
-            <h1>任务详情</h1>
-            <el-col v-bind:span="20" v-bind:offset="2">{{ description }}</el-col>
+            <el-row>
+              <h1>任务详情</h1>
+              <el-col v-bind:span="4"><i class="el-icon-document"></i> 任务描述：</el-col>
+              <el-col v-bind:span="20">{{ description }}</el-col>
+            </el-row>
+            <el-row>
+              <p><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
+            </el-row>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -201,7 +207,8 @@ export default {
       missionState: 0,
       cancelMissionId: -1,
       cancelButtonDisable: false,
-      finishOrderId: -1
+      finishOrderId: -1,
+      bounty: 0
     }
   },
 
@@ -369,14 +376,14 @@ export default {
         // if the mission is published by the one clicking the row
         // get the params by using 'this.$route.params.mission_id'
         this.$router.push({
-          name: 'answerQuestionnaire',
+          name: 'statistic',
           params: {
-            showResult: true,
-            mission_id: row.mission_id
+            id: row.mission_id
           }
         })
       } else {
         // dialog for other missions
+        this.missionTitle = row.title
         backend.getRequest('mission/', {
           params: {
             personal: 1,
@@ -404,7 +411,7 @@ export default {
             this.description = mission[0].description
             this.startTime = mission[0].create_time
             this.endTime = mission[0].deadline
-            this.missionTitle = mission[0].title
+            this.bounty = mission[0].bounty
           }
           this.dialogVisible = true
         }).catch(() => {
