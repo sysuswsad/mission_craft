@@ -102,10 +102,14 @@ export default {
       return leftHour
     },
 
-    passTime (startTime, endTime, finishTime = '') {
+    passTime (startTime, endTime, finishTime) {
+      let sTime = new Date(startTime)
+      let nowTime = Date.now()
+      let eTime = new Date(endTime)
+      console.log(finishTime)
       if (this.finNum !== 0 || this.orderState === 1) {
+        console.log(finishTime)
         let finTime = new Date(finishTime)
-        let sTime = new Date(startTime)
         let passHour = 0
         if (finTime.getTime() > sTime.getTime()) {
           let msDiff = finTime.getTime() - sTime.getTime()
@@ -115,8 +119,11 @@ export default {
       } else if ((this.missionState === 1 && this.finNum === 0) || this.orderState === 2) {
         return 100
       }
-      let nowTime = Date.now()
-      let sTime = new Date(startTime)
+
+      if (nowTime >= eTime.getTime()) {
+        return 100
+      }
+
       let passHour = 0
       if (nowTime > sTime.getTime()) {
         let msDiff = nowTime - sTime.getTime()

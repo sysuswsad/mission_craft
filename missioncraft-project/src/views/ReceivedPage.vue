@@ -83,15 +83,22 @@
             <div class="vertical-divider"></div>
           </el-col>
           <el-col v-bind:span="14">
-            <h1>任务详情</h1>
-            <el-col v-bind:span="20" v-bind:offset="2">{{ description }}</el-col>
+            <el-row>
+              <h1>任务详情</h1>
+              <el-col v-bind:span="4"><i class="el-icon-document"></i> 任务描述：</el-col>
+              <el-col v-bind:span="20">{{ description }}</el-col>
+            </el-row>
+            <el-row>
+              <p><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
+            </el-row>
           </el-col>
         </el-row>
         <el-divider></el-divider>
         <el-row>
           <time-slider v-bind:start-time="startTime"
                        v-bind:end-time="endTime"
-                       v-bind:order-state="finishState"></time-slider>
+                       v-bind:order-state="finishState"
+                       v-bind:finish-time="finishTime"></time-slider>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -120,6 +127,7 @@ export default {
       activeTab: 'processing',
       allMission: [
         {
+          order_id: '1',
           mission_id: '1',
           missionType: '问卷调查',
           title: '大学生就业调查',
@@ -127,6 +135,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '2',
           mission_id: '2',
           missionType: '其他任务',
           title: '快递代取',
@@ -134,12 +143,14 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '3',
           mission_id: '3',
           missionType: '其他任务',
           title: '大学英语线下辅导',
           status: '已结束'
         },
         {
+          order_id: '4',
           mission_id: '4',
           missionType: '问卷调查',
           title: '第三饭堂饭菜调查',
@@ -147,6 +158,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '5',
           mission_id: '5',
           missionType: '其他任务',
           title: '篮球租赁请求',
@@ -154,6 +166,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '6',
           mission_id: '6',
           missionType: '问卷调查',
           title: '大学生就业调查',
@@ -161,6 +174,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '7',
           mission_id: '7',
           missionType: '其他任务',
           title: '网上求夸找自信',
@@ -186,10 +200,11 @@ export default {
       emptyStr: '',
       startTime: '2019-06-09 00:00:00',
       endTime: '2019-06-22 23:59:59',
-      finishTime: '',
+      finishTime: '2019-06-19 00:00:00',
       finishState: 0,
       cancelMissionId: -1,
-      cancelButtonDisable: false
+      cancelButtonDisable: false,
+      bounty: 0
     }
   },
 
@@ -205,11 +220,13 @@ export default {
         this.allMission = []
         for (let i = 0; i < orders.length; ++i) {
           let mission = {
+            order_id: '',
             mission_id: '',
             missionType: '',
             title: '',
             status: ''
           }
+          mission.order_id = orders[i].order_id
           mission.mission_id = orders[i].mission_id
           mission.title = orders[i].title
           mission.finish_time = orders[i].finish_time
@@ -309,7 +326,7 @@ export default {
     },
 
     rowClick (row) {
-      this.finishTime = row.finish_time
+      // this.finishTime = row.finish_time
       if (row.status === '进行中') {
         this.finishState = 0
       } else if (row.status === '已完成') {
@@ -319,17 +336,35 @@ export default {
       }
       // judge and jump to the detail page
       if (row.missionType === '问卷调查') {
-        // to-do: route to detail page and pass some parameters to sign if the mission is over/finished or
-        // if the mission is published by the one clicking the row
-        this.$router.push({
-          name: 'answerQuestionnaire',
-          params: {
-            showResult: true,
-            mission_id: row.mission_id
-          }
-        })
+        // dialog for other missions
+        if (this.finishState === 0) {
+          this.$router.push({
+            name: 'answerQuestionnaire',
+            params: {
+              missionId: row.mission_id,
+              orderId: row.order_id
+            }
+          })
+        } else if (this.finishState === 1) {
+          // this.$message('您已完成该问卷，报酬为' + this.bounty)
+          backend.getRequest('mission/', {
+            params: {
+              mission_id: row.mission_id
+            }
+          }).then((response) => {
+            let mission = response.data.data['missions']
+            this.bounty = mission[0].bounty
+
+            this.$message('您已完成该问卷，报酬为' + this.bounty)
+          }).catch(() => {
+
+          })
+        } else {
+          this.$message('无效问卷')
+        }
       } else {
         // dialog for other missions
+        this.missionTitle = row.title
         backend.getRequest('mission/', {
           params: {
             mission_id: row.mission_id
@@ -343,7 +378,7 @@ export default {
           this.description = mission[0].description
           this.startTime = mission[0].create_time
           this.endTime = mission[0].deadline
-          this.missionTitle = mission[0].title
+          this.bounty = mission[0].bounty
           this.dialogVisible = true
           // contact way
         }).catch(() => {

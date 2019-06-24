@@ -138,7 +138,8 @@ export default {
         // to-do: refresh data in db
         notification.push({ 'n_id': row.n_id, 'has_read': 1 })
         backend.putRequest('notification/', {
-          notification: notification
+          notification: notification,
+          type: 0
         }).then((response) => {
           row.has_read = '✔'
           // this.$emit('markMessage', 1)
@@ -160,7 +161,8 @@ export default {
       }
       // to-do: refresh data in db
       backend.putRequest('notification/', {
-        notification: notification
+        notification: notification,
+        type: 0
       }).then((response) => {
         for (let i = 0; i < this.multipleSelection.length; ++i) {
           if (this.multipleSelection[i].has_read === '') {
@@ -189,7 +191,8 @@ export default {
 
       // to-do: refresh data in db
       backend.putRequest('notification/', {
-        notification: notification
+        notification: notification,
+        type: 0
       }).then((response) => {
         for (let i = 0; i < this.multipleSelection.length; ++i) {
           if (this.multipleSelection[i].has_read === '✔') {
@@ -222,14 +225,13 @@ export default {
     onConfirmDelete () {
       let notification = []
       for (let i = 0; i < this.multipleSelection.length; ++i) {
-        notification.push({ 'n_id': this.multipleSelection[i].n_id })
+        notification.push(this.multipleSelection[i].n_id)
       }
 
       // to-do: refresh data in db
-      backend.deleteRequest('notification', {
-        params: {
-          notification: notification
-        }
+      backend.putRequest('notification/', {
+        notification: notification,
+        type: 1
       }).then((response) => {
         this.$message({
           type: 'success',
@@ -249,7 +251,6 @@ export default {
           message: '删除失败！'
         })
       })
-      console.log('delete')
     },
 
     cancelSelection () {
@@ -280,8 +281,10 @@ export default {
           // to-do: refresh data in db
           notification.push({ 'n_id': row.n_id, 'has_read': 1 })
           backend.putRequest('notification/', {
-            notification: notification
+            notification: notification,
+            type: 0
           }).then((response) => {
+            row.has_read = '✔'
             this.$store.commit('updateMessage', {
               message: this.messageData
             })
