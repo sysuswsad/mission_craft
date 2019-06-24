@@ -91,7 +91,7 @@
               <el-col v-bind:span="23" v-bind:offset="1">{{ description }}</el-col>
             </el-row>
             <el-row>
-              <p style="font-weight: bold"><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
+              <p style="font-weight: bold"><i class="el-icon-coin"></i>&nbsp;任务报酬：￥{{ bounty }}</p>
             </el-row>
           </el-col>
         </el-row>
@@ -372,14 +372,5 @@ export default {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-  }
-
-  .username-container {
-    margin: 20px 0 0 0;
-    font-weight: bold;
-  }
-
-  .contact-row-wrapper {
-    margin-bottom: 10px;
   }
 </style>
