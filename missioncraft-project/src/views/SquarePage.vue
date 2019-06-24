@@ -197,17 +197,11 @@
 
         <el-divider></el-divider>
 
-        <el-row style="margin-top: 40px" type="flex" align="middle">
-          <el-col v-bind:span="5" style="text-align: center">{{ missionProfile.createTime }}</el-col>
-          <el-col v-bind:span="14">
-            <el-slider
-              v-bind:step="Math.floor(100 / timeDiff(missionProfile.createTime, missionProfile.deadline))"
-              v-bind:value="passTime(missionProfile.createTime, missionProfile.deadline)"
-              v-bind:format-tooltip="formatTooltip"
-              disabled>
-            </el-slider>
-          </el-col>
-          <el-col v-bind:span="5" style="text-align: center">{{ missionProfile.deadline }}</el-col>
+        <el-row style="margin-top: 40px">
+          <TimeSlider
+            v-bind:start-time="missionProfile.createTime"
+            v-bind:end-time="missionProfile.deadline">
+          </TimeSlider>
         </el-row>
 
       </template>
@@ -218,9 +212,10 @@
 <script>
 import VueWaterfallEasy from 'vue-waterfall-easy/src/vue-waterfall-easy/vue-waterfall-easy'
 import $backend from '../backend'
+import TimeSlider from '../components/TimeSlider'
 export default {
   name: 'SquarePage',
-  components: { VueWaterfallEasy },
+  components: {TimeSlider, VueWaterfallEasy },
 
   data () {
     function validateEmpty (_this) {
@@ -335,8 +330,13 @@ export default {
           }).then(() => {
             this.profileVisible = false
 
-            // To do
-            this.$router.push('aq')
+            this.$router.push({
+              name: 'answerQuestionnaire',
+              params: {
+                missionId: this.missionProfile.id,
+                orderId: response.data.data.order_id
+              }
+            })
           })
         }).catch(error => {
           console.log(error)
@@ -390,52 +390,7 @@ export default {
           this.$refs.waterfall.waterfallOver()
         }
       })
-    },
-
-    // --- same to ReceivedPage ---
-    formatTooltip () {
-      let startTime = Date.now()
-      let endTime = new Date(this.endTime)
-      let left = '剩余0天0时0分0秒'
-      if (endTime.getTime() > startTime) {
-        let msDiff = endTime.getTime() - startTime
-        // compute day left
-        let leftDay = Math.floor(msDiff / (1000 * 24 * 60 * 60))
-        // hours left after computing day left
-        let leaveForHour = msDiff % (1000 * 24 * 60 * 60)
-        // compute hour left
-        let leftHour = Math.floor(leaveForHour / (1000 * 60 * 60))
-        let leaveForMinute = leaveForHour % (1000 * 3600)
-        let leftMinute = Math.floor(leaveForMinute / (1000 * 60))
-        let leaveForSecond = leaveForMinute % (1000 * 60)
-        let leftSecond = Math.round(leaveForSecond / 1000)
-        left = '剩余' + leftDay + '天' + leftHour + '时' + leftMinute + '分' + leftSecond + '秒'
-      }
-      return left
-    },
-
-    timeDiff (sTime, eTime) {
-      let startTime = new Date(sTime)
-      let endTime = new Date(eTime)
-      let leftHour = 0
-      if (endTime.getTime() > startTime.getTime()) {
-        let msDiff = endTime.getTime() - startTime.getTime()
-        leftHour = Math.floor(msDiff / (1000 * 3600))
-      }
-      return leftHour
-    },
-
-    passTime (startTime, endTime) {
-      let nowTime = Date.now()
-      let sTime = new Date(startTime)
-      let passHour = 0
-      if (nowTime > sTime.getTime()) {
-        let msDiff = nowTime - sTime.getTime()
-        passHour = Math.ceil(msDiff / (1000 * 3600))
-      }
-      return passHour * (100.0 / this.timeDiff(startTime, endTime))
     }
-    // --- ---
   },
 
   computed: {

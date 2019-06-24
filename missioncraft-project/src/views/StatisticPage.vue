@@ -193,7 +193,7 @@ export default {
   }
 
   // beforeRouteEnter (to, from, next) {
-  //   if (from.name.localeCompare('publication') === 0) {
+  //   if (from.name.localeCompare('published') === 0) {
   //     next()
   //   } else {
   //     next(false)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row style="margin-top: 40px" type="flex" align="middle">
+    <el-row type="flex" align="middle">
       <el-col v-bind:span="5" style="text-align: center">{{ startTime }}</el-col>
       <el-col v-bind:span="14">
         <el-slider
