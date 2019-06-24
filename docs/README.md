@@ -28,7 +28,7 @@
 8. 生产规范与指南
    - 8.1 代码规范
    - 8.2 [REST API设计规范](https://sysuswsad.github.io/mission_craft/REST_API.html)
-   - 8.3 架构设计，详细设计（BCE方法）到应用程序框架映射框架映射指南
+   - 8.3 [架构设计，详细设计（BCE方法）到应用程序框架映射框架映射指南](https://sysuswsad.github.io/mission_craft/architecture.html)
    - 8.4 部署说明
 
 9. 成品展示
