@@ -44,6 +44,8 @@ export default {
     }
   },
   created: function () {
+    console.log(this.$route.params.missionId)
+    console.log(this.$route.params.orderId)
     backend.getRequest('mission/', {
       mission_id: this.$route.params.missionId
     }).then((response) => {
@@ -63,17 +65,10 @@ export default {
     summit () {
       console.log(this.answers)
       backend.putRequest('order/', {
-        mission_id: this.$route.params.orderId
+        order_id: this.$route.params.orderId,
+        answers: this.answers
       }).then((response) => {
-        this.questionnaire.questions = response.data.data['mission']['problems']
-        this.questionnaire.title = response.data.data['mission']['title']
-        for (let i = 0; i < this.questionnaire.questions.length; i++) {
-          if (this.questionnaire.questions[i].type === 1) {
-            this.answers.push([])
-          } else {
-            this.answers.push('')
-          }
-        }
+        console.log(response)
       }).catch(() => {
       })
     }
