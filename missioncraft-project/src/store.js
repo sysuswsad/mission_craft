@@ -39,8 +39,8 @@ export default new Vuex.Store({
       Vue.set(state, userInfo, { ...info })
     },
 
-    updateMessage (state, newMsg) {
-      state.message = newMsg.newMsg.msg
+    updateMessage (state, payload) {
+      state.message = payload.message
     },
 
     addMission (state, payload) {
