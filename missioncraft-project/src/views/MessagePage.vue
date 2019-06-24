@@ -246,7 +246,6 @@ export default {
           message: this.messageData
         })
       }).catch(() => {
-        console.log(notification)
         this.$message({
           type: 'error',
           message: '删除失败！'
