@@ -5,8 +5,10 @@
       circle
       class="back-button"
       icon="el-icon-back"
-      v-on:click="backToPrev"></el-button>
-    <el-card>
+      v-on:click="backToPrev">
+    </el-button>
+
+    <el-card v-loading="loadData">
 
       <template v-slot:header>
         <h2 style="text-align: center">问卷标题 统计详情</h2>
@@ -80,6 +82,7 @@ export default {
 
   data () {
     return {
+      loadData: true,
       missionId: -1,
       statistic: [],
       textPageRecorder: {}
@@ -167,7 +170,7 @@ export default {
         personal: 1,
         mission_id: this.$route.params.id
       }
-    }).then((response) => {
+    }).then(response => {
       this.statistic = this.statistic.concat(response.data.data.missions[0].problems)
 
       // initialize the current pages of areas of text problems
@@ -176,11 +179,21 @@ export default {
           this.$set(this.textPageRecorder, index, 1)
         }
       }
+
+      this.loadData = false
+    }).catch(error => {
+      this.$alert('发生了错误！请稍后重试', '错误', {
+        confirmButtonText: '返回',
+        type: 'error',
+        callback: action => {
+          this.$router.go(-1)
+        }
+      })
     })
   }
 
   // beforeRouteEnter (to, from, next) {
-  //   if (from.name.localeCompare('publication') === 0) {
+  //   if (from.name.localeCompare('published') === 0) {
   //     next()
   //   } else {
   //     next(false)

@@ -4,10 +4,9 @@ import { Message } from 'element-ui'
 
 let $axios = axios.create({
   // baseURL: 'http://qcloud.captainp.cn:5000/api/',
-  // baseURL: 'http://172.18.33.181:5000/api/',
-  // baseURL: 'http://172.18.35.89:5000/api/',
-  baseURL: 'http://172.18.34.59:5000/api/',
   // baseURL: 'http://127.0.0.1:5000/api/',
+  baseURL: 'http://172.18.35.89:5000/api/',
+  // baseURL: 'http://172.18.34.59:5000/api/',
   timeout: 5000,
   headers: { 'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
@@ -29,9 +28,11 @@ $axios.interceptors.request.use(config => {
 $axios.interceptors.response.use(response => {
   return response
 }, error => {
+  console.log(error)
   console.log(`error keys: ${Object.keys(error)}`)
   console.log(`error.response keys: ${Object.keys(error.response)}`)
   console.log(`error.response.data keys: ${Object.keys(error.response.data)}`)
+  console.log(error.response.data.message)
   switch (parseInt(error.response.data.message)) {
     case 100:
       Message.warning('该用户名已被注册')

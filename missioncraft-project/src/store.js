@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import $backend from 'backend'
+import $backend from './backend'
+import { Message } from 'element-ui'
 
 Vue.use(Vuex)
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
       username: '',
       wechat: ''
     },
+    missionInfo: [],
     message: [],
     isLogin: false
   },
@@ -37,8 +39,12 @@ export default new Vuex.Store({
       Vue.set(state, userInfo, { ...info })
     },
 
-    updateMessage (state, payload) {
-      state.message = payload.message
+    updateMessage (state, newMsg) {
+      state.message = newMsg.newMsg.msg
+    },
+
+    addMission (state, payload) {
+      state.missionInfo = state.missionInfo.concat(payload.missionInfo.reverse())
     },
 
     logout (state) {
@@ -112,6 +118,35 @@ export default new Vuex.Store({
   actions: {
     getMessageRemotely (context) {
 
+    },
+
+    fetchMissionRemotely ({ commit, state }, payload) {
+      let personal = 0
+      let noMoreMissions = false
+
+      return $backend.getRequest('mission/', {
+        params: {
+          create_time: payload.create_time,
+          limit: payload.limit,
+          personal: personal
+        }
+      }).then(response => {
+        if (response.data.data.missions.length > 0) {
+          commit('addMission', {
+            missionInfo: response.data.data.missions
+          })
+        }
+
+        if (response.data.data.missions.length === 0) {
+          noMoreMissions = true
+        }
+
+        return noMoreMissions
+      }).catch(err => {
+        console.log(err.response.data.message)
+        Message.error('出错了！请刷新重试')
+        return noMoreMissions
+      })
     }
   }
 })
