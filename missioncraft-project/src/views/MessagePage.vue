@@ -8,7 +8,7 @@
         <el-button size="mini" v-on:click="cancelSelection" v-bind:disabled="multipleSelection.length === 0">取消选择</el-button>
         <el-pagination
           class="pagination-container" layout="prev, pager, next, sizes, total, jumper"
-          v-bind:page-sizes="[5, 10, 20, 30]"
+          v-bind:page-sizes="[20, 50, 100]"
           v-bind:page-size="pageSize"
           v-bind:current-page.sync="currentPage"
           v-bind:total="messageData.length"
@@ -65,64 +65,9 @@ export default {
   name: 'MessagePage',
   data () {
     return {
-      messageData: [
-        {
-          n_id: '1',
-          has_read: '✔',
-          create_time: '2016-05-02 00:00:12',
-          message: '您有新的任务。'
-        },
-        {
-          n_id: '2',
-          has_read: '',
-          create_time: '2016-05-04 00:00:12',
-          message: 'xxx任务发布成功。'
-        },
-        {
-          n_id: '3',
-          has_read: '✔',
-          create_time: '2016-05-01 00:00:12',
-          message: '你发布的xxx任务已完成，请确认。'
-        },
-        {
-          n_id: '4',
-          has_read: '',
-          create_time: '2016-05-03 00:00:12',
-          message: '您接收的xxx任务已完成，闲钱已到账。'
-        },
-        {
-          n_id: '5',
-          has_read: '',
-          create_time: '2016-05-04 00:00:12',
-          message: '您接收的xxx任务已完成，闲钱已到账。'
-        },
-        {
-          n_id: '6',
-          has_read: '',
-          create_time: '2016-05-06 00:00:12',
-          message: '您接收的xxx任务已完成，闲钱已到账。'
-        },
-        {
-          n_id: '7',
-          has_read: '',
-          create_time: '2016-05-05 00:00:12',
-          message: '您接收的xxx任务已完成，闲钱已到账。'
-        },
-        {
-          n_id: '8',
-          has_read: '',
-          create_time: '2016-05-07 00:00:12',
-          message: '您接收的xxx任务已完成，闲钱已到账。'
-        },
-        {
-          n_id: '9',
-          has_read: '',
-          create_time: '2016-05-08 00:00:12',
-          message: '您接收的xxx任务已完成，闲钱已到账。'
-        }
-      ],
+      messageData: [],
       multipleSelection: [],
-      pageSize: 5,
+      pageSize: 20,
       currentPage: 1,
       expandRows: []
     }
@@ -135,7 +80,7 @@ export default {
     handleExpendChange (row, expandedRows) {
       if (row.has_read === '') {
         let notification = []
-        // to-do: refresh data in db
+
         notification.push({ 'n_id': row.n_id, 'has_read': 1 })
         backend.putRequest('notification/', {
           notification: notification,
@@ -159,7 +104,7 @@ export default {
           notification.push({ 'n_id': this.multipleSelection[i].n_id, 'has_read': 1 })
         }
       }
-      // to-do: refresh data in db
+
       backend.putRequest('notification/', {
         notification: notification,
         type: 0
@@ -189,7 +134,6 @@ export default {
         }
       }
 
-      // to-do: refresh data in db
       backend.putRequest('notification/', {
         notification: notification,
         type: 0
@@ -228,7 +172,6 @@ export default {
         notification.push(this.multipleSelection[i].n_id)
       }
 
-      // to-do: refresh data in db
       backend.putRequest('notification/', {
         notification: notification,
         type: 1
