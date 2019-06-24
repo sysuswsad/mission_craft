@@ -20,31 +20,31 @@
         </el-tabs>
       </template>
       <el-table
-          class="mission-table"
-          stripe
-          row-key="mission_id"
-          v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)"
-          v-on:row-click="rowClick">
+        class="mission-table"
+        stripe
+        row-key="mission_id"
+        v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)"
+        v-on:row-click="rowClick">
         <el-table-column
-            label="任务类型"
-            prop="missionType"
-            v-bind:filters="[{text:'问卷调查', value: '问卷调查'}, {text: '其他任务', value: '其他任务'}]"
-            v-bind:filter-method="filtersHandler"></el-table-column>
+          label="任务类型"
+          prop="missionType"
+          v-bind:filters="[{text:'问卷调查', value: '问卷调查'}, {text: '其他任务', value: '其他任务'}]"
+          v-bind:filter-method="filtersHandler"></el-table-column>
         <el-table-column prop="title" label="title"></el-table-column>
         <el-table-column align="right"> {{ '>' }}
         </el-table-column>
       </el-table>
     </el-card>
     <el-dialog
-        width="70%"
-        center
-        v-bind:visible.sync="dialogVisible">
+      width="70%"
+      center
+      v-bind:visible.sync="dialogVisible">
       <template v-slot:title>
         <h2>{{ missionTitle }}</h2>
       </template>
       <el-divider></el-divider>
       <div class="detail-container">
-        <el-row type="flex">
+        <el-row type="flex" v-if="isQuestionnaire === false">
           <el-col v-bind:span="8">
             <el-row>
               <h1>领取者</h1>
@@ -98,6 +98,20 @@
             </el-row>
           </el-col>
         </el-row>
+        <el-row type="flex" v-else>
+          <el-col v-bind:span="8" style="text-align: center">
+            <p><i class="el-icon-user-solid"></i> 领取人数：{{ rcv_num }}</p>
+          </el-col>
+          <el-col v-bind:span="8" style="text-align: center">
+            <p><i class="el-icon-user-solid"></i> 完成人数：{{ fin_num }}</p>
+          </el-col>
+          <el-col v-bind:span="8" style="text-align: center">
+            <el-button
+              v-if="isQuestionnaire === true"
+              type="primary"
+              v-on:click="toStatisticPage(missionId)">查看统计结果</el-button>
+          </el-col>
+        </el-row>
         <el-divider></el-divider>
         <el-row>
           <time-slider
@@ -110,17 +124,17 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-row>
-          <el-col v-bind:span="18" align="right">
+          <el-col v-bind:span="12">
             <el-button
-                v-bind:disabled="cancelButtonDisable"
-                type="warning"
-                v-on:click="handleMissionFinish()">确认完成</el-button>
+              v-bind:disabled="cancelButtonDisable"
+              type="success"
+              v-on:click="handleMissionFinish()">确认完成</el-button>
           </el-col>
-          <el-col v-bind:span="6">
+          <el-col v-bind:span="12">
             <el-button
-                v-bind:disabled="cancelButtonDisable"
-                type="danger"
-                v-on:click="handleMissionCancel()">取消任务</el-button>
+              v-bind:disabled="cancelButtonDisable"
+              type="danger"
+              v-on:click="handleMissionCancel()">取消任务</el-button>
           </el-col>
         </el-row>
       </span>
@@ -166,7 +180,9 @@ export default {
       cancelMissionId: -1,
       cancelButtonDisable: false,
       finishOrderId: -1,
-      bounty: 0
+      bounty: 0,
+      isQuestionnaire: false,
+      missionId: 0
     }
   },
 
@@ -251,6 +267,15 @@ export default {
       return row[property] === value
     },
 
+    toStatisticPage (missionId) {
+      this.$router.push({
+        name: 'statistic',
+        params: {
+          id: missionId
+        }
+      })
+    },
+
     handleMissionCancel () {
       this.$confirm('确认取消该任务？', '提示', {
         confirmButtonText: '确定',
@@ -327,15 +352,36 @@ export default {
 
     rowClick (row) {
       // judge and jump to the detail page
+      this.missionId = row.mission_id
       if (row.missionType === '问卷调查') {
+        this.isQuestionnaire = true
         // get the params by using 'this.$route.params.id'
-        this.$router.push({
-          name: 'statistic',
+        this.missionTitle = row.title
+        backend.getRequest('mission/', {
           params: {
-            id: row.mission_id
+            personal: 1,
+            mission_id: row.mission_id
           }
+        }).then((response) => {
+          let mission = response.data.data['missions']
+          if (mission.length !== 0) {
+            this.rcv_num = mission[0].rcv_num
+            if (mission[0].type === 0 && this.rcv_num !== 0) {
+              this.fin_num = mission[0].fin_num
+              this.finishTime = mission[0].finish_time
+            }
+            this.missionState = mission[0].state
+            this.cancelMissionId = mission[0].idMissionInfo
+            this.finishOrderId = mission[0].order_id
+            this.startTime = mission[0].create_time
+            this.endTime = mission[0].deadline
+          }
+          this.dialogVisible = true
+        }).catch(() => {
+
         })
       } else {
+        this.isQuestionnaire = false
         // dialog for other missions
         this.missionTitle = row.title
         backend.getRequest('mission/', {

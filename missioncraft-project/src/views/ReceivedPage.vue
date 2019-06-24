@@ -304,8 +304,9 @@ export default {
           }).then((response) => {
             let mission = response.data.data['missions']
             this.bounty = mission[0].bounty
+            let maxNum = mission[0].max_num
 
-            this.$message('您已完成该问卷，报酬为' + this.bounty)
+            this.$message('您已完成该问卷，报酬为' + this.bounty / maxNum)
           }).catch(() => {
 
           })
