@@ -4,32 +4,53 @@
       <div class="image-name-container">
         <img class="head-image" alt="加载失败" v-bind:src=selectUrl>
         <div class="user-name">
-          {{interUsername}}
+          余额：{{info.interBalance}}
         </div>
       </div>
     </div>
     <el-card class="user-info-card">
       <el-tabs class="user-info-tabs">
         <el-tab-pane label="个人信息">
-          <el-form label-width="100px">
+          <el-form label-width="100px" ref="info" v-bind:rules="rules" v-bind:model="info">
             <el-row>
               <el-col v-bind:span="12">
-                <el-form-item label="用户名">
-                  <el-input v-model="interUsername" v-bind:disabled="!canEdit"></el-input>
+                <el-form-item label="用户名" prop="interUsername">
+                  <el-input v-model="info.interUsername" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
-                <el-form-item label="年级">
-                  <el-input v-model="interGrade" v-bind:disabled="!canEdit"></el-input>
+                <el-form-item label="年级" prop="interGrade">
+                  <el-input v-model="info.interGrade" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col v-bind:span="12">
-                <el-form-item label="学院">
-                  <el-input v-model="interSchool" v-bind:disabled="!canEdit"></el-input>
+                <el-form-item label="学院" prop="interSchool">
+                  <el-input v-model="info.interSchool" v-bind:disabled="!canEdit"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col v-bind:span="12">
+                <el-form-item label="电话" prop="interPhone">
+                  <el-input v-model="info.interPhone" v-bind:disabled="!canEdit"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col v-bind:span="12">
+                <el-form-item label="微信" prop="interWeChat">
+                  <el-input v-model="info.interWeChat" v-bind:disabled="!canEdit"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col v-bind:span="12">
+                <el-form-item label="qq" prop="interQQ">
+                  <el-input v-model="info.interQQ" v-bind:disabled="!canEdit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -37,7 +58,7 @@
               <el-button type="primary" icon="el-icon-edit" style="margin-left: 100px" v-if="!canEdit" v-on:click="editButtonClick">修改</el-button>
               <el-col>
                 <el-button type="primary" style="margin-left: 100px" v-if="canEdit" v-on:click="cancelButtonClick">取消</el-button>
-                <el-button type="primary" style="margin-left: 100px" v-if="canEdit" v-on:click="submitInfo">确认</el-button>
+                <el-button type="primary" style="margin-left: 100px" v-if="canEdit" v-on:click="submitInfo('info')">确认</el-button>
               </el-col>
             </el-row>
           </el-form>
@@ -104,9 +125,13 @@ export default {
     if (this.$cookies.isKey('u-token')) {
       backend.getRequest('user/')
         .then((response) => {
-          this.interUsername = response.data.data['username']
-          this.interSchool = response.data.data['school']
-          this.interGrade = response.data.data['grade']
+          this.info.interUsername = response.data.data['username']
+          this.info.interSchool = response.data.data['school']
+          this.info.interGrade = response.data.data['grade']
+          this.info.interPhone = response.data.data['phone']
+          this.info.interWeChat = response.data.data['wechat']
+          this.info.interQQ = response.data.data['qq']
+          this.info.interBalance = response.data.data['balance']
         })
         .catch(() => {
         })
@@ -127,9 +152,15 @@ export default {
       defaultUrl: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
       canEdit: false,
       imageUrl: '',
-      interUsername: '',
-      interSchool: '',
-      interGrade: '',
+      info: {
+        interUsername: '',
+        interSchool: '',
+        interGrade: '',
+        interPhone: '',
+        interWeChat: '',
+        interQQ: '',
+        interBalance: ''
+      },
       passwordSet: {
         oldPassword: '',
         newPassword: '',
@@ -156,6 +187,24 @@ export default {
             validator: validatePass,
             trigger: 'change'
           }
+        ],
+        interPhone: [
+          {
+            pattern: /^(?:\+?86)?1(?:3\d{3}|5[^4\D]\d{2}|8\d{3}|7(?:[35678]\d{2}|4(?:0\d|1[0-2]|9\d))|9[189]\d{2}|66\d{2})\d{6}$/,
+            message: '电话号码格式有误'
+          }
+        ],
+        interWeChat: [
+          {
+            pattern: /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/,
+            message: '微信号格式有误'
+          }
+        ],
+        interQQ: [
+          {
+            pattern: /^[1-9]\d{4,9}$/,
+            message: 'QQ号格式有误'
+          }
         ]
       }
     }
@@ -166,9 +215,9 @@ export default {
     },
     cancelButtonClick () {
       this.canEdit = !this.canEdit
-      this.interUsername = this.$store.state.userInfo.username
-      this.interGrade = this.$store.state.userInfo.grade
-      this.interSchool = this.$store.state.userInfo.school
+      this.info.interUsername = this.$store.state.userInfo.username
+      this.info.interGrade = this.$store.state.userInfo.grade
+      this.info.interSchool = this.$store.state.userInfo.school
     },
     handleAvatarSuccess (res, file) {
       this.url = res.data.avatar
@@ -182,56 +231,63 @@ export default {
       }
       return isLt2M
     },
-    submitInfo () {
-      backend.putRequest('user/',
-        {
-          username: this.interUsername,
-          grade: this.interGrade,
-          school: this.interSchool
-        })
-        .then((response) => {
-          this.$message.success('用户信息修改成功！')
-          this.$store.commit('changeInfo', { 'username': this.interUsername, 'school': this.interSchool, 'grade': this.interGrade })
-          this.canEdit = !this.canEdit
-        })
-        .catch(function (error) {
-          console.log(error)
-          this.$message.error('用户信息修改失败！')
-        })
+    submitInfo (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          backend.putRequest('user/',
+            {
+              username: this.info.interUsername,
+              grade: this.info.interGrade,
+              school: this.info.interSchool,
+              phone: this.info.interPhone,
+              qq: this.info.interQQ,
+              wechat: this.info.interWeChat
+            })
+            .then((response) => {
+              this.$message.success('用户信息修改成功！')
+              this.$store.commit('changeInfo', {
+                'username': this.info.interUsername,
+                'school': this.info.interSchool,
+                'grade': this.info.interGrade,
+                'phone': this.info.interPhone,
+                'qq': this.info.interQQ,
+                'wechat': this.info.interWeChat
+              })
+              this.canEdit = !this.canEdit
+            })
+            .catch(function (error) {
+              console.log(error)
+              this.$message.error('用户信息修改失败！')
+            })
+        }
+      })
     },
     changePassword (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          backend.postRequest('user/',
-            { username: this.info.username,
-              sid: this.info.studentId,
-              email: this.info.email,
-              password: this.info.password,
-              code: this.info.code
+          backend.postRequest('password/',
+            {
+              username: this.username,
+              old_password: this.passwordSet.oldPassword,
+              new_password: this.passwordSet.newPassword
             })
             .then((response) => {
-              this.$router.push({ name: 'login' })
-              this.$message.success('注册成功！')
+              this.$message.success('密码修改成功')
             })
-            .catch(() => {
+            .catch((error) => {
+              let msg = Object.values(error.response.data)[1]
+              msg = parseInt(msg.split(' '))
+              switch (msg) {
+                case 112:
+                  this.$message.error('旧密码错误')
+                  break
+                default:
+                  this.$message.error('未知错误')
+                  break
+              }
             })
-        } else {
-          alert('表单错误')
-          return false
         }
       })
-      backend.postRequest('password/',
-        {
-          username: this.username,
-          old_password: this.passwordSet.oldPassword,
-          new_password: this.passwordSet.newPassword
-        })
-        .then((response) => {
-          this.$message.success('密码修改成功！')
-        })
-        .catch(() => {
-          this.$message.error('密码修改失败！')
-        })
     }
   },
 

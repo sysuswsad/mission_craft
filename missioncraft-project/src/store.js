@@ -102,6 +102,9 @@ export default new Vuex.Store({
       state.userInfo.username = payload.username
       state.userInfo.school = payload.school
       state.userInfo.grade = payload.grade
+      state.userInfo.phone = payload.phone
+      state.userInfo.qq = payload.qq
+      state.userInfo.wechat = payload.wechat
     }
 
   },

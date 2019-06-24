@@ -53,7 +53,7 @@ export default new Router({
       component: QuestionnairePage
     },
     {
-      path: '/answerQuestionnaire',
+      path: '/answerQuestionnaire/:missionId',
       name: 'answerQuestionnaire',
       component: AnswerQuestionnairePage
     },

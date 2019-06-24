@@ -212,7 +212,17 @@ export default {
               this.$router.push({ name: 'login' })
               this.$message.success('注册成功！')
             })
-            .catch(() => {
+            .catch((error) => {
+              let msg = Object.values(error.response.data)[1]
+              msg = parseInt(msg.split(' '))
+              switch (msg) {
+                case 109:
+                  this.$message.error('用户名已被注册')
+                  break
+                default:
+                  this.$message.error('未知错误')
+                  break
+              }
             })
         } else {
           alert('表单错误')

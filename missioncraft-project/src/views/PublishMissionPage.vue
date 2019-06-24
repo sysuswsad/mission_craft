@@ -31,12 +31,12 @@
         <el-col style="margin-bottom: 1rem">
           <span style="font-size: 20px; font-weight:bold" class="tip">联系方式</span>
         </el-col>
-        <el-form v-bind:model="contactWay" label-width="100px" ref="contactWay">
+        <el-form v-bind:model="contactWay" label-width="100px" ref="contactWay" v-bind:rules="rules">
           <el-row>
             <el-col v-bind:span="18">
               <el-form-item
                 label="电话"
-                v-bind:rules="{message: '请输入电话号码'}">
+                prop="phone">
                 <el-input v-model="contactWay.phone" placeholder="电话号码" type="text" prefix-icon="el-icon-mobile-phone"></el-input>
               </el-form-item>
             </el-col>
@@ -45,7 +45,7 @@
             <el-col v-bind:span="18">
               <el-form-item
                       label="微信"
-                      v-bind:rules="{message: '请输入微信'}">
+                      prop="weChat">
                 <el-input v-model="contactWay.weChat" placeholder="微信" type="text" prefix-icon="el-icon-chat-dot-square"></el-input>
               </el-form-item>
             </el-col>
@@ -54,7 +54,7 @@
             <el-col v-bind:span="18">
               <el-form-item
                 label="QQ"
-                v-bind:rules="{message: '请输入QQ'}">
+                prop="qq">
                 <el-input v-model="contactWay.qq" placeholder="QQ" type="text" prefix-icon="el-icon-position"></el-input>
               </el-form-item>
             </el-col>
@@ -63,7 +63,7 @@
             <el-col v-bind:span="18">
               <el-form-item
                 label="其他"
-                v-bind:rules="{message: '请输入其他联系方式'}">
+                prop="other">
                 <el-input v-model="contactWay.other" placeholder="其他" type="text" prefix-icon="el-icon-s-home"></el-input>
               </el-form-item>
             </el-col>
@@ -97,7 +97,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-button class="submit-button" type="primary" v-on:click="submit('payForm')">提交</el-button>
+      <el-button class="submit-button" type="primary" v-on:click="submit('payForm', 'contactWay')">提交</el-button>
     </el-card>
   </div>
 </template>
@@ -125,57 +125,82 @@ export default {
         qq: '',
         other: ''
       },
-      url: ''
+      url: '',
+      rules: {
+        phone: [
+          {
+            pattern: /^(?:\+?86)?1(?:3\d{3}|5[^4\D]\d{2}|8\d{3}|7(?:[35678]\d{2}|4(?:0\d|1[0-2]|9\d))|9[189]\d{2}|66\d{2})\d{6}$/,
+            message: '电话号码格式有误'
+          }
+        ],
+        weChat: [
+          {
+            pattern: /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/,
+            message: '微信号格式有误'
+          }
+        ],
+        qq: [
+          {
+            pattern: /^[1-9]\d{4,9}$/,
+            message: 'QQ号格式有误'
+          }
+        ]
+      }
     }
   },
 
   methods: {
-    submit (formName) {
+    submit (formName, t) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {
           return false
         } else {
-          if (this.contactWay.weChat === '' && this.contactWay.phone === '' && this.contactWay.qq === '' && this.contactWay.other === '') {
-            this.$message.error('至少填写一种联系方式')
-          } else if (this.descriptionFrom.title === '' || this.descriptionFrom.description === '') {
-            this.$message.error('任务描述或者任务标题不能为空')
-          } else {
-            this.$confirm('确定发布此任务?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              setTimeout(() => {
-                backend.postRequest('mission/',
-                  {
-                    type: '1',
-                    deadline: this.descriptionFrom.date.date1 + ' ' + this.descriptionFrom.date.date2,
-                    title: this.descriptionFrom.title,
-                    description: this.descriptionFrom.description,
-                    qq: this.contactWay.qq,
-                    wechat: this.contactWay.weChat,
-                    phone: this.contactWay.phone,
-                    other_way: this.contactWay.other,
-                    bounty: this.payForm.payment
+          this.$refs[t].validate((valid1) => {
+            if (!valid1) {
+              return false
+            } else {
+              if (this.contactWay.weChat === '' && this.contactWay.phone === '' && this.contactWay.qq === '' && this.contactWay.other === '') {
+                this.$message.error('至少填写一种联系方式')
+              } else if (this.descriptionFrom.title === '' || this.descriptionFrom.description === '') {
+                this.$message.error('任务描述或者任务标题不能为空')
+              } else {
+                this.$confirm('确定发布此任务?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  setTimeout(() => {
+                    backend.postRequest('mission/',
+                      {
+                        type: '1',
+                        deadline: this.descriptionFrom.date.date1 + ' ' + this.descriptionFrom.date.date2,
+                        title: this.descriptionFrom.title,
+                        description: this.descriptionFrom.description,
+                        qq: this.contactWay.qq,
+                        wechat: this.contactWay.weChat,
+                        phone: this.contactWay.phone,
+                        other_way: this.contactWay.other,
+                        bounty: this.payForm.payment
+                      })
+                      .then((response) => {
+                        this.$message({
+                          type: 'success',
+                          message: '发布成功!'
+                        })
+                        this.$router.push({ name: 'square' })
+                      })
+                      .catch(() => {
+                      })
                   })
-                  .then((response) => {
-                    this.$message({
-                      type: 'success',
-                      message: '发布成功!'
-                    })
-                    this.$router.push({ name: 'square' })
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                   })
-                  .catch(function (error) {
-                    console.log(error)
-                  })
-              })
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消删除'
-              })
-            })
-          }
+                })
+              }
+            }
+          })
         }
       })
     }

@@ -14,7 +14,7 @@
             v-bind:class="{ 'avatar-expand': !isCollapsed, 'avatar-collapse': isCollapsed }">
         </div>
         <div class="user-meta">
-          <span class="username" v-show="!isCollapsed">Apple</span>
+          <span class="username" v-show="!isCollapsed">{{username}}</span>
         </div>
       </el-row>
       <el-divider direction="horizontal"></el-divider>
@@ -114,7 +114,11 @@ export default {
           return 'http://172.18.34.59:5000' + this.$store.state.userInfo.avatar
         }
       }
-    }
+    },
+
+    ...mapState({
+      username: state => state.userInfo.username
+    })
   }
 }
 </script>

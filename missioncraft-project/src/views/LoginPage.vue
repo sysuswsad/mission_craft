@@ -85,11 +85,26 @@ export default {
                 this.$router.push({ name: 'square' })
               })
               .catch(() => {
+                // console.log('ooooo')
+                // console.log(error.response)
                 this.$router.push({ name: 'login' })
               })
           })
         })
-        .catch(() => {
+        .catch((error) => {
+          let msg = Object.values(error.response.data)[1]
+          msg = parseInt(msg.split(' '))
+          switch (msg) {
+            case 105:
+              this.$message.error('用户名错误')
+              break
+            case 106:
+              this.$message.error('密码错误')
+              break
+            default:
+              this.$message.error('未知错误')
+              break
+          }
         })
     }
   }
