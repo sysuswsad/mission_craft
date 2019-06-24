@@ -34,30 +34,30 @@ export default {
     return {
       questionnaire: {
         title: '我的问卷',
-        questions: [
-          { 'type': 0, 'question': '这是单选题', 'choices': ['我是a', '我是b'] },
-          { 'type': 1, 'question': '这是多选题', 'choices': ['选项1', '选项2'] },
-          { 'type': 2, 'question': '这是填空题', 'choices': ['选项1', '选项2'] }
-        ]
+        questions: []
       },
       answers: []
     }
   },
-  created: function () {
-    console.log(this.$route.params.missionId)
-    console.log(this.$route.params.orderId)
+  created () {
     backend.getRequest('mission/', {
-      mission_id: this.$route.params.missionId
-    }).then((response) => {
-      this.questionnaire.questions = response.data.data['mission']['problems']
-      this.questionnaire.title = response.data.data['mission']['title']
-      for (let i = 0; i < this.questionnaire.questions.length; i++) {
-        if (this.questionnaire.questions[i].type === 1) {
-          this.answers.push([])
-        } else {
-          this.answers.push('')
-        }
+      params: {
+        mission_id: this.$route.params.missionId,
+        return_problems: 1
       }
+    }).then((response) => {
+      setTimeout(() => {
+        console.log(response.data.data['missions'])
+        this.questionnaire.questions = response.data.data['missions'][0]['problems']
+        this.questionnaire.title = response.data.data['missions'][0]['title']
+        for (let i = 0; i < this.questionnaire.questions.length; i++) {
+          if (this.questionnaire.questions[i].type === 1) {
+            this.answers.push([])
+          } else {
+            this.answers.push('')
+          }
+        }
+      })
     }).catch(() => {
     })
   },
@@ -65,10 +65,11 @@ export default {
     summit () {
       console.log(this.answers)
       backend.putRequest('order/', {
-        order_id: this.$route.params.orderId,
-        answers: this.answers
+        answers: this.answers,
+        order_id: this.$route.params.orderId
       }).then((response) => {
-        console.log(response)
+        this.$message.success('问卷提交成功')
+        this.$router.push({ name: 'square' })
       }).catch(() => {
       })
     }
