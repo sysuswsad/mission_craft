@@ -4,17 +4,17 @@
       <template v-slot:header>
         <el-tabs v-model="activeTab" v-on:tab-click="handleClick">
           <el-tab-pane label="进行中" name="processing"></el-tab-pane>
-          <el-tab-pane label="已完成" name="complete"></el-tab-pane>
-          <el-tab-pane label="已结束" name="over"></el-tab-pane>
+          <el-tab-pane label="已完成" name="completed"></el-tab-pane>
+          <el-tab-pane label="未完成" name="uncompleted"></el-tab-pane>
           <div>
             <el-pagination
-                class="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
-                v-bind:page-sizes="[20, 50, 100]"
-                v-bind:page-size="pageSize"
-                v-bind:current-page.sync="currentPage"
-                v-bind:total="tableMission.length"
-                v-on:current-change="handleCurrentChange"
-                v-on:size-change="handleSizeChange">
+              class="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
+              v-bind:page-sizes="[20, 50, 100]"
+              v-bind:page-size="pageSize"
+              v-bind:current-page.sync="currentPage"
+              v-bind:total="tableMission.length"
+              v-on:current-change="handleCurrentChange"
+              v-on:size-change="handleSizeChange">
             </el-pagination>
           </div>
         </el-tabs>
@@ -67,7 +67,7 @@
             </el-row>
             <div v-for="(index, value) in contactWay" v-bind:key="value">
               <el-row v-if="contactWay[value] !== emptyStr" v-bind:gutter="20" type="flex">
-                <el-col v-bind:span="24"v-if="value === 'phone'" style="margin: 1rem 0">
+                <el-col v-bind:span="24" v-if="value === 'phone'" style="margin: 1rem 0">
                   <span>{{ '手机号码：' + contactWay[value] }}</span>
                 </el-col>
                 <el-col v-bind:span="24" v-if="value === 'weChat'">
@@ -100,11 +100,12 @@
         </el-row>
         <el-divider></el-divider>
         <el-row>
-          <time-slider v-bind:start-time="startTime"
-                       v-bind:end-time="endTime"
-                       v-bind:mission-state="missionState"
-                       v-bind:fin-num="fin_num"
-                       v-bind:finish-time="finishTime"></time-slider>
+          <time-slider
+            v-bind:start-time="startTime"
+            v-bind:end-time="endTime"
+            v-bind:mission-state="missionState"
+            v-bind:fin-num="fin_num"
+            v-bind:finish-time="finishTime"></time-slider>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -202,7 +203,7 @@ export default {
           } else if (missions[i].state === 0 && missions[i].fin_num < missions[i].max_num) {
             mission.status = '进行中'
           } else {
-            mission.status = '已结束'
+            mission.status = '未完成'
           }
           this.allMission.push(mission)
         }
@@ -227,10 +228,10 @@ export default {
         if (tab.name === 'processing' && this.allMission[i].status === '进行中') {
           this.tableMission.push(this.allMission[i])
           this.cancelButtonDisable = false
-        } else if (tab.name === 'complete' && this.allMission[i].status === '已完成') {
+        } else if (tab.name === 'completed' && this.allMission[i].status === '已完成') {
           this.tableMission.push(this.allMission[i])
           this.cancelButtonDisable = true
-        } else if (tab.name === 'over' && this.allMission[i].status === '已结束') {
+        } else if (tab.name === 'uncompleted' && this.allMission[i].status === '未完成') {
           this.tableMission.push(this.allMission[i])
           this.cancelButtonDisable = true
         }
@@ -276,7 +277,7 @@ export default {
         })
 
         let index = this.allMission.indexOf(this.tableMission[i])
-        this.allMission[index].status = '已结束'
+        this.allMission[index].status = '未完成'
         this.tableMission.splice(i, 1)
         this.dialogVisible = false
       }).catch(() => {

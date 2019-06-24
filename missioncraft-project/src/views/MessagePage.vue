@@ -243,6 +243,7 @@ export default {
   },
 
   created () {
+    this.messageData = []
     backend.getRequest('notification/').then((response) => {
       if (response.data.data['notifications'].length !== 0) {
         this.messageData = response.data.data['notifications']
@@ -254,6 +255,10 @@ export default {
             this.messageData[i].has_read = ''
           }
         }
+
+        this.$store.commit('updateMessage', {
+          message: this.messageData
+        })
       }
     }).catch(() => {
 

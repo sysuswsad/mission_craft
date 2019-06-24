@@ -35,12 +35,8 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    login (state, info) {
-      Vue.set(state, userInfo, { ...info })
-    },
-
-    updateMessage (state, newMsg) {
-      state.message = newMsg.newMsg.msg
+    updateMessage (state, payload) {
+      state.message = payload.message
     },
 
     addMission (state, payload) {
@@ -116,10 +112,6 @@ export default new Vuex.Store({
   },
 
   actions: {
-    getMessageRemotely (context) {
-
-    },
-
     fetchMissionRemotely ({ commit, state }, payload) {
       let personal = 0
       let noMoreMissions = false

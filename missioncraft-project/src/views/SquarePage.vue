@@ -215,7 +215,7 @@ import $backend from '../backend'
 import TimeSlider from '../components/TimeSlider'
 export default {
   name: 'SquarePage',
-  components: {TimeSlider, VueWaterfallEasy },
+  components: { TimeSlider, VueWaterfallEasy },
 
   data () {
     function validateEmpty (_this) {
@@ -224,8 +224,9 @@ export default {
     }
 
     const validatePhoneAndQQ = (rule, value, callback) => {
-      if (validateEmpty(this))
+      if (validateEmpty(this)) {
         callback(new Error('请至少填写一项'))
+      }
 
       if (value.toString().length > 0 && !Number.isInteger(value)) {
         callback(new Error('请输入数字'))
@@ -327,8 +328,6 @@ export default {
             cancelButtonText: '稍 后',
             type: 'success'
           }).then(() => {
-            this.profileVisible = false
-
             this.$router.push({
               name: 'answerQuestionnaire',
               params: {
@@ -336,6 +335,8 @@ export default {
                 orderId: response.data.data.order_id
               }
             })
+          }).finally(() => {
+            this.profileVisible = false
           })
         }).catch(error => {
           console.log(error)
@@ -378,9 +379,9 @@ export default {
       this.$refs.contactForm.resetFields()
     },
 
-    fetchMissionRemotely (limit = 20) {
+    fetchMissionRemotely (fetchNew = false, limit = 20) {
       return this.$store.dispatch('fetchMissionRemotely', {
-        create_time: this.currentOldestMissionCreateTime,
+        create_time: fetchNew ? '' : this.currentOldestMissionCreateTime,
         limit: limit
       }).then(noMoreMissions => {
         this.filterWithType(this.filter.type)
@@ -417,7 +418,7 @@ export default {
   },
 
   created () {
-    this.fetchMissionRemotely().then(() => {
+    this.fetchMissionRemotely(true).then(() => {
       this.missionInfo = this.allMissionInfo
     })
   }
