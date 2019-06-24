@@ -223,6 +223,7 @@ export default {
                     title: this.title,
                     description: this.title,
                     bounty: this.questionnaireSetting.money,
+                    max_num: this.questionnaireSetting.recruitment,
                     problems: this.questions
                   })
                   .then((response) => {
