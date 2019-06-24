@@ -53,42 +53,60 @@ def update_notification():
     if not data:
         return bad_request('ERROR DATA AT GET NOTIFICATION')
 
-    notifications = data.get("notification")
+    type_n = data.get("type") # 0:update 1:delete
 
-    db = get_db()
+    if type_n == 0:
+        notifications = data.get("notification")
 
-    for notification in notifications:
-        db.execute(
-            'UPDATE Notification SET has_read = ? WHERE n_id = ?',
-            (notification["has_read"], notification["n_id"])
-        )
-        db.commit()
-    return ok('Update the state of notifications successfully')
+        db = get_db()
+
+        for notification in notifications:
+            db.execute(
+                'UPDATE Notification SET has_read = ? WHERE n_id = ?',
+                (notification["has_read"], notification["n_id"])
+            )
+            db.commit()
+
+        return ok('Update the state of notifications successfully')
+    elif type_n == 1:
+        notification = data.get("notification")
+        db = get_db()
+        for n_id in notification:
+            db.execute(
+                'UPDATE Notification SET has_deleted = ? WHERE n_id = ?',
+                (1, n_id)
+            )
+            db.commit()
+
+        return ok('Delete notification successfully')
+
+    return bad_request('ERROR WRONG TYPE_N')
 
 
-@bp.route('/notification/', methods=['delete'])
-@auth.login_required
-def delete_notification():
-    """删除通知
-    """
-    data = request.get_json()  # {notification: [123, ...]}
-    if not data:
-        return bad_request('ERROR DATA AT GET NOTIFICATION')
+# @bp.route('/notification/', methods=['delete'])
+# @auth.login_required
+# def delete_notification():
+#     """删除通知
+#     """
+#     data = request.get_json()  # {notification: [123, ...]}
+#     print(request)
+#     if not data:
+#         return bad_request('ERROR DATA AT DELETE NOTIFICATION')
 
-    notification = data.get("notification")
-    db = get_db()
-    for n_id in notification:
-        db.execute(
-            'UPDATE Notification SET has_deleted = ? WHERE n_id = ?',
-            (1, n_id)
-        )
-        # db.execute(
-        #     'DELETE FROM Notification WHERE n_id = ?',
-        #     (n_id)
-        # )
-        db.commit()
+#     notification = data.get("notification")
+#     db = get_db()
+#     for n_id in notification:
+#         db.execute(
+#             'UPDATE Notification SET has_deleted = ? WHERE n_id = ?',
+#             (1, n_id)
+#         )
+#         # db.execute(
+#         #     'DELETE FROM Notification WHERE n_id = ?',
+#         #     (n_id)
+#         # )
+#         db.commit()
 
-    return ok('Delete notification successfully')
+#     return ok('Delete notification successfully')
     
 
 ###########################################################
