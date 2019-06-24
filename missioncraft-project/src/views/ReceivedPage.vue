@@ -127,6 +127,7 @@ export default {
       activeTab: 'processing',
       allMission: [
         {
+          order_id: '1',
           mission_id: '1',
           missionType: '问卷调查',
           title: '大学生就业调查',
@@ -134,6 +135,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '2',
           mission_id: '2',
           missionType: '其他任务',
           title: '快递代取',
@@ -141,12 +143,14 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '3',
           mission_id: '3',
           missionType: '其他任务',
           title: '大学英语线下辅导',
           status: '已结束'
         },
         {
+          order_id: '4',
           mission_id: '4',
           missionType: '问卷调查',
           title: '第三饭堂饭菜调查',
@@ -154,6 +158,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '5',
           mission_id: '5',
           missionType: '其他任务',
           title: '篮球租赁请求',
@@ -161,6 +166,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '6',
           mission_id: '6',
           missionType: '问卷调查',
           title: '大学生就业调查',
@@ -168,6 +174,7 @@ export default {
           finish_time: ''
         },
         {
+          order_id: '7',
           mission_id: '7',
           missionType: '其他任务',
           title: '网上求夸找自信',
@@ -213,11 +220,13 @@ export default {
         this.allMission = []
         for (let i = 0; i < orders.length; ++i) {
           let mission = {
+            order_id: '',
             mission_id: '',
             missionType: '',
             title: '',
             status: ''
           }
+          mission.order_id = orders[i].order_id
           mission.mission_id = orders[i].mission_id
           mission.title = orders[i].title
           mission.finish_time = orders[i].finish_time
@@ -332,7 +341,8 @@ export default {
           this.$router.push({
             name: 'answerQuestionnaire',
             params: {
-              id: row.mission_id
+              missionId: row.mission_id,
+              orderId: row.order_id
             }
           })
         } else if (this.finishState === 1) {
