@@ -9,7 +9,7 @@
           <div>
             <el-pagination
               class="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
-              v-bind:page-sizes="[5, 10, 20, 30]"
+              v-bind:page-sizes="[20, 50, 100]"
               v-bind:page-size="pageSize"
               v-bind:current-page.sync="currentPage"
               v-bind:total="tableMission.length"
@@ -49,31 +49,31 @@
             <el-row>
               <h1>发布者</h1>
             </el-row>
-            <el-row>
-              <el-col v-bind:span="8" v-bind:offset="1" class="img-wrapper">
-                <div>
-                  <img class="img-container" v-bind:src=url alt="加载失败"/>
-                </div>
+            <el-row v-bind:gutter="20" type="flex">
+              <el-col v-bind:span="7" class="img-wrapper">
+                <img class="img-container" v-bind:src=url alt="加载失败"/>
               </el-col>
-              <el-col class="username-container" v-bind:span="8">
-                <span>{{ username }}</span>
-                <div style="margin-top: 10px">
+              <el-col v-bind:span="8">
+                <el-row style="margin: 1rem 0">
+                  <span>{{ username }}</span>
+                </el-row>
+                <el-row>
                   <span style="font-weight: bold">{{ '信誉积分：' + integral }}</span>
-                </div>
+                </el-row>
               </el-col>
             </el-row>
             <div v-for="(index, value) in contactWay" v-bind:key="value">
-              <el-row v-if="contactWay[value] !== emptyStr" class="contact-row-wrapper">
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'phone'">
+              <el-row v-if="contactWay[value] !== emptyStr" v-bind:gutter="20" type="flex">
+                <el-col v-bind:span="24"v-if="value === 'phone'" style="margin: 1rem 0">
                   <span>{{ '手机号码：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'weChat'">
+                <el-col v-bind:span="24" v-if="value === 'weChat'">
                   <span>{{ '微信：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'qq'">
+                <el-col v-bind:span="24" v-if="value === 'qq'" style="margin: 1rem 0">
                   <span>{{ 'qq：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'other'">
+                <el-col v-bind:span="24" v-if="value === 'other'">
                   <span>{{ '其他联系方式：' + contactWay[value] }}</span>
                 </el-col>
               </el-row>
@@ -85,12 +85,13 @@
           <el-col v-bind:span="14">
             <h1>任务详情</h1>
             <el-row style="margin: 1rem 0">
-              <el-col v-bind:span="3" v-bind:offset="1"><i class="el-icon-document"></i> 任务描述：</el-col>
-              <el-col v-bind:span="20">{{ description }}</el-col>
+              <el-col v-bind:span="24" style="font-weight: bold"><i class="el-icon-document"></i> 任务描述：</el-col>
             </el-row>
-            <el-row style="margin: 1rem 0">
-              <el-col v-bind:span="3" v-bind:offset="1"><i class="el-icon-coin"></i>&nbsp;任务报酬：</el-col>
-              <el-col v-bind:span="20">{{ bounty }}</el-col>
+            <el-row>
+              <el-col v-bind:span="23" v-bind:offset="1">{{ description }}</el-col>
+            </el-row>
+            <el-row>
+              <p style="font-weight: bold"><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
             </el-row>
           </el-col>
         </el-row>
@@ -128,64 +129,8 @@ export default {
   data () {
     return {
       activeTab: 'processing',
-      allMission: [
-        {
-          order_id: '1',
-          mission_id: '1',
-          missionType: '问卷调查',
-          title: '大学生就业调查',
-          status: '已完成',
-          finish_time: ''
-        },
-        {
-          order_id: '2',
-          mission_id: '2',
-          missionType: '其他任务',
-          title: '快递代取',
-          status: '已完成',
-          finish_time: ''
-        },
-        {
-          order_id: '3',
-          mission_id: '3',
-          missionType: '其他任务',
-          title: '大学英语线下辅导',
-          status: '已结束'
-        },
-        {
-          order_id: '4',
-          mission_id: '4',
-          missionType: '问卷调查',
-          title: '第三饭堂饭菜调查',
-          status: '进行中',
-          finish_time: ''
-        },
-        {
-          order_id: '5',
-          mission_id: '5',
-          missionType: '其他任务',
-          title: '篮球租赁请求',
-          status: '进行中',
-          finish_time: ''
-        },
-        {
-          order_id: '6',
-          mission_id: '6',
-          missionType: '问卷调查',
-          title: '大学生就业调查',
-          status: '已结束',
-          finish_time: ''
-        },
-        {
-          order_id: '7',
-          mission_id: '7',
-          missionType: '其他任务',
-          title: '网上求夸找自信',
-          status: '进行中',
-          finish_time: ''
-        }
-      ],
-      pageSize: 5,
+      allMission: [],
+      pageSize: 20,
       currentPage: 1,
       tableMission: [],
       dialogVisible: false,
@@ -195,15 +140,15 @@ export default {
       description: '',
       integral: 8,
       contactWay: {
-        phone: '17878787878',
-        weChat: 'we-chat',
+        phone: '',
+        weChat: '',
         qq: '',
         other: ''
       },
       emptyStr: '',
-      startTime: '2019-06-09 00:00:00',
-      endTime: '2019-06-22 23:59:59',
-      finishTime: '2019-06-19 00:00:00',
+      startTime: '',
+      endTime: '',
+      finishTime: '',
       finishState: 0,
       cancelMissionId: -1,
       cancelButtonDisable: false,
@@ -227,7 +172,8 @@ export default {
             mission_id: '',
             missionType: '',
             title: '',
-            status: ''
+            status: '',
+            finish_time: ''
           }
           mission.order_id = orders[i].order_id
           mission.mission_id = orders[i].mission_id
@@ -308,7 +254,6 @@ export default {
     },
 
     onConfirmCancel (i) {
-      // to-do: refresh data in db
       console.log(`cancelMissionId: ${this.cancelMissionId}`)
       backend.putRequest('mission/', {
         mission_id: this.cancelMissionId
@@ -330,7 +275,7 @@ export default {
     },
 
     rowClick (row) {
-      // this.finishTime = row.finish_time
+      this.finishTime = row.finish_time
       this.cancelMissionId = row.mission_id
       if (row.status === '进行中') {
         this.finishState = 0
@@ -379,7 +324,7 @@ export default {
           if (mission[0].avatar !== '') {
             this.url = mission[0].receviver_avatar
           }
-          this.username = mission[0].publisher_name
+          // this.username = mission[0].publisher_name
           this.description = mission[0].description
           this.startTime = mission[0].create_time
           this.endTime = mission[0].deadline

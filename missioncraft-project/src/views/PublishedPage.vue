@@ -51,9 +51,7 @@
             </el-row>
             <el-row v-if="rcv_num !== 0">
               <el-col v-bind:span="8" v-bind:offset="1" class="img-wrapper">
-                <div>
-                  <img class="img-container" v-bind:src=url alt="加载失败"/>
-                </div>
+                <img class="img-container" v-bind:src=url alt="加载失败"/>
               </el-col>
               <el-col class="username-container" v-bind:span="8">
                 <span>{{ username }}</span>
@@ -68,17 +66,17 @@
               </el-col>
             </el-row>
             <div v-for="(index, value) in contactWay" v-bind:key="value">
-              <el-row v-if="contactWay[value] !== emptyStr" class="contact-row-wrapper">
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'phone'">
+              <el-row v-if="contactWay[value] !== emptyStr" v-bind:gutter="20" type="flex">
+                <el-col v-bind:span="24"v-if="value === 'phone'" style="margin: 1rem 0">
                   <span>{{ '手机号码：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'weChat'">
+                <el-col v-bind:span="24" v-if="value === 'weChat'">
                   <span>{{ '微信：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'qq'">
+                <el-col v-bind:span="24" v-if="value === 'qq'" style="margin: 1rem 0">
                   <span>{{ 'qq：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="20" v-bind:offset="2" v-if="value === 'other'">
+                <el-col v-bind:span="24" v-if="value === 'other'">
                   <span>{{ '其他联系方式：' + contactWay[value] }}</span>
                 </el-col>
               </el-row>
@@ -88,13 +86,15 @@
             <div class="vertical-divider"></div>
           </el-col>
           <el-col v-bind:span="14">
-            <el-row>
-              <h1>任务详情</h1>
-              <el-col v-bind:span="4"><i class="el-icon-document"></i> 任务描述：</el-col>
-              <el-col v-bind:span="20">{{ description }}</el-col>
+            <h1>任务详情</h1>
+            <el-row style="margin: 1rem 0">
+              <el-col v-bind:span="24" style="font-weight: bold"><i class="el-icon-document"></i> 任务描述：</el-col>
             </el-row>
             <el-row>
-              <p><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
+              <el-col v-bind:span="23" v-bind:offset="1">{{ description }}</el-col>
+            </el-row>
+            <el-row>
+              <p style="font-weight: bold"><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
             </el-row>
           </el-col>
         </el-row>
@@ -139,57 +139,14 @@ export default {
   data () {
     return {
       activeTab: 'processing',
-      allMission: [
-        {
-          mission_id: '1',
-          missionType: '问卷调查',
-          title: '大学生就业调查',
-          status: '已完成'
-        },
-        {
-          mission_id: '2',
-          missionType: '其他任务',
-          title: '快递代取',
-          status: '已完成'
-        },
-        {
-          mission_id: '3',
-          missionType: '其他任务',
-          title: '大学英语线下辅导',
-          status: '进行中'
-        },
-        {
-          mission_id: '4',
-          missionType: '问卷调查',
-          title: '第三饭堂饭菜调查',
-          status: '进行中'
-        },
-        {
-          mission_id: '5',
-          missionType: '其他任务',
-          title: '篮球租赁请求',
-          status: '已完成'
-        },
-        {
-          mission_id: '6',
-          missionType: '问卷调查',
-          title: '大学生就业调查',
-          status: '已完成'
-        },
-        {
-          mission_id: '7',
-          missionType: '其他任务',
-          title: '网上求夸找自信',
-          status: '已完成'
-        }
-      ],
+      allMission: [],
       pageSize: 20,
       currentPage: 1,
       tableMission: [],
       dialogVisible: false,
       missionTitle: '',
       url: 'https://oj.vmatrix.org.cn/img/default-avatar.b6541da3.png',
-      username: 'caixukun',
+      username: '',
       description: '',
       integral: 8,
       contactWay: {
@@ -199,9 +156,9 @@ export default {
         other: ''
       },
       emptyStr: '',
-      startTime: '2019-06-01 23:59:59',
-      endTime: '2019-06-22 23:59:59',
-      finishTime: '2019-06-19 23:59:59',
+      startTime: '',
+      endTime: '',
+      finishTime: '',
       rcv_num: 0,
       fin_num: 0,
       missionState: 0,
@@ -310,7 +267,6 @@ export default {
     },
 
     onConfirmCancel (i) {
-      // to-do: refresh data in db
       backend.putRequest('mission/', {
         mission_id: this.cancelMissionId
       }).then((response) => {
@@ -348,7 +304,6 @@ export default {
     },
 
     onConfirmFinish (i) {
-      // to-do: refresh data in db
       backend.putRequest('order/', {
         mission_id: this.cancelMissionId
       }).then((response) => {
