@@ -298,7 +298,6 @@ export default {
     checkProfile (event, { index, value }) {
       event.preventDefault()
 
-      console.log(value)
       this.missionProfile.id = value.idMissionInfo
       this.missionProfile.username = value.username
       this.missionProfile.type = value.type

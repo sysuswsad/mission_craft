@@ -83,22 +83,25 @@
             <div class="vertical-divider"></div>
           </el-col>
           <el-col v-bind:span="14">
-            <el-row>
-              <h1>任务详情</h1>
-              <el-col v-bind:span="4"><i class="el-icon-document"></i> 任务描述：</el-col>
+            <h1>任务详情</h1>
+            <el-row style="margin: 1rem 0">
+              <el-col v-bind:span="3" v-bind:offset="1"><i class="el-icon-document"></i> 任务描述：</el-col>
               <el-col v-bind:span="20">{{ description }}</el-col>
             </el-row>
-            <el-row>
-              <p><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
+            <el-row style="margin: 1rem 0">
+              <el-col v-bind:span="3" v-bind:offset="1"><i class="el-icon-coin"></i>&nbsp;任务报酬：</el-col>
+              <el-col v-bind:span="20">{{ bounty }}</el-col>
             </el-row>
           </el-col>
         </el-row>
         <el-divider></el-divider>
         <el-row>
-          <time-slider v-bind:start-time="startTime"
-                       v-bind:end-time="endTime"
-                       v-bind:order-state="finishState"
-                       v-bind:finish-time="finishTime"></time-slider>
+          <time-slider
+            v-bind:start-time="startTime"
+            v-bind:end-time="endTime"
+            v-bind:order-state="finishState"
+            v-bind:finish-time="finishTime">
+          </time-slider>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -306,6 +309,7 @@ export default {
 
     onConfirmCancel (i) {
       // to-do: refresh data in db
+      console.log(`cancelMissionId: ${this.cancelMissionId}`)
       backend.putRequest('mission/', {
         mission_id: this.cancelMissionId
       }).then((response) => {
@@ -327,6 +331,7 @@ export default {
 
     rowClick (row) {
       // this.finishTime = row.finish_time
+      this.cancelMissionId = row.mission_id
       if (row.status === '进行中') {
         this.finishState = 0
       } else if (row.status === '已完成') {
