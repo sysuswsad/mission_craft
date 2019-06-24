@@ -182,6 +182,7 @@ export default {
 
       this.loadData = false
     }).catch(error => {
+      console.log(error)
       this.$alert('发生了错误！请稍后重试', '错误', {
         confirmButtonText: '返回',
         type: 'error',

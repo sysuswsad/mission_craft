@@ -78,6 +78,26 @@ export default {
               .then((response) => {
                 this.isLogin = true
                 this.$store.commit('setAll', response.data.data)
+
+                let messageData = []
+                backend.getRequest('notification/').then((response) => {
+                  if (response.data.data['notifications'].length !== 0) {
+                    messageData = response.data.data['notifications']
+
+                    for (let i = 0; i < messageData.length; ++i) {
+                      if (messageData[i].has_read !== 0) {
+                        messageData[i].has_read = '✔'
+                      } else {
+                        messageData[i].has_read = ''
+                      }
+                    }
+
+                    this.$store.commit('updateMessage', {
+                      message: messageData
+                    })
+                  }
+                })
+
                 if (this.$route.path === '/login' || this.$route.path === '/') {
                   this.$router.push({ name: 'square' })
                 }

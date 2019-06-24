@@ -255,6 +255,10 @@ export default {
             this.messageData[i].has_read = ''
           }
         }
+
+        this.$store.commit('updateMessage', {
+          message: this.messageData
+        })
       }
     }).catch(() => {
 

@@ -224,8 +224,9 @@ export default {
     }
 
     const validatePhoneAndQQ = (rule, value, callback) => {
-      if (validateEmpty(this))
+      if (validateEmpty(this)) {
         callback(new Error('请至少填写一项'))
+      }
 
       if (value.toString().length > 0 && !Number.isInteger(value)) {
         callback(new Error('请输入数字'))

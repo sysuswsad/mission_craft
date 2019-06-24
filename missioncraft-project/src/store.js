@@ -35,10 +35,6 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    login (state, info) {
-      Vue.set(state, userInfo, { ...info })
-    },
-
     updateMessage (state, payload) {
       state.message = payload.message
     },
