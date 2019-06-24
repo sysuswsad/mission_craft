@@ -8,13 +8,13 @@
           <el-tab-pane label="未完成" name="uncompleted"></el-tab-pane>
           <div>
             <el-pagination
-                class="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
-                v-bind:page-sizes="[20, 50, 100]"
-                v-bind:page-size="pageSize"
-                v-bind:current-page.sync="currentPage"
-                v-bind:total="tableMission.length"
-                v-on:current-change="handleCurrentChange"
-                v-on:size-change="handleSizeChange">
+              class="pagination-container" background layout="prev, pager, next, sizes, total, jumper"
+              v-bind:page-sizes="[20, 50, 100]"
+              v-bind:page-size="pageSize"
+              v-bind:current-page.sync="currentPage"
+              v-bind:total="tableMission.length"
+              v-on:current-change="handleCurrentChange"
+              v-on:size-change="handleSizeChange">
             </el-pagination>
           </div>
         </el-tabs>
@@ -100,11 +100,12 @@
         </el-row>
         <el-divider></el-divider>
         <el-row>
-          <time-slider v-bind:start-time="startTime"
-                       v-bind:end-time="endTime"
-                       v-bind:mission-state="missionState"
-                       v-bind:fin-num="fin_num"
-                       v-bind:finish-time="finishTime"></time-slider>
+          <time-slider
+            v-bind:start-time="startTime"
+            v-bind:end-time="endTime"
+            v-bind:mission-state="missionState"
+            v-bind:fin-num="fin_num"
+            v-bind:finish-time="finishTime"></time-slider>
         </el-row>
       </div>
       <span slot="footer" class="dialog-footer">

@@ -116,10 +116,6 @@ export default new Vuex.Store({
   },
 
   actions: {
-    getMessageRemotely (context) {
-
-    },
-
     fetchMissionRemotely ({ commit, state }, payload) {
       let personal = 0
       let noMoreMissions = false
