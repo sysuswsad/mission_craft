@@ -100,7 +100,7 @@
         <el-tab-pane label="更换头像">
           <el-upload
             class="avatar-uploader"
-            action="http://172.18.34.59:5000/api/avatar/"
+            :action="getBaseURL"
             name="image"
             :headers="getToken"
             :show-file-list="false"
@@ -122,6 +122,7 @@ import backend from '../backend'
 export default {
   name: 'UserInfoPage',
   created () {
+    console.log(backend.baseURL)
     if (this.$cookies.isKey('u-token')) {
       backend.getRequest('user/')
         .then((response) => {
@@ -302,7 +303,7 @@ export default {
     },
     selectUrl () {
       if (this.url !== '') {
-        return 'http://172.18.34.59:5000' + this.url
+        return backend.baseURL + this.url
       } else {
         return this.defaultUrl
       }
@@ -310,6 +311,9 @@ export default {
     getToken () {
       return { 'Authorization': `Bearer ${this.$cookies.get('u-token')}`,
         'Accept': 'application/json, text/plain, */*' }
+    },
+    getBaseURL () {
+      return backend.baseURL + '/api/avatar/'
     }
   }
 }

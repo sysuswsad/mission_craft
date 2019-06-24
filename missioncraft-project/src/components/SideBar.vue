@@ -62,6 +62,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import backend from './../backend'
 export default {
   name: 'SideBar',
 
@@ -111,7 +112,7 @@ export default {
         if (this.$store.state.userInfo.avatar === '') {
           return 'default-avatar.png'
         } else {
-          return 'http://172.18.34.59:5000' + this.$store.state.userInfo.avatar
+          return backend.baseURL + this.$store.state.userInfo.avatar
         }
       }
     },

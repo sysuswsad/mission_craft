@@ -2,7 +2,7 @@
   <div class="question-container">
     <el-card class="question-card">
       <template v-slot:header>
-        <h2>{{questionnaire.title}}</h2>
+        <h2 style="text-align: center">{{questionnaire.title}}</h2>
       </template>
       <div v-for="(q, index) in questionnaire.questions" v-bind:key="index">
         <div v-if="q.type === 0">

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import $vue from './main.js'
 import { Message } from 'element-ui'
+const baseURL = 'http://172.18.35.89:5000'
 
 let $axios = axios.create({
   // baseURL: 'http://qcloud.captainp.cn:5000/api/',
@@ -111,6 +112,7 @@ $axios.interceptors.response.use(response => {
 })
 
 export default {
+  baseURL,
   postRequest (url, params, config = {}) {
     return $axios.post(url, params, config)
   },
