@@ -48,12 +48,12 @@ export default new Router({
       component: SquarePage
     },
     {
-      path: '/questionnaire',
+      path: '/qn',
       name: 'questionnaire',
       component: QuestionnairePage
     },
     {
-      path: '/answerQuestionnaire/:missionId',
+      path: '/aqn/:missionId',
       name: 'answerQuestionnaire',
       component: AnswerQuestionnairePage
     },
@@ -68,7 +68,7 @@ export default new Router({
       component: ReceivedPage
     },
     {
-      path: '/publishMission',
+      path: '/pm',
       name: 'publishMission',
       component: PublishMissionPage
     },

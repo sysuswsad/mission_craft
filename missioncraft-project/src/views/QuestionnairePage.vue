@@ -215,9 +215,10 @@ export default {
               type: 'warning'
             }).then(() => {
               setTimeout(() => {
+                console.log(this.questions)
                 backend.postRequest('mission/',
                   {
-                    type: '1',
+                    type: '0',
                     deadline: this.questionnaireSetting.date1 + ' ' + this.questionnaireSetting.date2,
                     title: this.title,
                     description: this.title,
