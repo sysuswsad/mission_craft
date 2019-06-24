@@ -2,7 +2,8 @@
   <div class="waterfall-container">
     <vue-waterfall-easy
       v-on:click="checkProfile"
-      v-bind:imgs-arr="missionData"
+      v-on:scrollReachBottom="fetchMissionRemotely"
+      v-bind:imgs-arr="missionInfo"
       v-bind:is-router-link="true"
       v-bind:gap="30"
       v-bind:img-width="320"
@@ -11,12 +12,12 @@
 
       <template v-slot:waterfall-head>
         <el-card shadow="hover" class="filter-container" v-bind:body-style="{ padding: '1.5rem 4rem' }">
-          <el-form class="mission-filter" v-model="filter">
+          <el-form class="mission-filter" v-bind:model="filter">
 
             <el-form-item label="任务类型" prop="type" class="filter-item">
               <el-checkbox-group v-model="filter.type" v-on:change="filterWithType">
-                <el-checkbox label="问卷" name="type"></el-checkbox>
-                <el-checkbox label="其他" name="type"></el-checkbox>
+                <el-checkbox label="0" name="type">问卷</el-checkbox>
+                <el-checkbox label="1" name="type">其他</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
 
@@ -33,7 +34,6 @@
             </el-form-item>
 
           </el-form>
-          <el-button v-on:click="test">+</el-button>
         </el-card>
       </template>
 
@@ -42,16 +42,16 @@
 
           <el-header style="border-bottom: 1px solid #dcdfe6">
             <h4>
-              这里是标题
+              {{ descriptionProps.value.title }}
             </h4>
           </el-header>
 
           <el-main class="mission-info-container">
             <el-row type="inline-flex" align="center" justify="space-between">
               <el-col v-bind:span="11" style="display: inline-flex">
-                <i v-if="descriptionProps.value.type.localeCompare('问卷') === 0" class="material-icons blue">assignment</i>
+                <i v-if="descriptionProps.value.type === 0" class="material-icons blue">assignment</i>
                 <i v-else class="material-icons green">directions_run</i>
-                <strong>&nbsp;{{ descriptionProps.value.type }}</strong>
+                <strong>&nbsp;{{ descriptionProps.value.type === 0 ? '问卷' : '其他' }}</strong>
               </el-col>
 
               <el-col v-bind:span="2">
@@ -60,12 +60,12 @@
 
               <el-col v-bind:span="11" style="display: inline-flex; justify-content: flex-end">
                 <i class="material-icons gold">monetization_on</i>
-                <span>&nbsp;{{ descriptionProps.value.reward }}</span>
+                <span>&nbsp;{{ descriptionProps.value.bounty }}</span>
               </el-col>
             </el-row>
 
             <el-row class="mission-desc-wrapper">
-              我是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的任务描述
+              {{ descriptionProps.value.description }}
             </el-row>
           </el-main>
 
@@ -73,8 +73,8 @@
             <div class="publisher-avatar-wrapper">
               <el-image src="default-avatar.png" alt="avatar" fit="scale-down"></el-image>
             </div>
-            <div class="publisher-username">这是一个比较长的用户名</div>
-            <div>发布于 2020-01-01 12:13:24</div>
+            <div class="publisher-username">{{ descriptionProps.value.username }}</div>
+            <div>发布于 {{ descriptionProps.value.create_time }}</div>
           </el-footer>
 
         </el-container>
@@ -82,6 +82,10 @@
 
       <template v-slot:loading>
         <div v-loading="dataLoading"></div>
+      </template>
+
+      <template v-slot:waterfall-over>
+        <div>没有更多啦！</div>
       </template>
 
     </vue-waterfall-easy>
@@ -106,6 +110,49 @@
       </template>
 
       <template v-slot:default>
+
+        <!-- dialog used to confirm contact -->
+        <el-dialog
+          v-bind:visible.sync="contactConfirmVisible"
+          v-bind:show-close="false"
+          width="30%"
+          append-to-body>
+
+          <template v-slot:title>
+            <el-row style="border-bottom: 1px solid #eeeeee">
+              <h3>联系方式</h3>
+            </el-row>
+          </template>
+
+          <template v-slot:footer>
+            <el-button v-on:click="resetContact">取 消</el-button>
+            <el-button type="primary" v-on:click="confirmAcceptance">确 认</el-button>
+          </template>
+
+          <template v-slot:default>
+            <el-row>
+              <strong>请确认您的联系方式：</strong>
+            </el-row>
+            <el-row style="margin-top: 1rem">
+              <el-form v-bind:model="contactInfo" ref="contactForm" v-bind:rules="contactRules" label-width="80px">
+                <el-form-item label="手机号码" prop="phone">
+                  <el-input v-model.number="contactInfo.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="QQ" prop="qq">
+                  <el-input v-model.number="contactInfo.qq"></el-input>
+                </el-form-item>
+                <el-form-item label="微信" prop="wechat">
+                  <el-input v-model="contactInfo.wechat"></el-input>
+                </el-form-item>
+                <el-form-item label="其他" prop="others">
+                  <el-input v-model="contactInfo.others"></el-input>
+                </el-form-item>
+              </el-form>
+            </el-row>
+          </template>
+
+        </el-dialog>
+
         <el-row type="flex" justify="center">
 
           <el-col v-bind:span="8">
@@ -120,7 +167,7 @@
               </el-col>
               <el-col v-bind:span="16">
                 <el-row style="margin: 1rem 0">
-                  <span>nickname</span>
+                  <span>{{ missionProfile.username }}</span>
                 </el-row>
                 <el-row style="margin: 1rem 0">
                   <strong>信誉积分？：213</strong>
@@ -139,10 +186,10 @@
               <h4><i class="el-icon-document"></i>&nbsp;任务描述</h4>
             </el-row>
             <el-row>
-              <p>我是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的任务描述</p>
+              <p>{{ missionProfile.description }}</p>
             </el-row>
             <el-row>
-              <p><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ missionProfile.reward }}</p>
+              <p><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ missionProfile.bounty }}</p>
             </el-row>
           </el-col>
 
@@ -150,46 +197,80 @@
 
         <el-divider></el-divider>
 
-        <el-row type="flex" justify="center">
-          <el-col v-bind:span="4">{{ missionProfile.createTime }}</el-col>
-          <el-col v-bind:span="16">
+        <el-row style="margin-top: 40px" type="flex" align="middle">
+          <el-col v-bind:span="5" style="text-align: center">{{ missionProfile.createTime }}</el-col>
+          <el-col v-bind:span="14">
             <el-slider
               v-bind:step="Math.floor(100 / timeDiff(missionProfile.createTime, missionProfile.deadline))"
-              v-bind:value="passTime(missionProfile.createTime)"
+              v-bind:value="passTime(missionProfile.createTime, missionProfile.deadline)"
               v-bind:format-tooltip="formatTooltip"
               disabled>
             </el-slider>
           </el-col>
-          <el-col v-bind:span="4">{{ missionProfile.deadline }}</el-col>
+          <el-col v-bind:span="5" style="text-align: center">{{ missionProfile.deadline }}</el-col>
         </el-row>
 
       </template>
-
     </el-dialog>
   </div>
 </template>
 
 <script>
 import VueWaterfallEasy from 'vue-waterfall-easy/src/vue-waterfall-easy/vue-waterfall-easy'
+import $backend from '../backend'
 export default {
   name: 'SquarePage',
   components: { VueWaterfallEasy },
 
   data () {
+    function validateEmpty (_this) {
+      return _this.contactInfo.phone.toString().length === 0 && _this.contactInfo.qq.toString().length === 0 &&
+        _this.contactInfo.wechat.length === 0 && _this.contactInfo.others.length === 0
+    }
+
+    const validatePhoneAndQQ = (rule, value, callback) => {
+      if (validateEmpty(this))
+        callback(new Error('请至少填写一项'))
+
+      if (value.toString().length > 0 && !Number.isInteger(value)) {
+        callback(new Error('请输入数字'))
+      } else {
+        callback()
+      }
+    }
+
+    const validateOthers = (rule, value, callback) => {
+      if (validateEmpty(this)) {
+        callback(new Error('请至少填写一项'))
+      } else {
+        callback()
+      }
+    }
+
     return {
       filter: {
-        type: ['问卷', '其他'],
+        type: ['0', '1'],
         minReward: null
       },
-      minConfirmDisable: false,
-      allData: [],
-      missionData: [
-        { href: '#', type: '问卷', reward: 0.4 }
-      ],
+      missionInfo: [],
       dataLoading: true,
       profileLoading: false,
       profileVisible: false,
+      contactConfirmVisible: false,
+      contactInfo: {
+        phone: '',
+        qq: '',
+        wechat: '',
+        others: ''
+      },
+      contactRules: {
+        phone: [{ validator: validatePhoneAndQQ, trigger: 'blur' }],
+        qq: [{ validator: validatePhoneAndQQ, trigger: 'blur' }],
+        wechat: [{ validator: validateOthers, trigger: 'blur' }],
+        others: [{ validator: validateOthers, trigger: 'blur' }]
+      },
       missionProfile: {
+        id: '',
         username: '',
         type: 0,
         avatar: '',
@@ -197,49 +278,118 @@ export default {
         createTime: '',
         deadline: '',
         description: '',
-        reward: -1
+        bounty: -1
       }
     }
   },
 
   methods: {
-    test () {
-      let temp = Math.random() > 0.5 ? { href: '#', type: '问卷', reward: 0.4 }
-        : { href: '#', type: '其他', reward: 0.7 }
-      this.missionData.push(temp)
-      this.allData = this.missionData
-    },
-
-    filterWithType (newVal) {
-      this.missionData =
-        this.allData.filter(mission => newVal.includes(mission.type))
-
-      if (this.filter.minReward !== 0) {
-        this.filterWithMin()
-      }
+    filterWithType (typeVal) {
+      this.missionInfo =
+        this.allMissionInfo.filter(mission =>
+          typeVal.includes(mission.type.toString()) && mission.bounty >= this.filter.minReward, this)
     },
 
     filterWithMin () {
-      if (this.filter.minReward === 0) {
-        this.resetFilterWithMin()
-      } else {
-        this.missionData =
-          this.missionData.filter(mission => mission.reward >= this.filter.minReward, this)
-      }
+      this.filterWithType(this.filter.type)
     },
 
     resetFilterWithMin () {
-      this.missionData = this.allData
+      this.missionInfo =
+        this.allMissionInfo.filter(mission => this.filter.type.includes(mission.type.toString()), this)
       this.filter.minReward = 0
     },
 
     checkProfile (event, { index, value }) {
       event.preventDefault()
+
+      console.log(value)
+      this.missionProfile.id = value.idMissionInfo
+      this.missionProfile.username = value.username
+      this.missionProfile.type = value.type
+      this.missionProfile.avatar = value.avatar
+      this.missionProfile.title = value.title
+      this.missionProfile.createTime = value.create_time
+      this.missionProfile.deadline = value.deadline
+      this.missionProfile.description = value.description
+      this.missionProfile.bounty = value.bounty
+
       this.profileVisible = true
     },
 
     acceptMission () {
-      this.profileLoading = true
+      if (this.missionProfile.type === 1) {
+        this.contactInfo.phone = this.$store.state.userInfo.phone
+        this.contactInfo.qq = this.$store.state.userInfo.qq
+        this.contactInfo.wechat = this.$store.state.userInfo.wechat
+
+        this.contactConfirmVisible = true
+      } else {
+        $backend.postRequest('order/', {
+          mission_id: this.missionProfile.id
+        }).then(response => {
+          this.$confirm(`您已成功领取任务 ${this.missionProfile.title} ！是否立即前往填写问卷？`, '领取成功', {
+            confirmButtonText: '前 往',
+            cancelButtonText: '稍 后',
+            type: 'success'
+          }).then(() => {
+            this.profileVisible = false
+
+            // To do
+            this.$router.push('aq')
+          })
+        }).catch(error => {
+          console.log(error)
+          this.$message.error('出错了，请稍后重试')
+        })
+      }
+    },
+
+    confirmAcceptance () {
+      this.$refs.contactForm.validate().then(() => {
+        console.log(`mission ID: ${this.missionProfile.id}`)
+        return $backend.postRequest('order/', {
+          mission_id: this.missionProfile.id,
+          phone: this.contactInfo.phone,
+          qq: this.contactInfo.qq,
+          wechat: this.contactInfo.wechat,
+          other_way: this.contactInfo.others
+        })
+      }).catch(() => {
+        return false
+      }).then(response => {
+        console.log(`response: ${response}`)
+        if (typeof response === 'boolean' && !response) {
+          return
+        }
+
+        this.contactConfirmVisible = false
+        this.profileVisible = false
+
+        this.$alert(`您已成功领取任务 ${this.missionProfile.title} ！可前往我的领取查看详情`, '领取成功')
+      }).catch(error => {
+        console.log(error)
+        this.contactConfirmVisible = false
+        this.$message.error('出错了，请稍后重试')
+      })
+    },
+
+    resetContact () {
+      this.contactConfirmVisible = false
+      this.$refs.contactForm.resetFields()
+    },
+
+    fetchMissionRemotely (limit = 20) {
+      return this.$store.dispatch('fetchMissionRemotely', {
+        create_time: this.currentOldestMissionCreateTime,
+        limit: limit
+      }).then(noMoreMissions => {
+        this.filterWithType(this.filter.type)
+
+        if (noMoreMissions) {
+          this.$refs.waterfall.waterfallOver()
+        }
+      })
     },
 
     // --- same to ReceivedPage ---
@@ -275,7 +425,7 @@ export default {
       return leftHour
     },
 
-    passTime (startTime) {
+    passTime (startTime, endTime) {
       let nowTime = Date.now()
       let sTime = new Date(startTime)
       let passHour = 0
@@ -283,9 +433,39 @@ export default {
         let msDiff = nowTime - sTime.getTime()
         passHour = Math.ceil(msDiff / (1000 * 3600))
       }
-      return passHour * (100.0 / this.$options.methods.timeDiff(startTime, this.endTime))
+      return passHour * (100.0 / this.timeDiff(startTime, endTime))
     }
     // --- ---
+  },
+
+  computed: {
+    allMissionInfo () {
+      return this.$store.state.missionInfo
+    },
+
+    currentOldestMissionCreateTime () {
+      const missionInfo = this.$store.state.missionInfo
+      if (missionInfo.length > 0) {
+        return missionInfo[missionInfo.length - 1].create_time
+      } else {
+        return ''
+      }
+    }
+  },
+
+  watch: {
+    contactInfo: {
+      handler () {
+        this.$refs.contactForm.clearValidate()
+      },
+      deep: true
+    }
+  },
+
+  created () {
+    this.fetchMissionRemotely().then(() => {
+      this.missionInfo = this.allMissionInfo
+    })
   }
 }
 </script>
