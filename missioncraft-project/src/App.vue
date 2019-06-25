@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-aside v-bind:width="sideWidth" v-if="isLogin" class="sidebar-container">
-        <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="getUnreadMsgNum"></side-bar>
+        <side-bar v-bind:is-collapsed="sidebarCollapsed" v-bind:unread="unread"></side-bar>
       </el-aside>
       <el-container>
         <el-header id="top-menu">
@@ -122,7 +122,7 @@ export default {
       }
     },
 
-    getUnreadMsgNum () {
+    unread () {
       let count = 0
       for (let i = 0; i < this.$store.state.message.length; ++i) {
         if (this.$store.state.message[i].has_read === '') {

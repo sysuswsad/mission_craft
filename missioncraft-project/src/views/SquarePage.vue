@@ -170,7 +170,7 @@
                   <span>{{ missionProfile.username }}</span>
                 </el-row>
                 <el-row style="margin: 1rem 0">
-                  <strong>信誉积分？：213</strong>
+                  <strong>信誉积分：213</strong>
                 </el-row>
               </el-col>
             </el-row>

@@ -254,7 +254,6 @@ export default {
     },
 
     onConfirmCancel (i) {
-      console.log(`cancelMissionId: ${this.cancelMissionId}`)
       backend.putRequest('mission/', {
         mission_id: this.cancelMissionId
       }).then((response) => {
