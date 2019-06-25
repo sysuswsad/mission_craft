@@ -38,10 +38,11 @@
 X1. Meeting Recodings（会议记录）
 
 - [Inception meeting(2019/04/03)](https://sysuswsad.github.io/mission_craft/meeting_0.html)
-- [First iteration meeting(2019/05/06)](https://sysuswsad.github.io/mission_craft/meeting_1.html)
-- [Progress report meeting(2019/05/20)](https://sysuswsad.github.io/mission_craft/meeting_2.html)
-- [second iteration meeting(2019/05/28)](https://sysuswsad.github.io/mission_craft/meeting_3.html)
-
+- [Demand analysis meeting(2019/04/10)](https://sysuswsad.github.io/mission_craft/meeting_1.html)
+- [First iteration meeting(2019/05/06)](https://sysuswsad.github.io/mission_craft/meeting_2.html)
+- [Progress report meeting(2019/05/20)](https://sysuswsad.github.io/mission_craft/meeting_3.html)
+- [Second iteration meeting(2019/05/28)](https://sysuswsad.github.io/mission_craft/meeting_4.html)
+- [Deployment meeting(2019/06/15)](https://sysuswsad.github.io/mission_craft/meeting_5.html)
 X2. 建模练习
 
 X3. Final Report
