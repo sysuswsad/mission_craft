@@ -32,7 +32,7 @@ CREATE TABLE User (
   mission_fin_num INT DEFAULT 0,
 -- 测试钱系统的时候balance设置为100
   balance DOUBLE DEFAULT 1000.0,
-  other_way VARCHAR(45) DEFAULT '',
+  other_way VARCHAR(45) DEFAULT ''
 );
 
 CREATE TABLE MissionInfo (
