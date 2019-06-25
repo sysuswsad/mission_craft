@@ -1,13 +1,13 @@
 import axios from 'axios'
 import $vue from './main.js'
 import { Message } from 'element-ui'
-const baseURL = 'http://127.0.0.1:5000'
+const baseURL = 'http://172.18.34.59:5000/api/'
 
 let $axios = axios.create({
   // baseURL: 'http://qcloud.captainp.cn:5000/api/',
-  baseURL: 'http://127.0.0.1:5000/api/',
+  // baseURL: 'http://127.0.0.1:5000/api/',
   // baseURL: 'http://172.18.35.89:5000/api/',
-  // baseURL: 'http://172.18.34.59:5000/api/',
+  baseURL: 'http://172.18.34.59:5000/api/',
   timeout: 5000,
   headers: { 'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
@@ -81,7 +81,7 @@ $axios.interceptors.response.use(response => {
         break
 
       case 201:
-        Message.error('你不能取消已被人接受的任务')
+        Message.error('您不能取消已被他人接受的任务')
         break
 
       case 301:
@@ -94,6 +94,10 @@ $axios.interceptors.response.use(response => {
 
       case 303:
         Message.warning('该任务已经确认')
+        break
+
+      case 304:
+        Message.error('您已领取该任务，不能重复领取')
         break
 
       default:

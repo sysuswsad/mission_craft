@@ -19,4 +19,3 @@
 | Azure0SKY | UI总设计：项目整体视觉设计，交互逻辑设计；前端开发：任务广场页面编写，问卷统计页面、任务领取页面； | I'm thinking                                                 |
 | Vilinz    | UI设计：登录注册页面，用户信息查看修改页面，任务发布页面；前端开发：前述相关页面编写；集成测试：前述页面功能的集成测试； | 练习coding两年半                                             |
 | penglsh   | UI设计：我的发布统计、我的领取统计、消息通知页面设计；前端开发前述相关页面编写；集成测试：前述页面功能的集成测试； | Life is a series of building, testing, changing and iterating |
-
