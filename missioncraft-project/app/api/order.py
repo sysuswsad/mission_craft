@@ -185,7 +185,9 @@ def confirm_order():
     if mission_info['type'] == 0:
         if order_info['receiver_id'] != g.user['idUser']:
             return forbidden('You can not submit for other receivers')
-        answers = json.loads(data.get('answers'))
+        answers = data.get('answers')
+        if type(answers) != list:
+            answers = json.loads(answers)
         problem_ids = db.execute(
             'SELECT idProblem FROM Problem WHERE mission_id = ?', (order_info['mission_id'],)
         ).fetchall()

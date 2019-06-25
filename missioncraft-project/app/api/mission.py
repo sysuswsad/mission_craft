@@ -82,7 +82,8 @@ def create_mission():
     if mission_type == 0:
         if not problems:
             return bad_request('Questionare should have problems')
-        problems = json.loads(problems)
+        if type(problems) != list:
+            problems = json.loads(problems)
         # 建议debug的时候注释掉这些try，便于看到错误
         try:
             for problem in problems:
