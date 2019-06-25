@@ -16,13 +16,13 @@ V1.1|2019.5.1|初步确定前后端框架|潘鉴
 ### 开发人员
 
 学号|姓名|身份|邮箱|专业方向|
---|--|--|--|--|
-16340173|欧穗新|后端开发工程师||计应
-16340176|潘鉴|后端开发工程师||计应
-16340178|彭靖寒|后端开发工程师||计应
-16340174|欧阳梓轩|前端开发工程师||计应
-163401|彭伟林|前端开发工程师||计应
-163401|彭流生|前端开发工程师||计应
+--|--|--|--|--|--
+16340173|欧穗新|后端开发工程师||计应|
+16340176|潘鉴|后端开发工程师||计应|
+16340178|彭靖寒|后端开发工程师||计应|
+16340174|欧阳梓轩|前端开发工程师||计应|
+163401|彭伟林|前端开发工程师|1622070923@qq.com|计应|
+163401|彭流生|前端开发工程师||计应|
 
 
 ### 开发计划
@@ -169,69 +169,7 @@ V1.1|2019.5.1|初步确定前后端框架|潘鉴
 
 最后前端挣闲钱系统的结构如下：
 
-```txt
-├── project.config.json //开发工具配置
-├── app.js //小程序的全局逻辑文件
-├── app.json //小程序的全局配置
-├── app.wxss //小程序的全局样式
-├── images //小程序利用到的图片
-|
-├── pages //小程序的页面文件存放文件夹
-|   ├── authorize // 授权登录页面
-│   │   ├── authorize.js //授权登录页面的逻辑文件
-|   |   ├── authorize.json //授权登录页面配置文件
-│   │   ├── authorize.wxml // 授权登录页面的结构文件
-│   │   └── authorize.wxss  // 授权登录页面的样式文件
-|   |
-│   ├── index //主菜单页面
-│   │   ├── index.js //主菜单页面的逻辑文件
-|   |   ├── index.json //主菜单页面配置文件
-│   │   ├── index.wxml // 主菜单页面的结构文件
-│   │   └── index.wxss  // 主菜单页面的样式文件
-|   |
-│   ├── recommendation //今日推荐页面
-│   |   ├── recommendation.js //今日推荐页面的逻辑文件
-│   |   ├── recommendation.json //今日推荐页面配置文件
-│   |   ├── recommendation.wxml //今日推荐页面的结构文件
-│   |   └── recommendation.wxss //今日推荐页面的样式文件
-|   |
-│   ├── recommendation-details //今日推荐卡片细节页面
-│   |   ├── recommendation-details.js //今日推荐卡片细节页面的逻辑文件
-│   |   ├── recommendation-details.json //今日推荐卡片细节页面配置文件
-│   |   ├── recommendation-details.wxml //今日推荐卡片细节页面的结构文件
-│   |   └── recommendation-details.wxss //今日推荐卡片细节页面的样式文件
-|   |
-│   ├── cart //购物车页面
-│   |   ├── cart.js //购物车页面的逻辑文件
-│   |   ├── cart.json //购物车页面配置文件
-│   |   ├── cart.wxml //购物车页面的结构文件
-│   └── └── cart.wxss //购物车页面的样式文件
-|
-├── component //自定义组件
-│    ├── card //今日推荐卡片组件
-│    |   ├── card.js //今日推荐卡片组件的逻辑文件
-│    |   ├── card.json //今日推荐卡片组件的配置文件
-│    |   ├── card.wxml //今日推荐卡片组件的结构文件
-│    |   └── card.wxss //今日推荐卡片组件的样式文件
-|    |
-|    ├── hSwiper //滑动框组件
-│    |   ├── hSwiper.js //滑动框组件的逻辑文件
-│    |   ├── hSwiper.json //滑动框组件的配置文件
-│    |   ├── hSwiper.wxml //滑动框组件的结构文件
-│    |   └── hSwiper.wxss //今日推荐卡片组件的样式文件
-|    |
-|    └── orderItem //购物车or订单item组件
-│    |   ├── orderItem.js //订单item的逻辑文件
-│    |   ├── orderItem.json //订单item的配置文件
-│    |   ├── orderItem.wxml //订单item组件的结构文件
-│    └── └── orderItem.wxss //订单item组件的样式文件
-|
-└── utils //公共的js代码
-     └── util.js
-
-```
-
-
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/vue2.jpg)
 
 ## 2. Server
 
@@ -407,5 +345,3 @@ app.py
     ├─/restaurant/table/payment
     ├─/restaurant/customer/history
 ```
-
->>>>>>> 604a104166497f86eaf596377d179f9a09c617d9

@@ -2,32 +2,32 @@
 
 ------
 
-### 用例图
+### 系统用例图
 
-![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/userCase1.png)
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/usercase1.png)
 
 ### 任务提供者
 
 - 时序图
 
-  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq1.png)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq1.jpg)
 
-- 类图
+- ECB的类图
 
-  ![](https://img-blog.csdnimg.cn/20190503225955766.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/class1.jpg)
 
 ### 任务接收者
 
 - 时序图
 
-  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq2.png)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq2.jpg)
 
-- 类图
+- ECB的类图
 
-  ![](https://img-blog.csdnimg.cn/20190503230101330.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/class2.jpg)
 
 ### 登录
 
 - 时序图
 
-  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq3.png)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq3.jpg)
