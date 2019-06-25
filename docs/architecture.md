@@ -12,15 +12,160 @@
 从各种数据访问对象检索和创建模型，更新各个存储库的值，执行特定于应用程序的逻辑和操作等。
 
 ### 持久化层
-MySQL 提供了数据的持久化服务
+SQLite3 提供了数据的持久化服务
 
 ## 框架目录设计
 ### 前端
-'''
-'''
-### 后端
-'''
-'''
+
+```bash
+.
+├── App.vue
+├── assets
+│   ├── flask-logo.png
+│   ├── logo.png
+│   ├── python-logo.png
+│   └── vue-logo.png
+├── backend.js
+├── components
+│   ├── HelloWorld.vue
+│   ├── SideBar.vue
+│   ├── TimeSlider.vue
+│   └── TopMenu.vue
+├── filters.js
+├── main.js
+├── router.js
+├── store.js
+├── theme
+│   └── element
+│       ├── alert.css
+│       ├── aside.css
+│       ├── autocomplete.css
+│       ├── badge.css
+│       ├── base.css
+│       ├── breadcrumb-item.css
+│       ├── breadcrumb.css
+│       ├── button-group.css
+│       ├── button.css
+│       ├── calendar.css
+│       ├── card.css
+│       ├── carousel-item.css
+│       ├── carousel.css
+│       ├── cascader.css
+│       ├── checkbox-button.css
+│       ├── checkbox-group.css
+│       ├── checkbox.css
+│       ├── col.css
+│       ├── collapse-item.css
+│       ├── collapse.css
+│       ├── color-picker.css
+│       ├── container.css
+│       ├── date-picker.css
+│       ├── dialog.css
+│       ├── display.css
+│       ├── divider.css
+│       ├── dropdown-item.css
+│       ├── dropdown-menu.css
+│       ├── dropdown.css
+│       ├── fonts
+│       │   ├── element-icons.ttf
+│       │   └── element-icons.woff
+│       ├── footer.css
+│       ├── form-item.css
+│       ├── form.css
+│       ├── header.css
+│       ├── icon.css
+│       ├── image.css
+│       ├── index.css
+│       ├── input-number.css
+│       ├── input.css
+│       ├── link.css
+│       ├── loading.css
+│       ├── main.css
+│       ├── menu-item-group.css
+│       ├── menu-item.css
+│       ├── menu.css
+│       ├── message-box.css
+│       ├── message.css
+│       ├── notification.css
+│       ├── option-group.css
+│       ├── option.css
+│       ├── pagination.css
+│       ├── popover.css
+│       ├── popper.css
+│       ├── progress.css
+│       ├── radio-button.css
+│       ├── radio-group.css
+│       ├── radio.css
+│       ├── rate.css
+│       ├── reset.css
+│       ├── row.css
+│       ├── scrollbar.css
+│       ├── select-dropdown.css
+│       ├── select.css
+│       ├── slider.css
+│       ├── spinner.css
+│       ├── step.css
+│       ├── steps.css
+│       ├── submenu.css
+│       ├── switch.css
+│       ├── tab-pane.css
+│       ├── table-column.css
+│       ├── table.css
+│       ├── tabs.css
+│       ├── tag.css
+│       ├── time-picker.css
+│       ├── time-select.css
+│       ├── timeline-item.css
+│       ├── timeline.css
+│       ├── tooltip.css
+│       ├── transfer.css
+│       ├── tree.css
+│       └── upload.css
+└── views
+    ├── AnswerQuestionnairePage.vue
+    ├── Api.vue
+    ├── Home.vue
+    ├── LoginPage.vue
+    ├── MessagePage.vue
+    ├── PublishMissionPage.vue
+    ├── PublishedPage.vue
+    ├── QuestionnairePage.vue
+    ├── ReceivedPage.vue
+    ├── RegisterPage.vue
+    ├── SquarePage.vue
+    ├── StatisticPage.vue
+    └── UserInfoPage.vue
+```
+
+
+
+### 后端  
+
+```bash
+.
+├── __init__.py
+├── api
+│   ├── __init__.py
+│   ├── mission.py
+│   ├── notification.py
+│   ├── order.py
+│   └── user.py
+├── auth.py
+├── currency.py
+├── db.py
+├── email.py
+├── response_code.py
+├── schema.sql
+├── static
+│   ├── 1.jpg
+│   ├── 2.jpg
+│   ├── 2.png
+│   ├── 3.jpg
+│   └── logo.png
+├── statistics.py
+└── verification.py
+```
+
 
 ## ECB
 - **Boundary 对象**：表示参与者与系统之间进行的交互以及信息交流  
