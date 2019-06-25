@@ -10,26 +10,26 @@
 
 5. [Product Backlog](https://sysuswsad.github.io/mission_craft/ProductBacklog.html)(产品特性库)
 
-6. [Requirement specification](https://sysuswsad.github.io/mission_craft/SRS.html)（需求规格说明书）
+6. Requirement specification（需求规格说明书）
    - 6.1 [Usecase Diagram and UML Activity Diagram](https://sysuswsad.github.io/mission_craft/UMLActivityDiagram.html)（用例图，业务过程/多泳道图）
    - 6.2 [Use Cases](https://sysuswsad.github.io/mission_craft/use_cases.html)（用例+活动图）
    - 6.3 [Domian Models](https://sysuswsad.github.io/mission_craft/DomainModels.html)（领域模型）
-   - 6.4 [State Models](https://sysuwsad.github.io/mission_craft/StateModel.html)（状态模型）
+   - 6.4 [State Models](https://sysuswsad.github.io/mission_craft/StateModel.html)（状态模型）
    - 6.5  [System Sequence](https://sysuswsad.github.io/mission_craft/SystemSequenceDiagram.html)（功能模型）
-   - 6.6 Supplementary Requirements（补充需求）
+   - 6.6 [Supplementary Requirements](https://sysuswsad.github.io/mission_craft/SR.html)（补充需求）
 
-7. Design（设计说明书）
+7. [Design](https://sysuswsad.github.io/mission_craft/SD.html)（设计说明书）
    - 7.1 [UI design](https://sysuswsad.github.io/mission_craft/UI_design.html)（界面设计）
    - 7.2 [Database design](https://sysuswsad.github.io/mission_craft/DatabaseDesign.html)（数据库设计）
    - 7.3 [Interface API design](https://sysuswsad.github.io/mission_craft/api.html)（接口API设计）
-   - 7.4 Architecture design（架构设计）
+   - 7.4 [Architecture design](https://sysuswsad.github.io/mission_craft/Architecture_design.html)（架构设计）
    - 7.5 [Usecase design](https://sysuswsad.github.io/mission_craft/UseCaseDesign.html)（用例设计）
 
 8. 生产规范与指南
    - 8.1 代码规范
-   - 8.2 REST API设计规范
-   - 8.3 架构设计，详细设计（BCE方法）到应用程序框架映射框架映射指南
-   - 8.4 部署说明
+   - 8.2 [REST API设计规范](https://sysuswsad.github.io/mission_craft/REST_API.html)
+   - 8.3 [架构设计，详细设计（BCE方法）到应用程序框架映射框架映射指南](https://sysuswsad.github.io/mission_craft/architecture.html)
+   - 8.4 [部署说明](https://sysuswsad.github.io/mission_craft/deployment_doc.html)
 
 9. 成品展示
    - 9.1 短视频
@@ -37,9 +37,10 @@
 
 X1. Meeting Recodings（会议记录）
 
-- Meeting 0
-- Meeting 1
-- Meeting 2
+- [Inception meeting(2019/04/03)](https://sysuswsad.github.io/mission_craft/meeting_0.html)
+- [First iteration meeting(2019/05/06)](https://sysuswsad.github.io/mission_craft/meeting_1.html)
+- [Progress report meeting(2019/05/20)](https://sysuswsad.github.io/mission_craft/meeting_2.html)
+- [second iteration meeting(2019/05/28)](https://sysuswsad.github.io/mission_craft/meeting_3.html)
 
 X2. 建模练习
 

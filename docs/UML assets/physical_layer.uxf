@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>16</x>
+      <y>184</y>
+      <w>192</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;client&gt;&gt;
+Browser
+{html}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>64</x>
+      <y>248</y>
+      <w>96</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;app&gt;&gt;
+Mission Craft</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>264</x>
+      <y>176</y>
+      <w>216</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;server&gt;&gt;
+Proxy Server
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>320</x>
+      <y>248</y>
+      <w>96</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Nginx</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>520</x>
+      <y>168</y>
+      <w>248</w>
+      <h>296</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;server&gt;&gt;
+WSGI Server
+{os=centos7, tomcat, cpus=4}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>576</x>
+      <y>232</y>
+      <w>128</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>WSGI application
+{port=5000}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>592</x>
+      <y>352</y>
+      <w>96</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;DB&gt;&gt;
+sqlite</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>776</x>
+      <y>168</y>
+      <w>104</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;server&gt;&gt;
+cache
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>784</x>
+      <y>208</y>
+      <w>80</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Redis</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>152</x>
+      <y>264</y>
+      <w>184</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=-
+https</panel_attributes>
+    <additional_attributes>10.0;20.0;210.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>248</y>
+      <w>184</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=-
+https</panel_attributes>
+    <additional_attributes>210.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>280</y>
+      <w>24</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=-
+</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>696</x>
+      <y>224</y>
+      <w>104</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+</diagram>
