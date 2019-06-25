@@ -25,6 +25,7 @@ let $vue = new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+/*
 router.beforeEach((to, from, next) => {
   let isLogin = store.state.isLogin
   if (!isLogin) {
@@ -44,5 +45,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
+*/
 export default $vue

@@ -34,6 +34,7 @@
 ## order POST
 - 301 Mission is closed
 - 302 mission reached its max rcv num
+- 304 you have received this mission 
 
 ## order PUT
 - 303 The order has been confirmed
