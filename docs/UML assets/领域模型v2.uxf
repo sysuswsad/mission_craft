@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>13</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>169</x>
+      <y>390</y>
+      <w>273</w>
+      <h>559</h>
+    </coordinates>
+    <panel_attributes>用户
+--
+-ID
+-用户名
+-密码
+-真实姓名
+-类型（组织/个人）
+-审核人
+-大学
+-学院
+-年级
+-邮箱（必须是教育邮箱）
+-账户余额
+-发布任务数
+-完成任务数
+-身份证号码
+-电话
+-qq
+-微信
+-性别
+-标签
+--
++注册登录
++修改个人信息
++发布任务
++接手任务
++发起申诉</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>429</x>
+      <y>364</y>
+      <w>208</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+发布 &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>156</x>
+      <y>936</y>
+      <w>221</w>
+      <h>156</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+审核组织用户真实性 ^</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>169</x>
+      <y>1066</y>
+      <w>273</w>
+      <h>169</h>
+    </coordinates>
+    <panel_attributes>管理员
+--
+-ID（工号）
+-用户名
+-密码
+-其他待定信息
+--
++审核通过组织用户的注册
++处理用户申诉
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>611</x>
+      <y>390</y>
+      <w>273</w>
+      <h>273</h>
+    </coordinates>
+    <panel_attributes>任务信息
+--
+-ID（任务号）
+-发布人ID
+-任务标签
+-任务创建时间
+-任务截止时间（ddl）
+-标题
+-任务简短描述
+-任务详细信息
+-任务赏金
+-最大接单人数
+-任务状态</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1040</x>
+      <y>390</y>
+      <w>169</w>
+      <h>195</h>
+    </coordinates>
+    <panel_attributes>问题
+--
+-ID（问题号）
+-任务ID
+-问题类型
+-题干内容
+-题目内容
+-是否必答
+-跳转逻辑</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>611</x>
+      <y>1066</y>
+      <w>273</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>申诉
+--
+-ID（申诉单号）
+-任务详单ID
+-处理人工号
+-申诉创建时间
+-申诉描述信息
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>429</x>
+      <y>1170</y>
+      <w>208</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+处理 &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>429</x>
+      <y>910</y>
+      <w>208</w>
+      <h>195</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+发起 &gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0;50.0;120.0;140.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>871</x>
+      <y>364</y>
+      <w>195</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+包含 &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;130.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>611</x>
+      <y>793</y>
+      <w>273</w>
+      <h>169</h>
+    </coordinates>
+    <panel_attributes>任务详单
+--
+-ID（单号）
+-任务ID
+-接单人ID
+-发布人确认信息
+-接单人确认信息
+-任务完成状态（双方=&gt;完成）</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>429</x>
+      <y>767</y>
+      <w>208</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+接单 &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>598</x>
+      <y>650</y>
+      <w>130</w>
+      <h>169</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1
+提供信息 v</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>871</x>
+      <y>767</y>
+      <w>195</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+包含 &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;130.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1040</x>
+      <y>793</y>
+      <w>273</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>答案
+--
+-ID（答案号）
+-任务详单ID
+-问题ID
+-答案内容
+-答题时间
+-反馈信息
+-备注</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1027</x>
+      <y>572</y>
+      <w>130</w>
+      <h>247</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+提供信息 v</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>598</x>
+      <y>949</y>
+      <w>130</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+提供信息 v</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1040</x>
+      <y>52</y>
+      <w>273</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>答案统计表
+--
+-答案统计表ID
+-任务ID
+-问题ID
+-统计信息
+-备注</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1027</x>
+      <y>182</y>
+      <w>130</w>
+      <h>234</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+提供信息 ^</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>871</x>
+      <y>182</y>
+      <w>195</w>
+      <h>234</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+包含 ^</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0;130.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1300</x>
+      <y>182</y>
+      <w>91</w>
+      <h>637</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+统计 v</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;470.0</additional_attributes>
+  </element>
+</diagram>
