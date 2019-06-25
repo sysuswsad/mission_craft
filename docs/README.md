@@ -43,6 +43,22 @@ X1. Meeting Recodings（会议记录）
 - [Progress report meeting(2019/05/20)](https://sysuswsad.github.io/mission_craft/meeting_3.html)
 - [Second iteration meeting(2019/05/28)](https://sysuswsad.github.io/mission_craft/meeting_4.html)
 - [Deployment meeting(2019/06/15)](https://sysuswsad.github.io/mission_craft/meeting_5.html)
-X2. 建模练习
 
-X3. Final Report
+
+
+X2. [KANBAN](<https://github.com/sysuswsad/mission_craft/projects>)
+
+
+
+X3.Auditing-records（审计报告）
+
+
+
+X4.Tech/Work Report
+
+- [16340173-title]()
+
+X5. Final Report
+
+- [16340173-title]()
+- [小组分工与贡献率说明]()
