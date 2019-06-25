@@ -84,7 +84,7 @@ def create_order():
         return bad_request('Missing contact info')
 
     # 已经结束
-    if(mission['state'] == 1):
+    if(mission['state'] != 0):
         return bad_request('Mission is closed') 
     # 达最大接单数
     rcv_num = mission['rcv_num']
@@ -222,7 +222,7 @@ def confirm_order():
     )
     db.commit()
     db.execute(
-        'UPDATE MissionInfo SET state = 1, finish_time = datetime(CURRENT_TIMESTAMP,"localtime") WHERE idMissionInfo = ? AND fin_num==max_num', 
+        'UPDATE MissionInfo SET state = 2, finish_time = datetime(CURRENT_TIMESTAMP,"localtime") WHERE idMissionInfo = ? AND fin_num==max_num', 
         (order_info['mission_id'],)
     )
     db.commit()

@@ -1,22 +1,22 @@
 # 团队分工
 
-| 学号     | 昵称      | Github                         | 定位                    |
-| -------- | --------- | ------------------------------ | ----------------------- |
-| 16340178 | JH-Peng   | <https://github.com/NeoBryant> | 后端开发工程师+产品经理 |
-| 16340173 | ousuixin  | <https://github.com/ousuixin>  | 后端开发工程师+项目经理 |
-| 16340174 | Azure0SKY | <https://github.com/Azure0Sky> | 前端开发工程师          |
-| 16340176 | PJsFirst  | <https://github.com/PJsFirst>  | 测试工程师              |
-| 16340181 | Vilinz    | <https://github.com/Vilinz>    | 前端开发工程师          |
-| 16340179 | penglsh   | <https://github.com/penglsh>   | 前端开发工程师          |
+| 学号     | 昵称      | Github                         | 定位                                     |
+| -------- | --------- | ------------------------------ | ---------------------------------------- |
+| 16340173 | ousuixin  | <https://github.com/ousuixin>  | 项目经理，架构师，后端开发工程师         |
+| 16340176 | PJsFirst  | <https://github.com/PJsFirst>  | 测试工程师，后端开发工程师               |
+| 16340178 | JH-Peng   | <https://github.com/NeoBryant> | 产品经理，后端开发工程师                 |
+| 16340174 | Azure0SKY | <https://github.com/Azure0Sky> | UI总设计师，前端开发工程师               |
+| 16340181 | Vilinz    | <https://github.com/Vilinz>    | UI设计师，前端开发工程师，集成测试工程师 |
+| 16340179 | penglsh   | <https://github.com/penglsh>   | UI设计师，前端开发工程师，集成测试工程师 |
 
 具体分工与个人宣言
 
-| 昵称      | 分工 | 个人宣言 |
-| :-------- | ---- | -------- |
-| JH-Peng   |      |          |
-| ousuixin  |      |          |
-| Azure0SKY |      |          |
-| PJsFirst  |      |          |
-| Vilinz    |      |          |
-| penglsh   |      |          |
+| 昵称      | 分工                                                         | 个人宣言                                                     |
+| :-------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ousuixin  | 项目总监：负责监督项目开发进度、生产质量，成本管理，协调前后端开发、对接；架构师：数据库设计，参与软件设计（api设计）；后端开发：用户登录注册、任务系统部分api编写及其单元测试； | never say die                                                |
+| PJsFirst  | 测试工程师：负责后端各个api的测例设计；后端开发：用户信息获取&修改、订单系统api编写及其单元测试； | I can do this all                                            |
+| JH-Peng   | 产品经理：前期市场调研，需求分析，产品功能确定，软件设计（api设计），数据库设计管理与维护；后端开发：通知系统api编写及其单元测试； | 博学，审问，慎思，明辨，笃行                                 |
+| Azure0SKY | UI总设计：项目整体视觉设计，交互逻辑设计；前端开发：任务广场页面编写，问卷统计页面、任务领取页面； | I'm thinking                                                 |
+| Vilinz    | UI设计：登录注册页面，用户信息查看修改页面，任务发布页面；前端开发：前述相关页面编写；集成测试：前述页面功能的集成测试； | 练习coding两年半                                             |
+| penglsh   | UI设计：我的发布统计、我的领取统计、消息通知页面设计；前端开发前述相关页面编写；集成测试：前述页面功能的集成测试； | Life is a series of building, testing, changing and iterating |
 

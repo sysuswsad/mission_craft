@@ -271,7 +271,7 @@ def cancel_mission():
     # 发布者可以取消
     if(mission_info['type'] == 0):
         if(mission_info['publisher_id'] == g.user['idUser']):
-            db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
+            db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (3, mission_id))
             db.commit()
             # 订单取消，发布人获得退款
             refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rcv_num'])
@@ -298,7 +298,7 @@ def cancel_mission():
             if rcv_num != 0:
                 return error_response(400, 'Should not cancel a mission already received')
             else:
-                db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (1, mission_id))
+                db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (3, mission_id))
                 db.commit()
                 # 订单取消，发布人获得退款
                 refund_by_cancel(mission_info['bounty']/mission_info['max_num'], mission_info['max_num']-mission_info['rcv_num'])
