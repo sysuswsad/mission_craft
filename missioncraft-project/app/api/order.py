@@ -85,7 +85,7 @@ def create_order():
 
     # 已经结束
     if(mission['state'] != 0):
-        return bad_request('Mission is closed') 
+        return bad_request('301 Mission is closed') 
     
     order = db.execute(
         'SELECT * FROM MissionOrder WHERE mission_id = ? AND receiver_id = ?', (mission_id, g.user['idUser'],)
@@ -94,7 +94,6 @@ def create_order():
     if order is not None:
         return bad_request('304 you have received this mission')
 
->>>>>>> 776e7ff615c644ad376266e20f874ca90e0a7f29
     # 达最大接单数
     rcv_num = mission['rcv_num']
     max_num = mission['max_num']
