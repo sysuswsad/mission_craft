@@ -4,13 +4,13 @@
 
 ### 用例图
 
-![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/userCase.png)
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/userCase1.png)
 
 ### 任务提供者
 
 - 时序图
 
-  ![](https://img-blog.csdnimg.cn/20190503225931731.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq1.png)
 
 - 类图
 
@@ -20,7 +20,7 @@
 
 - 时序图
 
-  ![](https://img-blog.csdnimg.cn/20190503230036908.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq2.png)
 
 - 类图
 
@@ -30,4 +30,4 @@
 
 - 时序图
 
-  ![](https://img-blog.csdnimg.cn/20190503230137497.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+  ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/seq3.png)
