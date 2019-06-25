@@ -1,5 +1,3 @@
-
-
 # Weclome to ApiDoc
 ----
 <!-- TOC -->

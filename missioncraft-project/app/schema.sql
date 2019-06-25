@@ -225,6 +225,7 @@ VALUES
   (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
     10, 10, 3, 3, 0),
   (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+<<<<<<< HEAD
     10, 10, 3, 3, 0),
 
   (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
@@ -242,6 +243,8 @@ VALUES
   (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
     10, 10, 3, 3, 0),
   (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+=======
+>>>>>>> 5f1b721b2074b51695d21ee2748c38db1d8224c4
     10, 10, 3, 3, 0)
 ;
 
