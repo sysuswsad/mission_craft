@@ -29,7 +29,11 @@ router.beforeEach((to, from, next) => {
   let isLogin = store.state.isLogin
   if (!isLogin) {
     if (to.path !== '/login') {
-      return next({ path: '/login' })
+      if (to.path === '/register') {
+        next()
+      } else {
+        return next({ path: '/login' })
+      }
     } else {
       next()
     }
@@ -40,4 +44,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
 export default $vue
