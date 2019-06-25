@@ -1,4 +1,4 @@
-<template>
+2<template>
   <div class="waterfall-container">
     <vue-waterfall-easy
       v-on:click="checkProfile"
