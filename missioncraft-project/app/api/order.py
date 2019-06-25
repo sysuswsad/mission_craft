@@ -13,7 +13,7 @@ from app.currency import get_by_confirm
 import json
 
 from app.api.notification import (
-    create_notification_type_1, create_notification_type_3, 
+    create_notification_type_1, create_notification_type_3,
     create_notification_type_4, create_notification_type_8)
 
 # 查看个人领取订单
@@ -24,7 +24,7 @@ def get_rcv_order():
     orders = db.execute(
         'SELECT * FROM MissionOrder WHERE receiver_id = ?', (g.user['idUser'],)
     ).fetchall()
-    
+
     data = {}
     l = []
     for order in orders:
@@ -70,13 +70,13 @@ def create_order():
     phone = data.get('phone')
     other_way = data.get('other_way')
     # end modified
- 
+
     db = get_db()
     mission = db.execute(
         'SELECT * FROM MissionInfo WHERE idMissionInfo = ?', (mission_id,)
     ).fetchone()
     # id不存在
-  
+
     if(mission is None):
         return bad_request('mission_id is invalid')
 
@@ -85,7 +85,7 @@ def create_order():
 
     # 已经结束
     if(mission['state'] == 1):
-        return bad_request('Mission is closed') 
+        return bad_request('Mission is closed')
     # 达最大接单数
     rcv_num = mission['rcv_num']
     max_num = mission['max_num']
@@ -121,7 +121,7 @@ def create_order():
       'INSERT INTO MissionOrder (mission_id, receiver_id, receive_time) VALUES (?, ?, ?)',
         (mission_id, g.user['idUser'], datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     )
- 
+
     # 得到订单id
     order_id = db.execute(
         'select last_insert_rowid() from MissionOrder'
@@ -131,7 +131,7 @@ def create_order():
     obj = {
         'order_id': order_id[0]
     }
-    
+
     # notification
     if mission['type'] != 0: # 对于非问卷类任务
         create_notification_type_3(mission['idMissionInfo'])
@@ -148,7 +148,7 @@ def confirm_order():
 
     db = get_db()
 
-    order_id = data.get('order_id')	
+    order_id = data.get('order_id')
     mission_id = data.get('mission_id')
     # 发布者通过mission_id取消
     if mission_id and order_id is None:
@@ -185,13 +185,15 @@ def confirm_order():
     if mission_info['type'] == 0:
         if order_info['receiver_id'] != g.user['idUser']:
             return forbidden('You can not submit for other receivers')
-        answers = json.loads(data.get('answers'))
+        answers = data.get('answers')
+        if type(answers) != list:
+            answers = json.loads(answers)
         problem_ids = db.execute(
             'SELECT idProblem FROM Problem WHERE mission_id = ?', (order_info['mission_id'],)
         ).fetchall()
         try:
             for i in range(0, len(answers)):
-                db.execute('INSERT INTO Answer (order_id, problem_id, result) VALUES (?, ?, ?)', 
+                db.execute('INSERT INTO Answer (order_id, problem_id, result) VALUES (?, ?, ?)',
                     (order_id, problem_ids[i]['idProblem'], json.dumps(answers[i]))
                 )
             db.commit()
@@ -202,25 +204,25 @@ def confirm_order():
             return forbidden('You can not submit for other publishers')
 
     # 为接单人发钱
-    get_by_confirm(mission_info['bounty']/mission_info['max_num'], 
+    get_by_confirm(mission_info['bounty']/mission_info['max_num'],
     	g.user['idUser'] if mission_info['type'] == 0 else order_info['receiver_id'])
-    
+
     # 更新其它表
     db.execute(
-        'UPDATE MissionOrder SET publisher_confirm = ?, receiver_confirm = ?, order_state = ?, finish_time = ? WHERE idMissionOrder = ?', 
+        'UPDATE MissionOrder SET publisher_confirm = ?, receiver_confirm = ?, order_state = ?, finish_time = ? WHERE idMissionOrder = ?',
         (1, 1, 1, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), order_id,)
     )
     db.execute(
-        'UPDATE User SET mission_fin_num = mission_fin_num + 1 WHERE idUser = ?', 
+        'UPDATE User SET mission_fin_num = mission_fin_num + 1 WHERE idUser = ?',
         (order_info['receiver_id'],)
     )
     db.execute(
-        'UPDATE MissionInfo SET fin_num = fin_num + 1 WHERE idMissionInfo = ?', 
+        'UPDATE MissionInfo SET fin_num = fin_num + 1 WHERE idMissionInfo = ?',
         (order_info['mission_id'],)
     )
     db.commit()
     db.execute(
-        'UPDATE MissionInfo SET state = 1, finish_time = datetime(CURRENT_TIMESTAMP,"localtime") WHERE idMissionInfo = ? AND fin_num==max_num', 
+        'UPDATE MissionInfo SET state = 1, finish_time = datetime(CURRENT_TIMESTAMP,"localtime") WHERE idMissionInfo = ? AND fin_num==max_num',
         (order_info['mission_id'],)
     )
     db.commit()

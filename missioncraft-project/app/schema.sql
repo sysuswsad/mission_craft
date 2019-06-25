@@ -6,34 +6,34 @@ DROP TABLE IF EXISTS MissionInfo;
 -- DROP TABLE IF EXISTS Verification;
 -- DROP TABLE IF EXISTS Notification;
 
-CREATE TABLE User (
-  idUser INTEGER PRIMARY KEY AUTOINCREMENT,
-  username VARCHAR(45) UNIQUE NOT NULL,
-  password VARCHAR(45) NOT NULL,
-  sid VARCHAR(45) UNIQUE NOT NULL,
-  realname VARCHAR(45) DEFAULT '',
-  id_card_num VARCHAR(45) DEFAULT '',
-  type INT DEFAULT 0,
-  -- 注意一下sql里面id都是从1开始，所以下面这个id=0是无意义的，不能用，需要赋值后使用
-  -- 并且记得添加管理员表之后，需要为下面的属性标注外键
-  check_man_id INT DEFAULT 0,
-  university VARCHAR(45) DEFAULT '',
-  school VARCHAR(45) DEFAULT '',
-  grade VARCHAR(45) DEFAULT '',
-  gender INT DEFAULT -1,
-  email VARCHAR(45) NOT NULL,
-  phone VARCHAR(45) DEFAULT '',
-  qq VARCHAR(45) DEFAULT '',
-  wechat VARCHAR(45) DEFAULT '',
-  avatar VARCHAR(45) DEFAULT '',
-  tag VARCHAR(45) DEFAULT '',
-  mission_pub_num INT DEFAULT 0,
-  -- mission_todo_num INT DEFAULT 0,
-  mission_fin_num INT DEFAULT 0,
--- 测试钱系统的时候balance设置为100
-  balance DOUBLE DEFAULT 1000.0,
-  other_way VARCHAR(45) DEFAULT '',
-);
+-- CREATE TABLE User (
+--   idUser INTEGER PRIMARY KEY AUTOINCREMENT,
+--   username VARCHAR(45) UNIQUE NOT NULL,
+--   password VARCHAR(45) NOT NULL,
+--   sid VARCHAR(45) UNIQUE NOT NULL,
+--   realname VARCHAR(45) DEFAULT '',
+--   id_card_num VARCHAR(45) DEFAULT '',
+--   type INT DEFAULT 0,
+--   -- 注意一下sql里面id都是从1开始，所以下面这个id=0是无意义的，不能用，需要赋值后使用
+--   -- 并且记得添加管理员表之后，需要为下面的属性标注外键
+--   check_man_id INT DEFAULT 0,
+--   university VARCHAR(45) DEFAULT '',
+--   school VARCHAR(45) DEFAULT '',
+--   grade VARCHAR(45) DEFAULT '',
+--   gender INT DEFAULT -1,
+--   email VARCHAR(45) NOT NULL,
+--   phone VARCHAR(45) DEFAULT '',
+--   qq VARCHAR(45) DEFAULT '',
+--   wechat VARCHAR(45) DEFAULT '',
+--   avatar VARCHAR(45) DEFAULT '',
+--   tag VARCHAR(45) DEFAULT '',
+--   mission_pub_num INT DEFAULT 0,
+--   -- mission_todo_num INT DEFAULT 0,
+--   mission_fin_num INT DEFAULT 0,
+-- -- 测试钱系统的时候balance设置为100
+--   balance DOUBLE DEFAULT 1000.0,
+--   other_way VARCHAR(45) DEFAULT ''
+-- );
 
 CREATE TABLE MissionInfo (
   idMissionInfo INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -225,6 +225,23 @@ VALUES
   (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
     10, 10, 3, 3, 0),
   (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+    10, 10, 3, 3, 0),
+
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+    10, 10, 3, 3, 0),
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+    10, 10, 3, 3, 0),
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+    10, 10, 3, 3, 0),
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+    10, 10, 3, 3, 0),
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+    10, 10, 3, 3, 0),
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+    10, 10, 3, 3, 0),
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
+    10, 10, 3, 3, 0),
+  (1, '1360', '14735', 'ousx', 'no', 1, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test dilivery fetch', 'test mission description',
     10, 10, 3, 3, 0)
 ;
 

@@ -68,7 +68,7 @@ def create_mission():
 
     # 该用户发布任务数量+1
     db.execute(
-        'UPDATE User SET mission_pub_num=mission_pub_num+1 WHERE idUser = ?', 
+        'UPDATE User SET mission_pub_num=mission_pub_num+1 WHERE idUser = ?',
         (g.user['idUser'],)
     )
 
@@ -82,11 +82,12 @@ def create_mission():
     if mission_type == 0:
         if not problems:
             return bad_request('Questionare should have problems')
-        problems = json.loads(problems)
+        if type(problems) != list:
+            problems = json.loads(problems)
         # 建议debug的时候注释掉这些try，便于看到错误
         try:
             for problem in problems:
-                db.execute('INSERT INTO Problem (mission_id, type, problem_stem, problem_detail) VALUES (?, ?, ?, ?)', 
+                db.execute('INSERT INTO Problem (mission_id, type, problem_stem, problem_detail) VALUES (?, ?, ?, ?)',
                     (mission_id, int(problem['type']), problem['question'], json.dumps(problem.get('choices', '')))
                 )
         except Exception:
@@ -118,7 +119,7 @@ def get_mission():
     mission_array = []
     col_name = [name_list[1] for name_list in db.execute('PRAGMA table_info(MissionInfo)').fetchall()]
     col_name.remove('phone');col_name.remove('qq');col_name.remove('wechat');col_name.remove('other_way')
-    
+
     # 若missionid不为空，说明是通过missionid查询特定订单信息，不需要提供任何其他信息
     if mission_id or mission_id == 0:
         try:
@@ -151,12 +152,12 @@ def get_mission():
         # personal为0时表示广场查询，为1时表示私人查询，广场查询只返回state=0的任务
         if personal == 0:
             mission_info = db.execute(
-                'SELECT * FROM MissionInfo WHERE bounty > ? AND create_time < ? AND state == 0', 
+                'SELECT * FROM MissionInfo WHERE bounty > ? AND create_time < ? AND state == 0',
                 (bounty, create_time)
             ).fetchall()
         elif personal == 1:
             mission_info = db.execute(
-                'SELECT * FROM MissionInfo WHERE publisher_id = ? AND bounty > ? AND create_time < ?', 
+                'SELECT * FROM MissionInfo WHERE publisher_id = ? AND bounty > ? AND create_time < ?',
                 (g.user['idUser'], bounty, create_time)
             ).fetchall()
         for row in mission_info:
@@ -205,7 +206,7 @@ def get_mission():
             for num in range(0, len(problems)):
                 item['problems'][num]['answer'] = statistics_ana(problem_info[num]['type'], problem_info[num]['problem_detail'], problem_info[num]['idProblem'])
 
-    # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息    
+    # 使用订单表完善missioninfo信息，如果是其他任务需要先检查任务是否被接受，如果是那么就需要返回接收人任务人信息
     for item in mission_array:
         # item['receiver_id'] = ''
         # item['receiver_time'] = ''
@@ -259,7 +260,7 @@ def cancel_mission():
     if (mission_id is None):
         return bad_request('Mission_id is required')
     mission_info = db.execute('SELECT * FROM MissionInfo WHERE idMissionInfo = ?',
-        (mission_id,) 
+        (mission_id,)
     ).fetchone()
     if(mission_info is None):
         return bad_request('Mission_id is invalid')
@@ -280,7 +281,7 @@ def cancel_mission():
             if order_info['receiver_id'] == g.user['idUser']:
                 # 如果问卷原本是满人了,就重新开放
                 if rcv_num == max_num:
-                    db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (0, mission_id))         
+                    db.execute('UPDATE MissionInfo SET state = ? WHERE idMissionInfo = ?', (0, mission_id))
                 # 修改接单人数
                 db.execute('UPDATE MissionInfo SET rcv_num = ? WHERE idMissionInfo = ?', (rcv_num - 1, mission_id))
                 # 订单取消
@@ -312,8 +313,8 @@ def cancel_mission():
 
                 # notification
                 create_notification_type_8(
-                    mission_id=mission_info['idMissionInfo'], 
-                    receiver_id=order_info['receiver_id'], 
+                    mission_id=mission_info['idMissionInfo'],
+                    receiver_id=order_info['receiver_id'],
                     cancel_time=datetime.datetime.now())
 
                 return ok('cancel successfully')
