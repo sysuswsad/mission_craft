@@ -20,9 +20,7 @@ export default {
   name: 'TimeSlider',
 
   data () {
-    return {
-      deadline: ''
-    }
+    return {}
   },
 
   props: {
@@ -57,10 +55,6 @@ export default {
     }
   },
 
-  created () {
-    this.deadline = this.endTime
-  },
-
   methods: {
     formatTooltip () {
       if (this.finNum !== 0 || this.orderState === 1) {
@@ -70,11 +64,11 @@ export default {
       } else if (this.orderState === 2) {
         return '任务已结束或已放弃（未完成）'
       }
-      let startTime = Date.now()
-      let eTime = new Date(this.deadline)
+      let currTime = Date.now()
+      let eTime = new Date(this.endTime.toString())
       let left = '任务未完成，已结束'
-      if (eTime.getTime() > startTime) {
-        let msDiff = eTime.getTime() - startTime
+      if (eTime.getTime() > currTime) {
+        let msDiff = eTime.getTime() - currTime
         // compute day left
         let leftDay = Math.floor(msDiff / (1000 * 24 * 60 * 60))
         // hours left after computing day left
@@ -106,9 +100,7 @@ export default {
       let sTime = new Date(startTime)
       let nowTime = Date.now()
       let eTime = new Date(endTime)
-      console.log(finishTime)
       if (this.finNum !== 0 || this.orderState === 1) {
-        console.log(finishTime)
         let finTime = new Date(finishTime)
         let passHour = 0
         if (finTime.getTime() > sTime.getTime()) {

@@ -1,10 +1,10 @@
--- DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS MissionInfo;
--- DROP TABLE IF EXISTS Problem;
--- DROP TABLE IF EXISTS MissionOrder;
--- DROP TABLE IF EXISTS Answer;
--- DROP TABLE IF EXISTS Verification;
--- DROP TABLE IF EXISTS Notification;
+ DROP TABLE IF EXISTS User;
+ DROP TABLE IF EXISTS MissionInfo;
+ DROP TABLE IF EXISTS Problem;
+ DROP TABLE IF EXISTS MissionOrder;
+ DROP TABLE IF EXISTS Answer;
+ DROP TABLE IF EXISTS Verification;
+ DROP TABLE IF EXISTS Notification;
 
 CREATE TABLE User (
   idUser INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,175 +58,175 @@ CREATE TABLE MissionInfo (
   FOREIGN KEY (publisher_id) REFERENCES User (idUser)
 );
 
--- CREATE TABLE Problem (
---   idProblem INTEGER PRIMARY KEY AUTOINCREMENT,
---   mission_id INTEGER NOT NULL,
---   type INT DEFAULT 0,
---   problem_stem VARCHAR(45) NOT NULL,
---   problem_detail VARCHAR(200) DEFAULT '',
---   must_be_answer INT DEFAULT 1,
---   jump_logic INT DEFAULT -1,
---   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo)
--- );
+ CREATE TABLE Problem (
+   idProblem INTEGER PRIMARY KEY AUTOINCREMENT,
+   mission_id INTEGER NOT NULL,
+   type INT DEFAULT 0,
+   problem_stem VARCHAR(45) NOT NULL,
+   problem_detail VARCHAR(200) DEFAULT '',
+   must_be_answer INT DEFAULT 1,
+   jump_logic INT DEFAULT -1,
+   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo)
+ );
 
--- CREATE TABLE MissionOrder (
---   idMissionOrder INTEGER PRIMARY KEY AUTOINCREMENT,
---   mission_id INTEGER NOT NULL,
---   receiver_id INTEGER NOT NULL,
---   phone VARCHAR(45) DEFAULT '',
---   qq VARCHAR(45) DEFAULT '',
---   wechat VARCHAR(45) DEFAULT '',
---   other_way VARCHAR(45) DEFAULT '',
---   publisher_confirm INT DEFAULT 0,
---   receiver_confirm INT DEFAULT 0,
---   order_state INT DEFAULT 0,
---   receive_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
---   finish_time DATETIME DEFAULT NULL,
---   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
---   FOREIGN KEY (receiver_id) REFERENCES User (idUser)
--- );
+ CREATE TABLE MissionOrder (
+   idMissionOrder INTEGER PRIMARY KEY AUTOINCREMENT,
+   mission_id INTEGER NOT NULL,
+   receiver_id INTEGER NOT NULL,
+   phone VARCHAR(45) DEFAULT '',
+   qq VARCHAR(45) DEFAULT '',
+   wechat VARCHAR(45) DEFAULT '',
+   other_way VARCHAR(45) DEFAULT '',
+   publisher_confirm INT DEFAULT 0,
+   receiver_confirm INT DEFAULT 0,
+   order_state INT DEFAULT 0,
+   receive_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+   finish_time DATETIME DEFAULT NULL,
+   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
+   FOREIGN KEY (receiver_id) REFERENCES User (idUser)
+ );
 
--- CREATE TABLE Answer (
---   idAnswer INTEGER PRIMARY KEY AUTOINCREMENT,
---   order_id INT NOT NULL,
---   problem_id INT NOT NULL,
---   result VARCHAR(45) NOT NULL,
---   answer_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
---   feedback VARCHAR(45) NULL,
---   supplement_info VARCHAR(45) NULL,
---   FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder),
---   FOREIGN KEY (problem_id) REFERENCES Problem (idProblem)
--- );
+ CREATE TABLE Answer (
+   idAnswer INTEGER PRIMARY KEY AUTOINCREMENT,
+   order_id INT NOT NULL,
+   problem_id INT NOT NULL,
+   result VARCHAR(45) NOT NULL,
+   answer_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+   feedback VARCHAR(45) NULL,
+   supplement_info VARCHAR(45) NULL,
+   FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder),
+   FOREIGN KEY (problem_id) REFERENCES Problem (idProblem)
+ );
 
--- -- 如果不使用redis数据库，就需要将验证码存到邮箱的这个表
--- CREATE TABLE Verification (
---   email VARCHAR(45) PRIMARY KEY,
---   code VARCHAR(10) NOT NULL,
---   send_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
--- );
+ -- 如果不使用redis数据库，就需要将验证码存到邮箱的这个表
+ CREATE TABLE Verification (
+   email VARCHAR(45) PRIMARY KEY,
+   code VARCHAR(10) NOT NULL,
+   send_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
+ );
 
--- CREATE TABLE Notification (
---   n_id INTEGER PRIMARY KEY AUTOINCREMENT,
---   user_id INTEGER NOT NULL,
---   mission_id INTEGER,
---   order_id INTEGER,
---   message VARCHAR(200) NOT NULL,
---   create_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
---   has_read INT DEFAULT 0,
---   has_deleted INT DEFAULT 0,
---   notification_type INT NOT NULL,
---   FOREIGN KEY (user_id) REFERENCES User (idUser),
---   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
---   FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder)
--- );
-
-INSERT INTO MissionInfo (publisher_id, phone, qq, wechat, other_way, type, create_time, deadline, title, description, bounty, max_num, rcv_num, fin_num, state)
-VALUES
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0),
-  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
-    10, 10, 3, 3, 0)
-;
+ CREATE TABLE Notification (
+   n_id INTEGER PRIMARY KEY AUTOINCREMENT,
+   user_id INTEGER NOT NULL,
+   mission_id INTEGER,
+   order_id INTEGER,
+   message VARCHAR(200) NOT NULL,
+   create_time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
+   has_read INT DEFAULT 0,
+   has_deleted INT DEFAULT 0,
+   notification_type INT NOT NULL,
+   FOREIGN KEY (user_id) REFERENCES User (idUser),
+   FOREIGN KEY (mission_id) REFERENCES MissionInfo (idMissionInfo),
+   FOREIGN KEY (order_id) REFERENCES MissionOrder (idMissionOrder)
+ );
+--
+--INSERT INTO MissionInfo (publisher_id, phone, qq, wechat, other_way, type, create_time, deadline, title, description, bounty, max_num, rcv_num, fin_num, state)
+--VALUES
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-04-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-05-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0),
+--  (1, '1360', '14735', 'ousx', 'no', 0, datetime('2019-06-08 11:20:12'), datetime('2019-07-08 11:20:12'), 'test mission title', 'test mission description',
+--    10, 10, 3, 3, 0)
+--;
 
 -- INSERT INTO Problem (mission_id, type, problem_stem, problem_detail)
 -- VALUES
