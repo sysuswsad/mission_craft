@@ -19,7 +19,7 @@
         <el-form label-width="100px">
           <el-row>
             <el-col>
-              <el-form-item label="问卷标题">
+              <el-form-item label="问卷标题" required>
                 <el-input v-model="title"></el-input>
               </el-form-item>
             </el-col>
@@ -101,7 +101,7 @@
             <el-col v-bind:span="0.1">-</el-col>
             <el-col v-bind:span="5">
               <el-form-item prop="date2" v-bind:rules="{required: true, message: '日期不能为空', trigger: 'blur'}">
-                <el-time-picker placeholder="选择时间" value-format="hh:mm:ss" v-model="questionnaireSetting.date2" style="width: 100%;"></el-time-picker>
+                <el-time-picker placeholder="选择时间" value-format="HH:mm:ss" v-model="questionnaireSetting.date2" style="width: 100%;"></el-time-picker>
               </el-form-item>
             </el-col>
           </el-form-item>

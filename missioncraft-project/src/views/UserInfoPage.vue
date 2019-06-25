@@ -122,7 +122,6 @@ import backend from '../backend'
 export default {
   name: 'UserInfoPage',
   created () {
-    console.log(backend.baseURL)
     if (this.$cookies.isKey('u-token')) {
       backend.getRequest('user/')
         .then((response) => {
@@ -219,6 +218,9 @@ export default {
       this.info.interUsername = this.$store.state.userInfo.username
       this.info.interGrade = this.$store.state.userInfo.grade
       this.info.interSchool = this.$store.state.userInfo.school
+      this.info.interPhone = this.$store.state.userInfo.phone
+      this.info.interWeChat = this.$store.state.userInfo.wechat
+      this.info.interqq = this.$store.state.userInfo.qq
     },
     handleAvatarSuccess (res, file) {
       this.url = res.data.avatar
@@ -256,8 +258,7 @@ export default {
               })
               this.canEdit = !this.canEdit
             })
-            .catch(function (error) {
-              console.log(error)
+            .catch(() => {
               this.$message.error('用户信息修改失败！')
             })
         }

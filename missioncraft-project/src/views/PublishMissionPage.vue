@@ -22,7 +22,7 @@
             </el-col>
             <el-col v-bind:span="0.1">-</el-col>
             <el-col v-bind:span="8">
-              <el-time-picker placeholder="选择时间" value-format="hh:mm:ss" v-model="descriptionFrom.date.date2" style="width: 100%;"></el-time-picker>
+              <el-time-picker placeholder="选择时间" value-format="HH:mm:ss" v-model="descriptionFrom.date.date2" style="width: 100%;"></el-time-picker>
             </el-col>
           </el-form-item>
         </el-form>
