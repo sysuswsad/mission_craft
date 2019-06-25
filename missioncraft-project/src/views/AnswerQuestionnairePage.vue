@@ -46,18 +46,15 @@ export default {
         return_problems: 1
       }
     }).then((response) => {
-      setTimeout(() => {
-        console.log(response.data.data['missions'])
-        this.questionnaire.questions = response.data.data['missions'][0]['problems']
-        this.questionnaire.title = response.data.data['missions'][0]['title']
-        for (let i = 0; i < this.questionnaire.questions.length; i++) {
-          if (this.questionnaire.questions[i].type === 1) {
-            this.answers.push([])
-          } else {
-            this.answers.push('')
-          }
+      this.questionnaire.questions = response.data.data['missions'][0]['problems']
+      this.questionnaire.title = response.data.data['missions'][0]['title']
+      for (let i = 0; i < this.questionnaire.questions.length; i++) {
+        if (this.questionnaire.questions[i].type === 1) {
+          this.answers.push([])
+        } else {
+          this.answers.push('')
         }
-      })
+      }
     }).catch(() => {
     })
   },

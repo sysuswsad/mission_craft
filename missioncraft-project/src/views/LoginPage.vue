@@ -2,7 +2,7 @@
   <div id="login-container">
     <el-card class="login-card">
       <template v-slot:header>
-        <h1 style="text-align: center">EARN MONEY</h1>
+        <h1 style="text-align: center">Mission Craft</h1>
       </template>
       <div id="login-form">
         <el-form v-bind:model="info" v-bind:rules="rules" status-icon>
