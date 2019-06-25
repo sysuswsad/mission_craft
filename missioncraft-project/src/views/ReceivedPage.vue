@@ -91,7 +91,7 @@
               <el-col v-bind:span="23" v-bind:offset="1">{{ description }}</el-col>
             </el-row>
             <el-row>
-              <p style="font-weight: bold"><i class="el-icon-coin"></i>&nbsp;任务报酬：{{ bounty }}</p>
+              <p style="font-weight: bold"><i class="el-icon-coin"></i>&nbsp;任务报酬：￥{{ bounty }}</p>
             </el-row>
           </el-col>
         </el-row>
@@ -304,8 +304,9 @@ export default {
           }).then((response) => {
             let mission = response.data.data['missions']
             this.bounty = mission[0].bounty
+            let maxNum = mission[0].max_num
 
-            this.$message('您已完成该问卷，报酬为' + this.bounty)
+            this.$message('您已完成该问卷，报酬为' + this.bounty / maxNum)
           }).catch(() => {
 
           })
@@ -371,14 +372,5 @@ export default {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-  }
-
-  .username-container {
-    margin: 20px 0 0 0;
-    font-weight: bold;
-  }
-
-  .contact-row-wrapper {
-    margin-bottom: 10px;
   }
 </style>
