@@ -14,7 +14,7 @@ auth = HTTPTokenAuth()
 
 @auth.error_handler
 def error_handler():
-    return unauthorized('301 Unauthorized Access')
+    return unauthorized('401 Unauthorized Access')
 
 
 @auth.verify_token

@@ -43,6 +43,10 @@ export default new Vuex.Store({
       state.missionInfo = state.missionInfo.concat(payload.missionInfo.reverse())
     },
 
+    refreshMission (state, payload) {
+      state.missionInfo = payload.missionInfo.reverse()
+    },
+
     logout (state) {
       state.userInfo.avatar = ''
       state.userInfo.balance = 0
@@ -124,9 +128,15 @@ export default new Vuex.Store({
         }
       }).then(response => {
         if (response.data.data.missions.length > 0) {
-          commit('addMission', {
-            missionInfo: response.data.data.missions
-          })
+          if (!payload.fetchNew) {
+            commit('addMission', {
+              missionInfo: response.data.data.missions
+            })
+          } else {
+            commit('refreshMission', {
+              missionInfo: response.data.data.missions
+            })
+          }
         }
 
         if (response.data.data.missions.length === 0) {

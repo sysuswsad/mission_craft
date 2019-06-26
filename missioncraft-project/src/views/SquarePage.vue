@@ -1,4 +1,4 @@
-<template>
+2<template>
   <div class="waterfall-container">
     <vue-waterfall-easy
       v-on:click="checkProfile"
@@ -340,7 +340,6 @@ export default {
           })
         }).catch(error => {
           console.log(error)
-          this.$message.error('出错了，请稍后重试')
         })
       }
     },
@@ -382,7 +381,8 @@ export default {
     fetchMissionRemotely (fetchNew = false, limit = 20) {
       return this.$store.dispatch('fetchMissionRemotely', {
         create_time: fetchNew ? '' : this.currentOldestMissionCreateTime,
-        limit: limit
+        limit: limit,
+        fetchNew: fetchNew
       }).then(noMoreMissions => {
         this.filterWithType(this.filter.type)
 

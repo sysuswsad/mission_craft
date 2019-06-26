@@ -64,16 +64,16 @@
             </el-row>
             <div v-for="(index, value) in contactWay" v-bind:key="value">
               <el-row v-if="contactWay[value] !== emptyStr" v-bind:gutter="20" type="flex">
-                <el-col v-bind:span="24" v-if="value === 'phone'" style="margin: 1rem 0">
+                <el-col v-bind:span="24" v-if="value === 'phone'" style="margin-top: 10px">
                   <span>{{ '手机号码：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="24" v-if="value === 'weChat'">
+                <el-col v-bind:span="24" v-if="value === 'weChat'" style="margin-top: 10px">
                   <span>{{ '微信：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="24" v-if="value === 'qq'" style="margin: 1rem 0">
+                <el-col v-bind:span="24" v-if="value === 'qq'" style="margin-top: 10px">
                   <span>{{ 'qq：' + contactWay[value] }}</span>
                 </el-col>
-                <el-col v-bind:span="24" v-if="value === 'other'">
+                <el-col v-bind:span="24" v-if="value === 'other'" style="margin-top: 10px">
                   <span>{{ '其他联系方式：' + contactWay[value] }}</span>
                 </el-col>
               </el-row>
@@ -317,14 +317,20 @@ export default {
         this.missionTitle = row.title
         backend.getRequest('mission/', {
           params: {
+            personal: 1,
             mission_id: row.mission_id
           }
         }).then((response) => {
           let mission = response.data.data['missions']
+          // console.log(mission)
           if (mission[0].avatar !== '') {
             this.url = mission[0].receviver_avatar
           }
-          // this.username = mission[0].publisher_name
+          this.username = mission[0].username
+          this.contactWay.phone = mission[0].phone
+          this.contactWay.qq = mission[0].qq
+          this.contactWay.weChat = mission[0].wechat
+          this.contactWay.other = mission[0].other_way
           this.description = mission[0].description
           this.startTime = mission[0].create_time
           this.endTime = mission[0].deadline

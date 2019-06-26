@@ -411,9 +411,16 @@ def create_notification_type_8(mission_id, receiver_id, cancel_time):
         (mission_id,)
     ).fetchall()
 
+    receiver = db.execute(
+        'SELECT u.username'
+        ' FROM User u'
+        ' WHERE u.idUser = ?',
+        (receiver_id,)
+    ).fetchall()
+
     # 生成通知
     message = "您于 {} 发布的任务 {} 于 {} 被接收人 {} 取消接收任务。 ".format(
-        info[0][1], info[0][2], cancel_time, receiver_id
+        info[0][1], info[0][2], cancel_time, receiver[0][0]
     )
     # 插入数据库
     db.execute(
@@ -422,6 +429,8 @@ def create_notification_type_8(mission_id, receiver_id, cancel_time):
         (info[0][3], mission_id, message, now_time, n_type,)
     )
     db.commit()
+
+
 
 
 def update_notification_login(user_id):
