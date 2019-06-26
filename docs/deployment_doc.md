@@ -13,15 +13,13 @@ git clone https://github.com/sysuswsad/mission_craft.git
 
 
 
-### 前端服务器部署流程
+### 前端开发环境部署流程
 
 #### 环境配置
 
-确保系统安装了npm，若没有，可通过以下链接下载安装：
+使用NPM作为Node.js包管理器
 
-[npm下载](https://www.npmjs.com/)
-
-#### 安装前端服务器所需依赖包
+#### 安装依赖包
 
 进入文件 package.json 所在目录：
 
@@ -37,7 +35,7 @@ npm i
 
 
 
-#### 运行前端服务器
+#### 运行vue开发服务器
 
 进入项目：
 
@@ -50,7 +48,7 @@ cd ~/mission_craft/missioncraft-project
 运行服务器：
 
 ```bash
-npm serve
+npm run serve
 ```
 
 
