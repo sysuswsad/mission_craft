@@ -100,6 +100,10 @@ $axios.interceptors.response.use(response => {
         Message.error('您已领取该任务，不能重复领取')
         break
 
+      case 305:
+      	Message.error('不可领取自己发布的任务')
+      	break
+
       default:
         console.log(`msg: ${error.response.data.message}`)
         break
