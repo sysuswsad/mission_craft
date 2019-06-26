@@ -101,3 +101,14 @@ JavaScript规范使用[ES2016+][1]
 - 尽量不使用 `!important` 声明。
 - 文本内容必须用双引号包围。
 - 当数值为 0 - 1 之间的小数时，省略整数部分的 `0`。
+
+
+
+## 后端代码规范
+
+#### python规范
+
+后端使用flask框架进行编码，python编码，规范[参照官网](<http://google.github.io/styleguide/pyguide.html>)
+
+
+
