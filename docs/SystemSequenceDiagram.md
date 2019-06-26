@@ -21,13 +21,13 @@
 
 ## 业务逻辑
 
-### 问卷发布
+### 发布问卷
 
 **16340178** 
 
 ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram3.png)
 
-### 取快递 
+### 发布其他任务 
 
 **16340178** 
 
