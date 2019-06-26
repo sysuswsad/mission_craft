@@ -323,7 +323,7 @@ export default {
 <style scoped>
   .head-container {
     height: 300px;
-    background-color: aquamarine;
+    background-color: rgb(244, 244, 245);
     width: 100%;
     display: flex;
     align-items: center;
