@@ -2,25 +2,34 @@
 
 ------
 
+
 ## 用户信息管理
 
-**用户注册与登录**
+### 用户注册与登录
 
-![](https://img-blog.csdnimg.cn/20190427213122495.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+**16340178**
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram1.png)
 
-**修改个人信息**
 
-![](https://img-blog.csdnimg.cn/20190427213147171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+### 修改个人信息  
+
+**16340178**
+
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram2.png)
 
 ------
 
 ## 业务逻辑
 
-**问卷发布**
+### 发布问卷
 
-![](https://img-blog.csdnimg.cn/20190427213213176.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+**16340178** 
 
-**取快递**
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram3.png)
 
-![](https://img-blog.csdnimg.cn/20190427213348384.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2MTI0MTk0,size_16,color_FFFFFF,t_70)
+### 发布其他任务 
+
+**16340178** 
+
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram4.png)
 
