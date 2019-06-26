@@ -39,7 +39,7 @@
 
 **16340179**
 
-[](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram5.png)
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram5.png)
 
 
 
@@ -47,10 +47,10 @@
 
 **16340173**
 
-[](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram6.png)
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram6.png)
 
 ### 其他任务确认完成
 
 **16340178**
 
-[](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram7.png)
+![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram7.png)
