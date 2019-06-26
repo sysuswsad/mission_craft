@@ -18,23 +18,23 @@ SQLite3 提供了数据的持久化服务
 ### 前端
 
 ```bash
-.
-├── App.vue
-├── assets
+.                                   //前端开发的源码
+├── App.vue                         //应用的最外层结构
+├── assets                          //图片等静态资源
 │   ├── flask-logo.png
 │   ├── logo.png
 │   ├── python-logo.png
 │   └── vue-logo.png
-├── backend.js
-├── components
+├── backend.js                      //与后端接口
+├── components                      //前端组件
 │   ├── HelloWorld.vue
 │   ├── SideBar.vue
 │   ├── TimeSlider.vue
 │   └── TopMenu.vue
 ├── filters.js
 ├── main.js
-├── router.js
-├── store.js
+├── router.js                       //前端路由
+├── store.js                        //应用的全局数据状态管理
 ├── theme
 │   └── element
 │       ├── alert.css
@@ -144,26 +144,26 @@ SQLite3 提供了数据的持久化服务
 ```bash
 .
 ├── __init__.py
-├── api
-│   ├── __init__.py
-│   ├── mission.py
-│   ├── notification.py
-│   ├── order.py
-│   └── user.py
-├── auth.py
+├── api                     //与前端接口
+│   ├── __init__.py
+│   ├── mission.py          //任务api
+│   ├── notification.py     //通知api
+│   ├── order.py            //订单api
+│   └── user.py             //用户api
+├── auth.py                 //身份认证
 ├── currency.py
-├── db.py
-├── email.py
+├── db.py                   //与数据库交互
+├── email.py                //发送邮件验证码
 ├── response_code.py
-├── schema.sql
-├── static
+├── schema.sql              //数据库创建
+├── static              
 │   ├── 1.jpg
 │   ├── 2.jpg
 │   ├── 2.png
 │   ├── 3.jpg
 │   └── logo.png
 ├── statistics.py
-└── verification.py
+└── verification.py         //验证
 ```
 
 
