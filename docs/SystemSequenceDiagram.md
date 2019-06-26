@@ -14,6 +14,7 @@
 ### 修改个人信息  
 
 **16340178**
+
 ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram2.png)
 
 ------
@@ -21,10 +22,14 @@
 ## 业务逻辑
 
 ### 问卷发布
-**16340178**
+
+**16340178** 
+
 ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram3.png)
 
-### 取快递
-**16340178**
+### 取快递 
+
+**16340178** 
+
 ![](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/systemsequencediagram4.png)
 
