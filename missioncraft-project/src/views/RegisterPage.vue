@@ -91,7 +91,7 @@ export default {
             message: '用户名不能为空'
           },
           {
-            pattern: /^[A-Za-z]+[A-Za-z0-9]{5,20}$/,
+            pattern: /^[A-Za-z][A-Za-z0-9]{5,20}$/,
             message: '用户名必须是以字母开头由数字和字母组成的6-20个字符的串'
           }
         ],
@@ -131,8 +131,8 @@ export default {
             message: '密码不能为空'
           },
           {
-            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\s\S]{8,16}$/,
-            message: '密码至少包含1个大写字母，1个小写字母和1个数字的8位串'
+            pattern: /^[\s\S]{8,}$/,
+            message: '密码长度至少为8'
           }
         ],
         confirmPass: [
