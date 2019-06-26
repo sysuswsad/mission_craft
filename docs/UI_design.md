@@ -155,11 +155,11 @@
 
   **问卷填写页面：**
 
-  ![]()
+  ![](https://github.com/penglsh/images/raw/master/sad_UI_design/survey_fill_in.png)
 
   **问卷结果统计页面（仅发布者可见）：**
 
-  ![]()
+  ![](https://github.com/penglsh/images/raw/master/sad_UI_design/survey_result.png)
 
 ---
 

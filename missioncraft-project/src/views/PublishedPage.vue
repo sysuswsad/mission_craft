@@ -22,7 +22,6 @@
       <el-table
         class="mission-table"
         stripe
-        row-key="mission_id"
         v-bind:data="tableMission.slice((currentPage-1) * pageSize, currentPage * pageSize)"
         v-on:row-click="rowClick">
         <el-table-column
@@ -102,11 +101,14 @@
           <el-col v-bind:span="6" style="text-align: center">
             <p><i class="el-icon-coin"></i> 总报酬：￥{{ bounty }}</p>
           </el-col>
-          <el-col v-bind:span="6" style="text-align: center">
-            <p><i class="el-icon-user-solid"></i> 完成人数：{{ fin_num }}</p>
+          <el-col v-bind:span="4" style="text-align: center">
+            <p><i class="el-icon-user-solid"></i> 需要份数：{{ max_num }}</p>
           </el-col>
-          <el-col v-bind:span="6" style="text-align: center">
+          <el-col v-bind:span="4" style="text-align: center">
             <p><i class="el-icon-user-solid"></i> 领取人数：{{ rcv_num }}</p>
+          </el-col>
+          <el-col v-bind:span="4" style="text-align: center">
+            <p><i class="el-icon-user-solid"></i> 完成人数：{{ fin_num }}</p>
           </el-col>
           <el-col v-bind:span="6" style="text-align: center">
             <el-button
@@ -178,6 +180,7 @@ export default {
       finishTime: '',
       rcv_num: 0,
       fin_num: 0,
+      max_num: 0,
       missionState: 0,
       selectedId: -1,
       cancelButtonDisable: false,
@@ -393,6 +396,7 @@ export default {
               this.fin_num = mission[0].fin_num
               this.finishTime = mission[0].finish_time
             }
+            this.max_num = mission[0].max_num
             this.missionState = mission[0].state
             this.selectedId = mission[0].idMissionInfo
             this.finishOrderId = mission[0].order_id
