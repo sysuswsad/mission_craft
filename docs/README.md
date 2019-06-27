@@ -60,6 +60,7 @@ X4.Tech/Work Report（技术博客）
 - [16340176- pytest学习与使用](https://blog.captainp.cn/2019/05/23/pytest/)
 - [16340178-Flask一个案例的中文解析](https://blog.csdn.net/qq_38789531/article/details/93863113)
 - [vue+element时间进度条实现](https://penglsh.github.io/2019/06/28/vue+element时间进度条实现/)
+- [Axios 封装使用](https://sysuswsad.github.io/mission_craft/16340174_ouyzx.html)
 
 X5. Final Report
 
@@ -68,4 +69,3 @@ X5. Final Report
 - [16340176-pjsfirst](https://sysuswsad.github.io/mission_craft/16340176_pjsfirst.html)
 - [16340179-penglsh](https://sysuswsad.github.io/mission_craft/16340179_penglsh.html)
 - [小组分工与贡献率说明](https://sysuswsad.github.io/mission_craft/team_summary.html)
-
