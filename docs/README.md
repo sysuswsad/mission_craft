@@ -50,7 +50,7 @@ X2. [KANBAN](<https://github.com/sysuswsad/mission_craft/projects>)
 
 
 
-X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/[auditing.html)（审计报告）
+X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/auditing.html)（审计报告）
 
 
 
