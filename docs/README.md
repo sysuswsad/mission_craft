@@ -61,6 +61,7 @@ X4.Tech/Work Report（技术博客）
 - [16340178-Flask一个案例的中文解析](https://blog.csdn.net/qq_38789531/article/details/93863113)
 - [vue+element时间进度条实现](https://penglsh.github.io/2019/06/28/vue+element时间进度条实现/)
 - [Axios 封装使用](https://sysuswsad.github.io/mission_craft/16340174_ouyzx.html)
+- [16340181-cookie管理](https://vilin.club/2019/06/26/%E4%BD%BF%E7%94%A8vue-cookies%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86/)
 
 X5. Final Report
 
@@ -68,4 +69,5 @@ X5. Final Report
 - [16340178-NeoBryant](https://sysuswsad.github.io/mission_craft/16340178_finalreport.html)
 - [16340176-pjsfirst](https://sysuswsad.github.io/mission_craft/16340176_pjsfirst.html)
 - [16340179-penglsh](https://sysuswsad.github.io/mission_craft/16340179_penglsh.html)
+- [16340181-Vilinz](https://vilin.club/2019/06/27/%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93/)
 - [小组分工与贡献率说明](https://sysuswsad.github.io/mission_craft/team_summary.html)
