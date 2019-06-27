@@ -47,6 +47,10 @@
 
 
 
+## 项目贡献
+
+![contribution](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/16340174_contribution)
+
 ## 个人博客清单
 
 - [Axios 封装使用](https://sysuswsad.github.io/mission_craft/16340174_ouyzx.html)
