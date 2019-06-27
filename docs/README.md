@@ -50,15 +50,17 @@ X2. [KANBAN](<https://github.com/sysuswsad/mission_craft/projects>)
 
 
 
-X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/[auditing.html)（审计报告）
+X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/auditing.html)（审计报告）
 
 
 
 X4.Tech/Work Report
 
-- [16340173-title]()
+- [16340173-flask之token认证](https://sysuswsad.github.io/mission_craft/16340173-blog.html)
+- [16340178-Flask一个案例的中文解析](https://blog.csdn.net/qq_38789531/article/details/93863113)
 
 X5. Final Report
 
-- [16340173-title]()
-- [小组分工与贡献率说明]()
+- [16340173-ousuixin](https://sysuswsad.github.io/mission_craft/16340173-ousuixin.html)
+- [16340178-NeoBryant](https://sysuswsad.github.io/mission_craft/16340178_finalreport.html)
+- [小组分工与贡献率说明](https://sysuswsad.github.io/mission_craft/team_summary.html)
