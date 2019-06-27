@@ -150,20 +150,20 @@ SQLite3 提供了数据的持久化服务
 │   ├── notification.py     //通知api
 │   ├── order.py            //订单api
 │   └── user.py             //用户api
-├── auth.py                 //身份认证
-├── currency.py
-├── db.py                   //与数据库交互
-├── email.py                //发送邮件验证码
-├── response_code.py
-├── schema.sql              //数据库创建
-├── static              
+├── auth.py                 //身份认证组件
+├── currency.py				//货币系统组件
+├── db.py                   //数据库交互组件
+├── email.py                //发送邮件验证码组件
+├── response_code.py		//状态码组件
+├── schema.sql              //数据库创建sql文件
+├── static              	//静态文件夹存储用户头像
 │   ├── 1.jpg
 │   ├── 2.jpg
 │   ├── 2.png
 │   ├── 3.jpg
 │   └── logo.png
-├── statistics.py
-└── verification.py         //验证
+├── statistics.py			//问卷统计组件
+└── verification.py         //邮箱真实性验证组件
 ```
 
 

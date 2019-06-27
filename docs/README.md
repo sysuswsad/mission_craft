@@ -32,7 +32,7 @@
    - 8.4 [部署说明](https://sysuswsad.github.io/mission_craft/deployment_doc.html)
 
 9. 成品展示
-   - 9.1 短视频
+   - 9.1 [短视频](https://www.bilibili.com/video/av56942328)
    - ...
 
 X1. Meeting Recodings（会议记录）
@@ -50,7 +50,7 @@ X2. [KANBAN](<https://github.com/sysuswsad/mission_craft/projects>)
 
 
 
-X3.Auditing-records（审计报告）
+X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/[auditing.html)（审计报告）
 
 
 
