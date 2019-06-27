@@ -55,6 +55,7 @@ CREATE TABLE MissionInfo (
   rcv_num INT DEFAULT 0,
   fin_num INT DEFAULT 0,
   state INT DEFAULT 0,
+  -- state为0表示开放，1表示关闭，2表示完成，3表示发布人取消，4表示过期
   FOREIGN KEY (publisher_id) REFERENCES User (idUser)
 );
 

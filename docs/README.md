@@ -18,7 +18,7 @@
    - 6.5  [System Sequence](https://sysuswsad.github.io/mission_craft/SystemSequenceDiagram.html)（功能模型）
    - 6.6 [Supplementary Requirements](https://sysuswsad.github.io/mission_craft/SR.html)（补充需求）
 
-7. [Design](https://sysuswsad.github.io/mission_craft/SD.html)（设计说明书）
+7. [Design](https://sysuswsad.github.io/mission_craft/SD.html)（软件设计说明书）
    - 7.1 [UI design](https://sysuswsad.github.io/mission_craft/UI_design.html)（界面设计）
    - 7.2 [Database design](https://sysuswsad.github.io/mission_craft/DatabaseDesign.html)（数据库设计）
    - 7.3 [Interface API design](https://sysuswsad.github.io/mission_craft/api.html)（接口API设计）
@@ -32,8 +32,8 @@
    - 8.4 [部署说明](https://sysuswsad.github.io/mission_craft/deployment_doc.html)
 
 9. 成品展示
-   - 9.1 短视频
-   - ...
+   - 9.1 [短视频](https://www.bilibili.com/video/av56942328)
+   - 9.2 [用户手册](https://sysuswsad.github.io/mission_craft/用户手册.html)
 
 X1. Meeting Recodings（会议记录）
 
@@ -50,15 +50,22 @@ X2. [KANBAN](<https://github.com/sysuswsad/mission_craft/projects>)
 
 
 
-X3.Auditing-records（审计报告）
+X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/auditing.html)（审计报告）
 
 
 
-X4.Tech/Work Report
+X4.Tech/Work Report（技术博客）
 
-- [16340173-title]()
+- [16340173-flask之token认证](https://sysuswsad.github.io/mission_craft/16340173-blog.html)
+- [16340176- pytest学习与使用](https://blog.captainp.cn/2019/05/23/pytest/)
+- [16340178-Flask一个案例的中文解析](https://blog.csdn.net/qq_38789531/article/details/93863113)
+- [vue+element时间进度条实现](https://penglsh.github.io/2019/06/28/vue+element时间进度条实现/)
 
 X5. Final Report
 
-- [16340173-title]()
-- [小组分工与贡献率说明]()
+- [16340173-ousuixin](https://sysuswsad.github.io/mission_craft/16340173-ousuixin.html)
+- [16340178-NeoBryant](https://sysuswsad.github.io/mission_craft/16340178_finalreport.html)
+- [16340176-pjsfirst](https://sysuswsad.github.io/mission_craft/16340176_pjsfirst.html)
+- [16340179-penglsh](https://sysuswsad.github.io/mission_craft/16340179_penglsh.html)
+- [小组分工与贡献率说明](https://sysuswsad.github.io/mission_craft/team_summary.html)
+

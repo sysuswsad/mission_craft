@@ -18,7 +18,7 @@ def check_mission_out_of_state(db):
     refund_overdue()
 
     # 扫描数据库并更新：
-    db.execute('UPDATE MissionInfo SET state = 2 WHERE state == 0 AND deadline < datetime(CURRENT_TIMESTAMP,"localtime")')
+    db.execute('UPDATE MissionInfo SET state = 4 WHERE state == 0 AND deadline < datetime(CURRENT_TIMESTAMP,"localtime")')
     db.execute('UPDATE MissionOrder SET order_state = 2 WHERE order_state == 0 AND mission_id == (SELECT idMissionInfo FROM MissionInfo WHERE deadline < datetime(CURRENT_TIMESTAMP,"localtime"))')
     db.commit()
 
@@ -30,7 +30,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     CORS(app, supports_credentials=True)
-    
+
     # 设置数据库
     app.config.from_mapping(
         DATABASE = os.path.join(app.instance_path, 'mission_craft.sqlite')

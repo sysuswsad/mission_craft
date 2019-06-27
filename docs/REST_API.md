@@ -1,4 +1,9 @@
 # REST API设计规范
+
+随着网络应用的不断发展，前端设备种类越来越繁多，包括手机、电脑、平板甚至网络电视等等，后端（后端一般都是计算机）需要与这些各种各样的前端设备进行通信，为了保证这种通信的简便性、正确性和安全性，需要设计统一的通信机制，无论是哪一种前端设备都遵循这种机制，完成与后端的通信。
+
+这就催生了API架构的诞生，目前应用范围最广，最成熟的API架构是RESTFUL API，因此在本项目中我们选用该规范指导我们完成API设计
+
 ## 1、协议
 使用https协议
 
@@ -58,4 +63,4 @@ GET /mission/ID：获取某个指定任务的信息
 
 500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。
 
-参考资料： [Rest API规范](https://blog.csdn.net/pkueecser/article/details/50193881)
+参考资料：感谢阮一峰大佬的博客 [Rest API规范](http://www.ruanyifeng.com/blog/2014/05/restful_api.html)

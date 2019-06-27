@@ -1,7 +1,7 @@
 import axios from 'axios'
 import $vue from './main.js'
 import { Message } from 'element-ui'
-const baseURL = 'http://172.18.35.89:5000/api/'
+const baseURL = 'http://172.18.35.89:5000'
 
 let $axios = axios.create({
   // baseURL: 'http://qcloud.captainp.cn:5000/api/',
@@ -101,8 +101,8 @@ $axios.interceptors.response.use(response => {
         break
 
       case 305:
-      	Message.error('不可领取自己发布的任务')
-      	break
+        Message.error('不可领取自己发布的任务')
+        break
 
       default:
         console.log(`msg: ${error.response.data.message}`)
