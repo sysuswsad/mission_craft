@@ -49,7 +49,7 @@
 
 ## 项目贡献
 
-![contribution](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/16340174_contribution)
+![contribution](https://github.com/sysuswsad/mission_craft/raw/master/docs/imgs/16340174_contribution.png)
 
 ## 个人博客清单
 
