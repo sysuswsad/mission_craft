@@ -18,7 +18,7 @@
    - 6.5  [System Sequence](https://sysuswsad.github.io/mission_craft/SystemSequenceDiagram.html)（功能模型）
    - 6.6 [Supplementary Requirements](https://sysuswsad.github.io/mission_craft/SR.html)（补充需求）
 
-7. [Design](https://sysuswsad.github.io/mission_craft/SD.html)（设计说明书）
+7. [Design](https://sysuswsad.github.io/mission_craft/SD.html)（软件设计说明书）
    - 7.1 [UI design](https://sysuswsad.github.io/mission_craft/UI_design.html)（界面设计）
    - 7.2 [Database design](https://sysuswsad.github.io/mission_craft/DatabaseDesign.html)（数据库设计）
    - 7.3 [Interface API design](https://sysuswsad.github.io/mission_craft/api.html)（接口API设计）
@@ -54,7 +54,7 @@ X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/auditing.html)�
 
 
 
-X4.Tech/Work Report
+X4.Tech/Work Report（技术博客）
 
 - [16340173-flask之token认证](https://sysuswsad.github.io/mission_craft/16340173-blog.html)
 - [16340176- pytest学习与使用](https://blog.captainp.cn/2019/05/23/pytest/)
