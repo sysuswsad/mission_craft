@@ -33,7 +33,7 @@
 
 9. 成品展示
    - 9.1 [短视频](https://www.bilibili.com/video/av56942328)
-   - ...
+   - 9.2 [用户手册](https://sysuswsad.github.io/mission_craft/用户手册.html)
 
 X1. Meeting Recodings（会议记录）
 
@@ -57,8 +57,10 @@ X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/auditing.html)�
 X4.Tech/Work Report
 
 - [16340173-title](https://sysuswsad.github.io/mission_craft/16340173-blog.html)
+- [16340176- pytest学习与使用](https://blog.captainp.cn/2019/05/23/pytest/)
 
 X5. Final Report
 
 - [16340173-title](https://sysuswsad.github.io/mission_craft/16340173-ousuixin.html)
+- [16340176-pjsfirst](https://sysuswsad.github.io/mission_craft/16340176_pjsfirst.html)
 - [小组分工与贡献率说明](https://sysuswsad.github.io/mission_craft/team_summary.html)
