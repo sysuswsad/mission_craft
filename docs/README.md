@@ -66,8 +66,9 @@ X4.Tech/Work Report（技术博客）
 X5. Final Report
 
 - [16340173-ousuixin](https://sysuswsad.github.io/mission_craft/16340173-ousuixin.html)
-- [16340178-NeoBryant](https://sysuswsad.github.io/mission_craft/16340178_finalreport.html)
+- [16340174-ouyzx](https://sysuswsad.github.io/mission_craft/16340174_ouyzx_finalreport.html)
 - [16340176-pjsfirst](https://sysuswsad.github.io/mission_craft/16340176_pjsfirst.html)
+- [16340178-NeoBryant](https://sysuswsad.github.io/mission_craft/16340178_finalreport.html)
 - [16340179-penglsh](https://sysuswsad.github.io/mission_craft/16340179_penglsh.html)
 - [16340181-Vilinz](https://vilin.club/2019/06/27/%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93/)
 - [小组分工与贡献率说明](https://sysuswsad.github.io/mission_craft/team_summary.html)
