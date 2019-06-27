@@ -56,8 +56,6 @@ X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/auditing.html)�
 
 X4.Tech/Work Report
 
-<<<<<<< HEAD
-
 - [16340173-flask之token认证](https://sysuswsad.github.io/mission_craft/16340173-blog.html)
 - [16340176- pytest学习与使用](https://blog.captainp.cn/2019/05/23/pytest/)
 - [16340178-Flask一个案例的中文解析](https://blog.csdn.net/qq_38789531/article/details/93863113)
