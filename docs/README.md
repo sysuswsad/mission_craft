@@ -56,9 +56,9 @@ X3.[Auditing-records](https://sysuswsad.github.io/mission_craft/auditing.html)�
 
 X4.Tech/Work Report
 
-- [16340173-title]()
+- [16340173-title](https://sysuswsad.github.io/mission_craft/16340173-blog.html)
 
 X5. Final Report
 
-- [16340173-title]()
-- [小组分工与贡献率说明]()
+- [16340173-title](https://sysuswsad.github.io/mission_craft/16340173-ousuixin.html)
+- [小组分工与贡献率说明](https://sysuswsad.github.io/mission_craft/team_summary.html)
