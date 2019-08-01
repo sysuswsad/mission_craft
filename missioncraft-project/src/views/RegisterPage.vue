@@ -206,7 +206,10 @@ export default {
               sid: this.info.studentId,
               email: this.info.email,
               password: this.info.password,
-              code: this.info.code
+              code: this.info.code,
+              qq: this.info.qq,
+              wechat: this.info.weChat,
+              phone: this.info.phone
             })
             .then((response) => {
               this.$router.push({ name: 'login' })
