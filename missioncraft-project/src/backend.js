@@ -5,7 +5,7 @@ const baseURL = 'http://172.18.35.89:5000/api/'
 
 let $axios = axios.create({
   // baseURL: 'http://qcloud.captainp.cn:5000/api/',
-  // baseURL: 'http://127.0.0.1:5000/api/',
+  //baseURL: 'http://127.0.0.1:5000/api/',
   baseURL: 'http://172.18.35.89:5000/api/',
   // baseURL: 'http://172.18.34.59:5000/api/',
   timeout: 5000,
